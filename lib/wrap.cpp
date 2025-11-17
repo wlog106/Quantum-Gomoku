@@ -1,10 +1,12 @@
 #include "universal.h"
+#include <unistd.h>
+using std::cout;
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
     int n;
 
 again:
-    if( (n = accept(fd, sa, salenptr)) < 0 ){
+    if( (n = TEMP_FAILURE_RETRY(accept(fd, sa, salenptr))) < 0 ){
         // ECONNABORTED: client abort before accept
 #ifdef EPROTO
         if(errno == EPROTO || errno == ECONNABORTED)
@@ -21,14 +23,14 @@ again:
 }
 
 void Bind(int fd, const struct sockaddr *sa, socklen_t salen){
-    if(bind(fd, sa, salen) < 0){
+    if(TEMP_FAILURE_RETRY(bind(fd, sa, salen)) < 0){
         cout << "bind error\n";
         exit(1);
     }
 }
 
 void Connect(int fd, const struct sockaddr *sa, socklen_t salen){
-    if(connect(fd, sa, salen) < 0){
+    if(TEMP_FAILURE_RETRY(connect(fd, sa, salen)) < 0){
         cout << "connect error\n";
         exit(1);
     }
@@ -46,8 +48,18 @@ void Inet_pton(int family, const char *strptr, void *addrptr){
     }
 }
 
-void Listen(){
-    
+void Listen(int fd, int backlog){
+    if(listen(fd, backlog) < 0){
+        cout << "listen error\n";
+        exit(1);
+    }
+}
+
+Sigfunc *Signal(int signo, Sigfunc *sighandler){
+    struct sigaction  action, original_action;
+    action.sa_handler = sighandler;
+    sigemptyset(&action.sa_mask);  /*don't mask other signal*/
+    action.sa_flags |= SA_RESTART;
 }
 
 int Socket(int family, int type, int protocol){
