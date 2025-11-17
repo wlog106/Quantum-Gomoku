@@ -7,7 +7,6 @@
 #include <iostream>
 #include <string.h>
 
-#define cout std::cout
 #define TEST_PORT 9000
 
 int Socket(int domain, int type, int protocol);
