@@ -84,6 +84,7 @@ int Read_commamd(int fd, queue<string> &buf, queue<string> &result){
 
     while(buf.size()){
         string tmp = buf.front();
+        buf.pop();
         if(tmp == "\n"){
             has_one_command = 1;
             break;
