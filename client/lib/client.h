@@ -11,3 +11,5 @@
 #define S_observer 7
 #define S_observing 8
 #define S_showresult 9
+
+void Login(int sockfd);
