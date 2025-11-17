@@ -1,5 +1,4 @@
 #include "universal.h"
-#include <unistd.h>
 using std::cout;
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
@@ -49,7 +48,7 @@ void Inet_pton(int family, const char *strptr, void *addrptr){
 }
 
 void Listen(int fd, int backlog){
-    if(listen(fd, backlog) < 0){
+    if(TEMP_FAILURE_RETRY(listen(fd, backlog)) < 0){
         cout << "listen error\n";
         exit(1);
     }
@@ -58,13 +57,18 @@ void Listen(int fd, int backlog){
 Sigfunc *Signal(int signo, Sigfunc *sighandler){
     struct sigaction  action, original_action;
     action.sa_handler = sighandler;
-    sigemptyset(&action.sa_mask);  /*don't mask other signal*/
+    sigemptyset(&action.sa_mask);  /* don't mask other signal */
     action.sa_flags |= SA_RESTART;
+    if(sigaction(signo, &action, &original_action) < 0){
+        cout << "fail to enroll signal handler\n";
+        exit(1);
+    }
+    return original_action.sa_handler;
 }
 
 int Socket(int family, int type, int protocol){
     int n;
-    if( (n = socket(family, type, protocol)) < 0){
+    if( (n = TEMP_FAILURE_RETRY(socket(family, type, protocol))) < 0){
         cout << "socket error\n";
         exit(1);
     }
