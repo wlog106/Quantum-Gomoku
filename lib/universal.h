@@ -6,7 +6,8 @@
 
 #include <iostream>
 #include <algorithm>
-#include <string.h>
+#include <string>
+#include <sstream>
 #include <unistd.h>
 #include <cerrno>
 #include <csignal>
