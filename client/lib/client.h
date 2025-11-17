@@ -1,5 +1,6 @@
 #pragma once
 #include "../../lib/universal.h"
+#include "../../lib/command.h"
 
 #define S_end 0
 #define S_login 1
@@ -12,4 +13,6 @@
 #define S_observing 8
 #define S_showresult 9
 
-void Login(int sockfd);
+//max-id = 10
+
+int Login(int sockfd);

@@ -18,7 +18,7 @@ int main(int argc, char **argv){
     while(state){
         switch (state){
         case S_login:
-            /* code */
+            if(Login(sockfd)) state = S_op_select;
             break;
         
         default:

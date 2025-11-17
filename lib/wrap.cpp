@@ -103,3 +103,9 @@ int Socket(int family, int type, int protocol){
     return n;
 }
 
+void Write(int fd, void *ptr, size_t nbytes){
+	if (TEMP_FAILURE_RETRY(write(fd, ptr, nbytes)) != nbytes){
+		cout << "write error\n";
+        exit(1);
+    }
+}
