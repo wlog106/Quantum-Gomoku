@@ -1,5 +1,5 @@
-#include "../lib/universal.h"
-#include <sys/socket.h>
+#include "lib/client.h"
+
 
 int main(int argc, char **argv){
 
@@ -11,4 +11,20 @@ int main(int argc, char **argv){
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(TEST_PORT);
     Inet_pton(AF_INET, argv[1], &servaddr.sin_addr);
+
+    //connect here
+
+    int state = S_login;
+    while(state){
+        switch (state){
+        case S_login:
+            /* code */
+            break;
+        
+        default:
+            break;
+        }
+    }
+
+    //disconnect here
 }
