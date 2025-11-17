@@ -13,6 +13,12 @@
 
 #include <vector>
 #include <queue>
+#include <map>
+
+#ifndef _GNU_SOURCE
+/* ensure TEMP_FAILURE_RETRY macro is defined */
+#define _GNU_SOURCE
+#endif
 
 #define TEST_PORT 9000
 #define SA struct sockaddr
