@@ -10,9 +10,14 @@
 #include <cerrno>
 #include <csignal>
 
+#include <vector>
+#include <queue>
+
 #define TEST_PORT 9000
 #define SA struct sockaddr
 #define LIS_BACKLOG 1024
+
+#define MAXLINE 50000
 
 typedef void Sigfunc(int);
 
