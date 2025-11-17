@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <string.h>
+#include <cerrno>
 
 #define cout std::cout
 #define TEST_PORT 9000
