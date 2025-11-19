@@ -48,18 +48,6 @@ int Read_commamd(int fd, string &buf, queue<string> &commands){
     return command_count;
 }
 
-Sigfunc *Signal(int signo, Sigfunc *sighandler){
-    struct sigaction  action, original_action;
-    action.sa_handler = sighandler;
-    sigemptyset(&action.sa_mask);  /* don't mask other signal */
-    action.sa_flags |= SA_RESTART;
-    if(sigaction(signo, &action, &original_action) < 0){
-        cout << "fail to enroll signal handler\n";
-        exit(1);
-    }
-    return original_action.sa_handler;
-}
-
 int Socket(int family, int type, int protocol){
     int n;
     if( (n = TEMP_FAILURE_RETRY(socket(family, type, protocol))) < 0){

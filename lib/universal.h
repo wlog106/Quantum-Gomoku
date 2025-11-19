@@ -33,6 +33,5 @@ typedef void Sigfunc(int);
 
 void Inet_pton(int family, const char *strptr, void *addrptr);
 int Read_commamd(int fd, std::string &buf, std::queue<std::string> &commands);
-Sigfunc *Signal(int signo, Sigfunc *sighandler);
 int Socket(int domain, int type, int protocol);
 void Write(int fd, void *ptr, size_t nbytes);

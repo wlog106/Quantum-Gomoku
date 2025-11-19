@@ -82,6 +82,18 @@ int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen){
     return listenfd;
 }
 
+Sigfunc *Signal(int signo, Sigfunc *sighandler){
+    struct sigaction  action, original_action;
+    action.sa_handler = sighandler;
+    sigemptyset(&action.sa_mask);  /* don't mask other signal */
+    action.sa_flags |= SA_RESTART;
+    if(sigaction(signo, &action, &original_action) < 0){
+        cout << "fail to enroll signal handler\n";
+        exit(1);
+    }
+    return original_action.sa_handler;
+}
+
 void sigchild(int signo){
     pid_t pid;
     int stat;
