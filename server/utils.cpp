@@ -1,4 +1,6 @@
 #include "server.h"
+#include <cerrno>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <sys/epoll.h>
 #include <sys/socket.h>
@@ -14,9 +16,9 @@ again:
     if( (n = TEMP_FAILURE_RETRY(accept(fd, sa, salenptr))) < 0 ){
         // ECONNABORTED: client abort before accept
 #ifdef EPROTO
-        if(errno == EPROTO || errno == ECONNABORTED)
+        if(errno == EPROTO || errno == ECONNABORTED || errno == EWOULDBLOCK)
 #else
-        if(errno == ECONNABORTED)
+        if(errno == ECONNABORTED || errno == EWOULDBLOCK)
 #endif     
             goto again;
         else{
@@ -59,6 +61,13 @@ int Epoll_wait(int epollfd, struct epoll_event *events, int maxevents){
     return n;
 }
 
+int Fcntl(int fd, int cmd, int arg){
+	int	n;
+	if ( (n = fcntl(fd, cmd, arg)) < 0)
+		cout << "fcntl error\n";
+	return n;
+}
+
 void Listen(int fd, int backlog){
     if(TEMP_FAILURE_RETRY(listen(fd, backlog)) < 0){
         cout << "listen error\n";
@@ -68,6 +77,7 @@ void Listen(int fd, int backlog){
 
 int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen){
 
+    int flags;
     int listenfd = Socket(AF_INET, SOCK_STREAM, 0);
 
     bzero(servaddr, salen);
@@ -78,6 +88,9 @@ int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen){
     Bind(listenfd, (SA *)servaddr, salen);
 
     Listen(listenfd, LIS_BACKLOG);
+
+    flags = Fcntl(listenfd, F_GETFL, 0);
+    Fcntl(listenfd, F_SETFL, flags | O_NONBLOCK);
 
     return listenfd;
 }
