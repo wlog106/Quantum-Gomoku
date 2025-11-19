@@ -3,12 +3,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <string.h>
+#include <unistd.h>
 
 #include <iostream>
 #include <algorithm>
 #include <string>
 #include <sstream>
-#include <unistd.h>
+
 #include <cerrno>
 #include <csignal>
 
