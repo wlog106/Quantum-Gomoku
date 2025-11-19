@@ -9,6 +9,10 @@ struct Room{
 
 };
 
+struct Fork_req{
+    
+};
+
 class Uid_generator{
     set<string> distributed_uid;
     string character_set = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -23,7 +27,17 @@ public:
                 uid += character_set[std::rand()%character_set.size()];
             }
 
-        }while(distributed_uid.find(uid)==distributed_uid.end());
+        }while(distributed_uid.find(uid)!=distributed_uid.end());
         return uid;
+    }
+    bool rm_uid(string uid){
+        auto it = distributed_uid.find(uid);
+        if(it==distributed_uid.end()){
+            return false;
+        }
+        else{
+            distributed_uid.erase(it);
+            return true;
+        }
     }
 };

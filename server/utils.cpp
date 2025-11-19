@@ -1,14 +1,14 @@
 #include "server.h"
 #include <cerrno>
-#include <fcntl.h>
-#include <netinet/in.h>
+#include <cstdio>
 #include <sys/epoll.h>
-#include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <unistd.h>
+
+#define cur_cmd cmd_q.front()
 using std::cout;
 using std::string;
+using std::queue;
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
     int n;
@@ -34,6 +34,23 @@ void Bind(int fd, const struct sockaddr *sa, socklen_t salen){
     if(TEMP_FAILURE_RETRY(bind(fd, sa, salen)) < 0){
         cout << "bind error\n";
         exit(1);
+    }
+}
+
+void Client_handler(int clifd, string &buf){
+    int cmd_id;
+    string cmd_info;
+    queue<string> cmd_q;
+    Read_commamd(clifd, buf, cmd_q);
+    while(!cmd_q.size()){
+        split_cmd(cur_cmd, &cmd_id, cmd_info);
+        if(cmd_id == C_create_new_account){
+            //create();
+        }
+        else if(cmd_id == C_login_to_server){
+
+        }
+        cmd_q.pop();
     }
 }
 
@@ -126,4 +143,11 @@ void sigchild(int signo){
         cout << "room with pid: " << pid << "terminated\n";
     }
     return;
+}
+
+void split_cmd(const string &cmd, int *cmd_id, string &cmd_info){
+    int i = 0;
+    while(cmd[i]!=' ') i++;
+    sscanf(cmd.substr(0, i).c_str(), "%d", cmd_id);
+    cmd_info = cmd.substr(i+1);
 }
