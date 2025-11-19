@@ -7,7 +7,7 @@ using std::string;
 
 /* 
     use epoll() to serve all waiting clients (i.e. who isn't in playing states).
-    use non-blocking accept to handle ECONNECTABORTED.
+    use non-blocking accept to handle ECONNECTABORTED & EWOULDBLOCK.
     set every accepted client sockfd to FD_CLOEXEC.
 
     *before fork(), parent should 
@@ -32,9 +32,8 @@ int main(int argc, char **argv){
     /* for establish connect */
     int                 listenfd, listenchlid, connfd;
     pid_t               childpid;
-    socklen_t           clilen;
     struct sockaddr_in  cliaddr, servaddr;
-    
+    socklen_t           clilen = sizeof(cliaddr);
 
     listenfd = Init_listenfd(&servaddr, sizeof(servaddr));
 
@@ -48,8 +47,15 @@ int main(int argc, char **argv){
 
     for( ; ; ){
         nfds = Epoll_wait(epollfd, events, MAX_EVENT);
-        while(nfds--){
-
+        for(int i=0; i<nfds; i++){
+            if(events[i].data.fd == listenfd){
+                connfd = Accept(listenfd, (SA*)&cliaddr, &clilen);
+                set_non_block(connfd);
+                set_close_exe(connfd);
+            }
+            else{
+                
+            }
         }
     }
 }

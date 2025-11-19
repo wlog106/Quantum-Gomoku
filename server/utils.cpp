@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 using std::cout;
+using std::string;
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
     int n;
@@ -93,6 +94,16 @@ int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen){
     Fcntl(listenfd, F_SETFL, flags | O_NONBLOCK);
 
     return listenfd;
+}
+
+void set_non_block(int fd){
+    int flags = Fcntl(fd, F_GETFL, 0);
+    Fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+}
+
+void set_close_exe(int fd){
+    int flags = Fcntl(fd, F_GETFL, 0);
+    Fcntl(fd, F_SETFL, flags | FD_CLOEXEC);
 }
 
 Sigfunc *Signal(int signo, Sigfunc *sighandler){
