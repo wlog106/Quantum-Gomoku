@@ -61,13 +61,6 @@ int Epoll_wait(int epollfd, struct epoll_event *events, int maxevents){
     return n;
 }
 
-int Fcntl(int fd, int cmd, int arg){
-	int	n;
-	if ( (n = fcntl(fd, cmd, arg)) < 0)
-		cout << "fcntl error\n";
-	return n;
-}
-
 void Listen(int fd, int backlog){
     if(TEMP_FAILURE_RETRY(listen(fd, backlog)) < 0){
         cout << "listen error\n";

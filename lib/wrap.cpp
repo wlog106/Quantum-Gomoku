@@ -12,6 +12,13 @@ void Connect(int fd, const struct sockaddr *sa, socklen_t salen){
     }
 }
 
+int Fcntl(int fd, int cmd, int arg){
+	int	n;
+	if ( (n = fcntl(fd, cmd, arg)) < 0)
+		cout << "fcntl error\n";
+	return n;
+}
+
 void Inet_pton(int family, const char *strptr, void *addrptr){
     int n;
     if( (n = inet_pton(family, strptr, addrptr)) < 0){
@@ -48,6 +55,21 @@ int Read_commamd(int fd, string &buf, queue<string> &commands){
     return command_count;
 }
 
+int Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout) {
+	int n;
+	if((n = select(nfds, readfds, writefds, exceptfds, timeout)) < 0){
+        cout << "select error" << endl;
+        exit(0);
+    }
+	return(n);
+}
+
+void Shutdown(int fd, int how) {
+	if (shutdown(fd, how) < 0){
+        cout << "shutdown error" << endl;
+    }
+}
+
 int Socket(int family, int type, int protocol){
     int n;
     if( (n = TEMP_FAILURE_RETRY(socket(family, type, protocol))) < 0){
@@ -55,6 +77,38 @@ int Socket(int family, int type, int protocol){
         exit(1);
     }
     return n;
+}
+
+void Pthread_create(pthread_t *tid, const pthread_attr_t *attr, void * (*func)(void *), void *arg){
+	int	n;
+	if ((n = pthread_create(tid, attr, func, arg)) == 0) return;
+	errno = n;
+	cout << "pthread_create error" << endl;
+    exit(1);
+}
+
+void Pthread_join(pthread_t tid, void **status){
+	int	n;
+	if((n = pthread_join(tid, status)) == 0) return;
+	errno = n;
+	cout << "pthread_join error" << endl;
+    exit(1);
+}
+
+void Pthread_mutex_lock(pthread_mutex_t *mptr) {
+	int	n;
+	if((n = pthread_mutex_lock(mptr)) == 0)return;
+	errno = n;
+	cout << "pthread_mutex_lock error" << endl;
+    exit(1);
+}
+
+void Pthread_mutex_unlock(pthread_mutex_t *mptr){
+	int	n;
+	if((n = pthread_mutex_unlock(mptr)) == 0) return;
+	errno = n;
+	cout << "pthread_mutex_unlock error" << endl;
+    exit(1);
 }
 
 void Write(int fd, void *ptr, size_t nbytes){

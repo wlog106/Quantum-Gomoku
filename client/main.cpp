@@ -12,19 +12,6 @@ int main(int argc, char **argv){
     servaddr.sin_port = htons(TEST_PORT);
     Inet_pton(AF_INET, argv[1], &servaddr.sin_addr);
 
-    //connect here
+    Connect(sockfd, (SA *) &servaddr, sizeof(servaddr));
 
-    int state = S_login;
-    while(state){
-        switch (state){
-        case S_login:
-            if(Login(sockfd)) state = S_op_select;
-            break;
-        
-        default:
-            break;
-        }
-    }
-
-    //disconnect here
 }

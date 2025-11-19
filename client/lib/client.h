@@ -12,7 +12,20 @@
 #define S_observer 7
 #define S_observing 8
 #define S_showresult 9
-
 //max-id = 10
 
+extern pthread_mutex_t ui_mutex;
+extern pthread_cond_t ui_cond;
+
+extern int client_state;
+extern pthread_mutex_t client_state_mutex;
+
+extern string account_input_box;
+extern pthread_mutex_t account_input_box_mutex;
+extern string password_input_box;
+extern pthread_mutex_t password_input_box_mutex;
+
+int get_state();
+
 int Login(int sockfd);
+void client_nonblocking_io(int sockfd);
