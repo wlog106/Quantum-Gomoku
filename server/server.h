@@ -3,8 +3,11 @@
 
 #define MAX_EVENT 10
 
+int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr);
+void Bind(int fd, const struct sockaddr *sa, socklen_t salen);
 int Epoll_create();
 void Epoll_ctl_add(int epollfd, int sockfd, struct epoll_event *ev);
+void Listen(int fd, int backlog);
 int Epoll_wait(int epollfd, struct epoll_event *events, int maxevents);
 int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen);
 void sigchild(int signo);

@@ -31,10 +31,7 @@
 
 typedef void Sigfunc(int);
 
-int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr);
-void Bind(int fd, const struct sockaddr *sa, socklen_t salen);
 void Inet_pton(int family, const char *strptr, void *addrptr);
-void Listen(int fd, int backlog);
 int Read_commamd(int fd, std::string &buf, std::queue<std::string> &commands);
 Sigfunc *Signal(int signo, Sigfunc *sighandler);
 int Socket(int domain, int type, int protocol);

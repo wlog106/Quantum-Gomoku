@@ -7,6 +7,33 @@
 #include <unistd.h>
 using std::cout;
 
+int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
+    int n;
+
+again:
+    if( (n = TEMP_FAILURE_RETRY(accept(fd, sa, salenptr))) < 0 ){
+        // ECONNABORTED: client abort before accept
+#ifdef EPROTO
+        if(errno == EPROTO || errno == ECONNABORTED)
+#else
+        if(errno == ECONNABORTED)
+#endif     
+            goto again;
+        else{
+            cout << "accept error\n";
+            exit(1);
+        }
+    }
+    return n;
+}
+
+void Bind(int fd, const struct sockaddr *sa, socklen_t salen){
+    if(TEMP_FAILURE_RETRY(bind(fd, sa, salen)) < 0){
+        cout << "bind error\n";
+        exit(1);
+    }
+}
+
 int Epoll_create(){
     int fd;
     if((fd = epoll_create1(0)) < 0){
@@ -30,6 +57,13 @@ int Epoll_wait(int epollfd, struct epoll_event *events, int maxevents){
         exit(1);
     }
     return n;
+}
+
+void Listen(int fd, int backlog){
+    if(TEMP_FAILURE_RETRY(listen(fd, backlog)) < 0){
+        cout << "listen error\n";
+        exit(1);
+    }
 }
 
 int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen){

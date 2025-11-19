@@ -5,33 +5,6 @@ using std::queue;
 using std::string;
 using std::stringstream;
 
-int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
-    int n;
-
-again:
-    if( (n = TEMP_FAILURE_RETRY(accept(fd, sa, salenptr))) < 0 ){
-        // ECONNABORTED: client abort before accept
-#ifdef EPROTO
-        if(errno == EPROTO || errno == ECONNABORTED)
-#else
-        if(errno == ECONNABORTED)
-#endif     
-            goto again;
-        else{
-            cout << "accept error\n";
-            exit(1);
-        }
-    }
-    return n;
-}
-
-void Bind(int fd, const struct sockaddr *sa, socklen_t salen){
-    if(TEMP_FAILURE_RETRY(bind(fd, sa, salen)) < 0){
-        cout << "bind error\n";
-        exit(1);
-    }
-}
-
 void Connect(int fd, const struct sockaddr *sa, socklen_t salen){
     if(TEMP_FAILURE_RETRY(connect(fd, sa, salen)) < 0){
         cout << "connect error\n";
@@ -47,13 +20,6 @@ void Inet_pton(int family, const char *strptr, void *addrptr){
     }
     else if(n == 0){
         cout << "(arg1) presentation error or doesn't match given address family\n";
-        exit(1);
-    }
-}
-
-void Listen(int fd, int backlog){
-    if(TEMP_FAILURE_RETRY(listen(fd, backlog)) < 0){
-        cout << "listen error\n";
         exit(1);
     }
 }
