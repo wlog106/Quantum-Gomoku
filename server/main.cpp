@@ -1,43 +1,55 @@
-#include "../lib/universal.h"
+#include "server.h"
 #include <csignal>
+#include <sys/epoll.h>
 #include <sys/select.h>
 using std::map;
 using std::string;
+
+/* 
+    use epoll() to serve all waiting clients (i.e. who isn't in playing states).
+    use non-blocking accept to handle ECONNECTABORTED.
+    set every accepted client sockfd to FD_CLOEXEC.
+
+    *before fork(), parent should 
+     1. turn off corresponding sockfds' FD_CLOEXEC option.
+     2. call sockpair() to create tunnel for IPC later.
+
+    *after fork(), parent should
+     1. reco
+
+    *after fork(), child should
+     1. call exec() to close all irrelevent sockfds (they were set to FD_CLOEXEC).
+*/
 
 int main(int argc, char **argv){
     /* store client data*/
     map<string, int>    sockfd_to_name;
     map<int, string>    name_to_sockfd;
-    /* for select */
-    int                 i, maxi, maxfd, nready;
-    fd_set              rest, allset;
+    /* for epoll*/
+    int                 nfds;
+    int                 epollfd;
+    struct epoll_event  ev, events[MAX_EVENT];
     /* for establish connect */
     int                 listenfd, listenchlid, connfd;
     pid_t               childpid;
     socklen_t           clilen;
     struct sockaddr_in  cliaddr, servaddr;
-    /* for signal handler */
-    Sigfunc             *kill_zombie;
+    
 
-    listenfd = Socket(AF_INET, SOCK_STREAM, 0);
+    listenfd = Init_listenfd(&servaddr, sizeof(servaddr));
 
-    bzero(&servaddr, sizeof(servaddr));
-    servaddr.sin_family       = AF_INET;
-    servaddr.sin_addr.s_addr  = htonl(INADDR_ANY);
-    servaddr.sin_port         = htons(TEST_PORT);
+    epollfd = Epoll_create();
 
-    Bind(listenfd, (SA *)&servaddr, sizeof(servaddr));
+    ev.events = EPOLLIN;
+    ev.data.fd = listenfd;
+    Epoll_ctl_add(epollfd, listenfd, &ev);
 
-    Listen(listenfd, LIS_BACKLOG);
-
-    Signal(SIGCHLD, kill_zombie);
-
-    maxfd = listenfd;
-    maxi = -1;
+    Signal(SIGCHLD, sigchild);
 
     for( ; ; ){
-        clilen = sizeof(cliaddr);
-        connfd = Accept(listenfd, (SA *)&cliaddr, &clilen);
+        nfds = Epoll_wait(epollfd, events, MAX_EVENT);
+        while(nfds--){
 
+        }
     }
 }

@@ -1,8 +1,8 @@
 #include "universal.h"
+#include <sys/epoll.h>
 using std::cout;
 using std::queue;
 using std::string;
-using std::vector;
 using std::stringstream;
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
