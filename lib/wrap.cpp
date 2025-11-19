@@ -41,6 +41,7 @@ int Read_commamd(int fd, string &buf, queue<string> &commands){
         cout << "read error\n";
         exit(0);
     }
+    read_buf[n] = 0;
     buf += read_buf;
 
     stringstream ss(buf);
