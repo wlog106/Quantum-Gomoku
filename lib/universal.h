@@ -34,6 +34,7 @@
 using std::cin;
 using std::cout;
 using std::endl;
+using std::flush;
 using std::string;
 using std::queue;
 using std::max;
@@ -49,6 +50,8 @@ int Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struc
 void Shutdown(int fd, int how);
 int Socket(int domain, int type, int protocol);
 void Pthread_create(pthread_t *tid, const pthread_attr_t *attr, void * (*func)(void *), void *arg);
+void Pthread_cond_signal(pthread_cond_t *cptr);
+void Pthread_cond_wait(pthread_cond_t *cptr, pthread_mutex_t *mptr);
 void Pthread_join(pthread_t tid, void **status);
 void Pthread_mutex_lock(pthread_mutex_t *mptr);
 void Pthread_mutex_unlock(pthread_mutex_t *mptr);

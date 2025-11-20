@@ -35,7 +35,7 @@ int Read_commamd(int fd, string &buf, queue<string> &commands){
 
     int command_count = 0;
 
-    size_t n;
+    int n;
     char read_buf[MAXLINE];
     if ((n = TEMP_FAILURE_RETRY(read(fd, read_buf, MAXLINE))) == -1){
         cout << "read error\n";
@@ -88,6 +88,22 @@ void Pthread_create(pthread_t *tid, const pthread_attr_t *attr, void * (*func)(v
     exit(1);
 }
 
+void Pthread_cond_signal(pthread_cond_t *cptr){
+	int	n;
+	if((n = pthread_cond_signal(cptr)) == 0) return;
+	errno = n;
+	cout << "pthread_cond_signal error" << endl;
+    exit(1);
+}
+
+void Pthread_cond_wait(pthread_cond_t *cptr, pthread_mutex_t *mptr){
+	int	n;
+	if((n = pthread_cond_wait(cptr, mptr)) == 0) return;
+	errno = n;
+	cout << "pthread_cond_wait error" << endl;
+    exit(1);
+}
+
 void Pthread_join(pthread_t tid, void **status){
 	int	n;
 	if((n = pthread_join(tid, status)) == 0) return;
@@ -113,7 +129,8 @@ void Pthread_mutex_unlock(pthread_mutex_t *mptr){
 }
 
 void Write(int fd, void *ptr, size_t nbytes){
-	if (TEMP_FAILURE_RETRY(write(fd, ptr, nbytes)) != nbytes){
+    size_t n;
+	if ((n = TEMP_FAILURE_RETRY(write(fd, ptr, nbytes))) != nbytes){
 		cout << "write error\n";
         exit(1);
     }
