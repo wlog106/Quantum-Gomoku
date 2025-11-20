@@ -2,7 +2,9 @@
 
 #define ALT_SCREEN_ON   "\x1b[?1049h"
 #define ALT_SCREEN_OFF  "\x1b[?1049l"
-#define CURSOR_SHOW    "\x1b[?25h"
+#define CLEAR_SCREEN    "\x1b[2J"
+#define CURSOR_SHOW     "\x1b[?25h"
+#define CURSOR_HOME     "\x1b[H"
 
 struct termios oldt, newt;
 
@@ -17,6 +19,6 @@ void set_terminal(){
 }
 
 void restore_terminal(){
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     cout << ALT_SCREEN_OFF << CURSOR_SHOW << flush;
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 }

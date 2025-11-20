@@ -2,3 +2,4 @@
 test
 *.d
 *.o
+client/main

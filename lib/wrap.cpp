@@ -31,6 +31,15 @@ void Inet_pton(int family, const char *strptr, void *addrptr){
     }
 }
 
+ssize_t Read(int fd, void *ptr, size_t nbytes){
+	ssize_t	n;
+	if((n = read(fd, ptr, nbytes)) == (ssize_t)-1){
+        cout << "read error" << endl;
+        exit(1);
+    }
+    return n;
+}
+
 int Read_commamd(int fd, string &buf, queue<string> &commands){
 
     int command_count = 0;
@@ -128,7 +137,7 @@ void Pthread_mutex_unlock(pthread_mutex_t *mptr){
     exit(1);
 }
 
-void Write(int fd, void *ptr, size_t nbytes){
+void Write(int fd, const void *ptr, size_t nbytes){
     size_t n;
 	if ((n = TEMP_FAILURE_RETRY(write(fd, ptr, nbytes))) != nbytes){
 		cout << "write error\n";

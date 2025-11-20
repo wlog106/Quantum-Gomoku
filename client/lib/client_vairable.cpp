@@ -11,6 +11,10 @@ pthread_cond_t ui_cond;
 bool ui_end = 0;
 string account_input_box;
 string password_input_box;
+string password_confirm_input_box;
+int choose_enter = 0;
+
+int std_handler_end[2];
 
 int get_state(){
     int state;
@@ -20,7 +24,7 @@ int get_state(){
     return state;
 }
 
-void change_state(int new_state){
+void set_state(int new_state){
     Pthread_mutex_lock(&client_state_mutex);
     client_state = new_state;
     Pthread_mutex_unlock(&client_state_mutex);
