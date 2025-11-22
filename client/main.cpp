@@ -1,9 +1,24 @@
 #include "lib/client.h"
 
+/*
+client termination:
+write pipe to std_handler and socket_reader(cause both of them block at select)
+std_handler -> change ui_end and wake ui up using signal -> write pipe to ui
+same as above: socket_reader -> socket_writer
+*/
+
 int main(int argc, char **argv){
-    pipe(std_handler_end);
+    pipe(ui_end_pipe);
+    pipe(std_handler_end_pipe);
+    pipe(socket_reader_end_pipe);
+    pipe(socket_writer_end_pipe);
     signal(SIGINT, [](int){
-        write(std_handler_end[1], "x", 1);
+        //use four write to terminate client
+        write(std_handler_end_pipe[1], "x", 1);
+        write(ui_end_pipe[1], "x", 1); //order does matter
+
+        write(socket_reader_end_pipe[1], "x", 1);
+        write(socket_writer_end_pipe[1], "x", 1); //order does matter
     });
 
     set_terminal();
