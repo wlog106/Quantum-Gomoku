@@ -1,5 +1,6 @@
 #include "../lib/universal.h"
 #include "../lib/command.h"
+#include "mariadb_api/mariadb_api.h"
 #include <sys/epoll.h>
 #include <fcntl.h>
 using std::string;
@@ -20,3 +21,6 @@ void set_close_exe(int fd);
 Sigfunc *Signal(int signo, Sigfunc *sighandler);
 void sigchild(int signo);
 void split_cmd(const string &cmd, int *cmd_id, string &cmd_info);
+
+bool Login(db_conn *db_handler, string &str);
+bool SignUp(db_conn *db_handler, string &str);
