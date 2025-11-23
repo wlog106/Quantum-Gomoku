@@ -8,7 +8,6 @@
 #define cur_cmd cmd_q.front()
 using std::cout;
 using std::string;
-using std::queue;
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr){
     int n;
@@ -34,23 +33,6 @@ void Bind(int fd, const struct sockaddr *sa, socklen_t salen){
     if(TEMP_FAILURE_RETRY(bind(fd, sa, salen)) < 0){
         cout << "bind error\n";
         exit(1);
-    }
-}
-
-void Client_handler(int clifd, string &buf){
-    int cmd_id;
-    string cmd_info;
-    queue<string> cmd_q;
-    Read_commamd(clifd, buf, cmd_q);
-    while(!cmd_q.size()){
-        split_cmd(cur_cmd, &cmd_id, cmd_info);
-        if(cmd_id == C_create_new_account){
-            //create();
-        }
-        else if(cmd_id == C_login_to_server){
-
-        }
-        cmd_q.pop();
     }
 }
 
