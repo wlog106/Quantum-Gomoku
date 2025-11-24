@@ -39,6 +39,7 @@ using std::string;
 using std::queue;
 using std::max;
 using std::min;
+using std::stringstream;
 
 typedef void Sigfunc(int);
 
