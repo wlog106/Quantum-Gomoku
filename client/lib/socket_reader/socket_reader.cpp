@@ -3,9 +3,8 @@
 
 
 void *socket_reader(void *vptr){
-    (void)vptr;
-    return NULL;
 
+    int sockfd = *(int*)vptr;
     string remain = "";
     queue<string> commands;
 

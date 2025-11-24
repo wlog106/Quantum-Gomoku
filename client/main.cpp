@@ -29,13 +29,15 @@ int main(int argc, char **argv){
     client_state = S_login_option;
 
     sockfd = start_connection(argv[1]);
+    int sockfd1 = sockfd;
+    int sockfd2 = sockfd;
     
     pthread_t tid_ui, tid_std, tid_socket_writer, tid_socket_reader;
 
     Pthread_create(&tid_ui  , NULL,             &ui, NULL);
     Pthread_create(&tid_std , NULL,  &stdin_handler, NULL);
-    Pthread_create(&tid_socket_writer, NULL, &socket_writer, NULL);
-    Pthread_create(&tid_socket_reader, NULL, &socket_reader, NULL);
+    Pthread_create(&tid_socket_writer, NULL, &socket_writer, &sockfd1);
+    Pthread_create(&tid_socket_reader, NULL, &socket_reader, &sockfd2);
 
     Pthread_join(tid_ui  , NULL);
     Pthread_join(tid_std , NULL);
