@@ -42,12 +42,10 @@ ssize_t Read(int fd, void *ptr, size_t nbytes){
 
 int Read_commamd(int fd, string &buf, queue<string> &commands){
 
-    int command_count = 0;
-
     int n;
     char read_buf[MAXLINE];
     if ((n = TEMP_FAILURE_RETRY(read(fd, read_buf, MAXLINE))) == -1){
-        cout << "read error\n";
+        cout << "haharead error\n";
         exit(0);
     }
     read_buf[n] = 0;
@@ -58,11 +56,10 @@ int Read_commamd(int fd, string &buf, queue<string> &commands){
     while(std::getline(ss, command, '\n')){
         if(!ss.eof()){
             commands.push(command);
-            command_count++;
         }
     }
     buf = command;
-    return command_count;
+    return n;
 }
 
 int Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout) {
