@@ -8,6 +8,10 @@ same as above: socket_reader -> socket_writer
 */
 
 int main(int argc, char **argv){
+    if (argc != 2){
+        cout << "usage: main <IPaddress>" << endl;
+        exit(0);
+    }
     pipe(ui_end_pipe);
     pipe(std_handler_end_pipe);
     pipe(socket_reader_end_pipe);
@@ -22,18 +26,21 @@ int main(int argc, char **argv){
     });
 
     set_terminal();
-    //sockfd = start_connection(argv[1]);
     client_state = S_login_option;
 
-    pthread_t tid_ui, tid_std, tid_sock;
+    sockfd = start_connection(argv[1]);
+    
+    pthread_t tid_ui, tid_std, tid_socket_writer, tid_socket_reader;
 
     Pthread_create(&tid_ui  , NULL,             &ui, NULL);
     Pthread_create(&tid_std , NULL,  &stdin_handler, NULL);
-    //Pthread_create(&tid_sock, NULL, &socket_handler, NULL);
+    Pthread_create(&tid_socket_writer, NULL, &socket_writer, NULL);
+    Pthread_create(&tid_socket_reader, NULL, &socket_reader, NULL);
 
     Pthread_join(tid_ui  , NULL);
     Pthread_join(tid_std , NULL);
-    //Pthread_join(tid_sock, NULL);
+    Pthread_join(tid_socket_writer, NULL);
+    Pthread_join(tid_socket_reader, NULL);
 
     restore_terminal();
     exit(0);
