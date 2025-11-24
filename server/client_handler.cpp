@@ -14,7 +14,7 @@ void client_handler(db_conn *db_handler, User &user)
     int cmd_id;
     string cmd_info;
     queue<string> cmd_q;
-    Read_commamd(user.sockfd, user.buffer, cmd_q);
+    Read_commamd(user.sockfd, user.rbuf, cmd_q);
     while(!cmd_q.size())
     {
         split_cmd(cur_cmd, &cmd_id, cmd_info);
