@@ -9,3 +9,8 @@
 #define CURSOR_SHOW    "\x1b[?25h"
 
 #define MOVE(row, col)  CSI << row << ";" << col << "H"
+
+//login page
+void login_option_ui();
+void login_with_account_ui();
+void creating_account_ui();

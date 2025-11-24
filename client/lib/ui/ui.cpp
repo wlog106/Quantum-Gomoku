@@ -3,7 +3,6 @@
 #include <unistd.h>
 
 
-
 void *ui(void *vptr){
     (void)vptr;
 
@@ -41,31 +40,13 @@ void *ui(void *vptr){
             */
             switch (client_state){
             case S_login_option:
-                cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE;
-                cout << "\x1b[1;38;5;226mWelcome to Quantum Gomoku!\n\x1b[0m" << flush;
-                cout << "\x1b[1mPress 1 to login\nPress 2 to create new account\x1b[0m" << flush;
+                login_option_ui();
                 break;
             case S_login_with_account:
-                cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[0m" << flush;
-                cout << ((choose_enter == 0) ? ">" : " ");
-                cout << "\x1b[1mAccount:\x1b[0m " << account_input_box << '\n';
-                cout << ((choose_enter == 1) ? ">" : " ");
-                cout << "\x1b[1mPassword:\x1b[0m ";
-                for(int i = 0; i < int(password_input_box.size()); i++) cout << "*";
-                cout << "\nPress Esc to leave\nPress enter to confirm\nPress up/down arrow to select" << flush;
+                login_with_account_ui();
                 break;
             case S_creating_account:
-                cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[0m" << flush;
-                cout << ((choose_enter == 0) ? ">" : " ");
-                cout << "\x1b[1mAccount:\x1b[0m " << account_input_box << '\n';
-                cout << ((choose_enter == 1) ? ">" : " ");
-                cout << "\x1b[1mPassword:\x1b[0m ";
-                for(int i = 0; i < int(password_input_box.size()); i++) cout << "*";
-                cout << '\n';
-                cout << ((choose_enter == 2) ? ">" : " ");
-                cout << "\x1b[1mPassword confirm:\x1b[0m ";
-                for(int i = 0; i < int(password_confirm_input_box.size()); i++) cout << "*";
-                cout << "\nPress Esc to leave\nPress enter to confirm\nPress up/down arrow to select" << flush;
+                creating_account_ui();
                 break;
             default:
                 break;

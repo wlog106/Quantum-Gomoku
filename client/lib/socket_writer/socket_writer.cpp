@@ -4,15 +4,15 @@
 
 void *socket_writer(void *vptr){
     (void)vptr;
-    return NULL;
 
+    fd_set rset, wset;
+    int maxfdp1 = max(sockfd, socket_writer_end_pipe[0]) + 1;
     while(true){
-        fd_set rset, wset;
+        
         FD_ZERO(&rset);
         FD_SET(socket_writer_end_pipe[0], &rset);
         FD_ZERO(&wset);
         FD_SET(sockfd, &wset);
-        int maxfdp1 = max(sockfd, socket_writer_end_pipe[0]) + 1;
         Select(maxfdp1, &rset, &wset, nullptr, nullptr);
         if(FD_ISSET(socket_writer_end_pipe[0], &rset)){
             char ch;
