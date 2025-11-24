@@ -80,7 +80,7 @@ string get_key(){
     else if(ch == 127){
         return "BACKSPACE";
     }
-    else if(ch == 13){
+    else if(ch == 10){
         return "ENTER";
     }
     else if(ch >= 33 && ch <= 126){

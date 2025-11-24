@@ -3,8 +3,8 @@
 
 
 void *socket_writer(void *vptr){
-    (void)vptr;
 
+    int sockfd = *(int*)vptr;
     fd_set rset, wset;
     int maxfdp1 = max(sockfd, socket_writer_end_pipe[0]) + 1;
     while(true){
