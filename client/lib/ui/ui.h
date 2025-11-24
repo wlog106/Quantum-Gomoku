@@ -1,3 +1,4 @@
+#pragma once
 #include "../client.h"
 
 #define CSI "\x1b["
