@@ -7,19 +7,33 @@ int sockfd;
 pthread_mutex_t sockfd_mutex;
 pthread_mutex_t client_state_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-pthread_mutex_t ui_mutex = PTHREAD_MUTEX_INITIALIZER; //lock everything about ui
-pthread_cond_t ui_cond;
-bool ui_end = 0;
-bool ui_new_info = 1;
-string account_input_box;
-string password_input_box;
-string password_confirm_input_box;
-int choose_enter = 0;
-
 pthread_mutex_t writer_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t writer_cond;
 bool writer_end = 0;
 queue<string> command_to_be_sent;
+
+/*
+--------------------
+start of ui variable
+--------------------
+*/
+pthread_mutex_t ui_mutex = PTHREAD_MUTEX_INITIALIZER; //lock everything about ui
+pthread_cond_t ui_cond;
+bool ui_end = 0;
+bool ui_new_info = 1;
+
+//login page
+string account_input_box;
+string password_input_box;
+string password_confirm_input_box;
+int login_err = 0;
+int choose_enter = 0;
+/*
+--------------------
+end of ui variable
+--------------------
+*/
+
 
 int std_handler_end_pipe[2];
 int ui_end_pipe[2];
