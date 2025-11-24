@@ -78,6 +78,13 @@ int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen){
     servaddr->sin_addr.s_addr  = htonl(INADDR_ANY);
     servaddr->sin_port         = htons(TEST_PORT);
 
+    int opt = 1;
+	if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+		fprintf(stderr, "setsockopt(SO_REUSEADDR) failed");
+		close(listenfd);
+		exit(1);
+	}
+
     Bind(listenfd, (SA *)servaddr, salen);
 
     Listen(listenfd, LIS_BACKLOG);

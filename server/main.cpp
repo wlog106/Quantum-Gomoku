@@ -1,5 +1,6 @@
 #include "server.h"
 #include <csignal>
+#include <cstdio>
 #include <sys/epoll.h>
 #include <sys/select.h>
 using std::map;
@@ -59,10 +60,14 @@ int main(int argc, char **argv){
                 ev.data.fd = connfd;
                 Epoll_ctl_add(epollfd, connfd, &ev);
                 cli.insert({connfd, User(connfd, US_ANONYMOUS)});
+                printf("client with fd: %d is connected.\n", connfd);
             }
-            else{
-                /* how to cope with fork() request? */
+            else if(evtype & EPOLLIN){
+                printf("client with fd: %d is readable.\n", evfd);
                 client_handler(db_handler, (cli.find(evfd))->second);
+            }
+            else if(evtype & EPOLLOUT){
+                //printf("client with fd: %d is writable", evfd);
             }
         }
     }

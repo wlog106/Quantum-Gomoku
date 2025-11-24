@@ -6,6 +6,7 @@
 using std::string;
 
 #define evfd events[i].data.fd
+#define evtype events[i].events
 
 #define MAX_EVENT 10
 #define MAX_CLIENT 50
@@ -19,7 +20,7 @@ public:
     string  name;
     int     state;
     int     elo;
-    string  buffer;
+    string  rbuf, wbuf;
     User();
     User(int sockfd, int state);
 };
