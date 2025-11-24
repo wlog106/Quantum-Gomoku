@@ -45,7 +45,7 @@ ${CLI_TARGET} : ${CLI_OBJS}
 -include $(SERV_DEP)
 -include $(CLI_DEP)
 
-all: clean create_dir_all ${SERV_TARGET} ${CLI_TARGET}
+all: create_dir_all ${SERV_TARGET} ${CLI_TARGET}
 
 client: clean create_dir_cli ${CLI_TARGET}
 
