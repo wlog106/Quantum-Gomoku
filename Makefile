@@ -51,8 +51,6 @@ client: create_dir_cli ${CLI_TARGET}
 
 server: create_dir_serv ${SERV_TARGET}
 
-clean: clean
-
 create_dir_all: 
 	mkdir -p ${DIRS}
 
