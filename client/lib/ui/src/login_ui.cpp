@@ -16,7 +16,7 @@ void login_with_account_ui(){
     cout << "\x1b[1mPassword:\x1b[0m ";
     for(int i = 0; i < int(password_input_box.size()); i++) cout << "*";
     cout << "\nPress Esc to leave\nPress enter to confirm\nPress up/down arrow to select" << flush;
-}           
+}
 
 void creating_account_ui(){
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[0m" << flush;
