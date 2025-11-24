@@ -14,6 +14,10 @@
  * The output is a hexadecimal string of 65 characters.
  * The last character will be the null-character.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 void sha256_hex(const void *src, size_t n_bytes, char *dst_hex65);
 
 void sha256_bytes(const void *src, size_t n_bytes, void *dst_bytes32);
@@ -30,5 +34,9 @@ void sha256_init(struct sha256 *sha);
 void sha256_append(struct sha256 *sha, const void *data, size_t n_bytes);
 void sha256_finalize_hex(struct sha256 *sha, char *dst_hex65);
 void sha256_finalize_bytes(struct sha256 *sha, void *dst_bytes32);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
