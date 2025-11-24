@@ -5,3 +5,4 @@ test
 client/main
 build
 qg_server
+qg_client
