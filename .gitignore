@@ -3,3 +3,5 @@ test
 *.d
 *.o
 client/main
+build
+qg_server
