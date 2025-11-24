@@ -12,38 +12,33 @@ int main(int argc, char **argv){
         cout << "usage: main <IPaddress>" << endl;
         exit(0);
     }
-    pipe(ui_end_pipe);
-    pipe(std_handler_end_pipe);
-    pipe(socket_reader_end_pipe);
-    pipe(socket_writer_end_pipe);
-    signal(SIGINT, [](int){
-        //use four write to terminate client
-        write(std_handler_end_pipe[1], "x", 1);
-        write(ui_end_pipe[1], "x", 1); //order does matter
+    pipe(client_end_pipe);
+    pthread_t tid_end;
+    Pthread_create(&tid_end, NULL, &terminator, NULL);
 
-        write(socket_reader_end_pipe[1], "x", 1);
-        write(socket_writer_end_pipe[1], "x", 1); //order does matter
+    signal(SIGINT, [](int){
+        write(client_end_pipe[1], "x", 1);
     });
 
     set_terminal();
     client_state = S_login_option;
 
     sockfd = start_connection(argv[1]);
-    int sockfd1 = sockfd;
-    int sockfd2 = sockfd;
     
     pthread_t tid_ui, tid_std, tid_socket_writer, tid_socket_reader;
 
     Pthread_create(&tid_ui  , NULL,             &ui, NULL);
     Pthread_create(&tid_std , NULL,  &stdin_handler, NULL);
-    Pthread_create(&tid_socket_writer, NULL, &socket_writer, &sockfd1);
-    Pthread_create(&tid_socket_reader, NULL, &socket_reader, &sockfd2);
+    Pthread_create(&tid_socket_writer, NULL, &socket_writer, NULL);
+    Pthread_create(&tid_socket_reader, NULL, &socket_reader, NULL);
 
     Pthread_join(tid_ui  , NULL);
     Pthread_join(tid_std , NULL);
     Pthread_join(tid_socket_writer, NULL);
     Pthread_join(tid_socket_reader, NULL);
+    Pthread_join(tid_end, NULL);
 
+    shutdown(sockfd, SHUT_RDWR);
     restore_terminal();
     exit(0);
 }

@@ -1,10 +1,11 @@
 #include "client.h"
 #include <pthread.h>
+#include <sys/select.h>
 
 
 int client_state;
 int sockfd;
-pthread_mutex_t sockfd_mutex;
+pthread_mutex_t sockfd_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t client_state_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 pthread_mutex_t writer_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -34,11 +35,31 @@ end of ui variable
 --------------------
 */
 
-
+pthread_mutex_t endfd_mutex = PTHREAD_MUTEX_INITIALIZER;
+int client_end_pipe[2];
 int std_handler_end_pipe[2];
 int ui_end_pipe[2];
 int socket_reader_end_pipe[2];
 int socket_writer_end_pipe[2];
+
+void *terminator(void *vptr){
+    pipe(ui_end_pipe);
+    pipe(std_handler_end_pipe);
+    pipe(socket_reader_end_pipe);
+    pipe(socket_writer_end_pipe);
+    
+    fd_set set;
+    FD_ZERO(&set);
+    FD_SET(client_end_pipe[0], &set);
+    Select(client_end_pipe[0]+1, &set, nullptr, nullptr, nullptr);
+    char ch;
+    Read(client_end_pipe[0], &ch, 1);
+    write(std_handler_end_pipe[1], "x", 1);
+    write(ui_end_pipe[1], "x", 1); //order does matter
+    write(socket_reader_end_pipe[1], "x", 1);
+    write(socket_writer_end_pipe[1], "x", 1); //order does matter
+    return NULL;
+}
 
 int get_state(){
     int state;
@@ -46,6 +67,22 @@ int get_state(){
     state = client_state;
     Pthread_mutex_unlock(&client_state_mutex);
     return state;
+}
+
+int get_sockfd(){
+    int sockfd;
+    Pthread_mutex_lock(&sockfd_mutex);
+    sockfd = client_state;
+    Pthread_mutex_unlock(&sockfd_mutex);
+    return sockfd;
+}
+
+int get_endfd(int type){
+    int endfd;
+    Pthread_mutex_lock(&endfd_mutex);
+    endfd = client_end_pipe[type];
+    Pthread_mutex_unlock(&endfd_mutex);
+    return endfd;
 }
 
 void set_state(int new_state){

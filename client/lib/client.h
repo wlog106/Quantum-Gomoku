@@ -50,12 +50,14 @@ end of ui variable
 /*
 end pipe
 */
+extern pthread_mutex_t endfd_mutex;
+extern int client_end_pipe[2];
 extern int std_handler_end_pipe[2];
 extern int ui_end_pipe[2];
 extern int socket_reader_end_pipe[2];
 extern int socket_writer_end_pipe[2];
 
-
+void *terminator(void *vptr);
 void *stdin_handler(void *vptr);
 void *ui(void *vptr);
 void *socket_reader(void *vptr);
@@ -63,6 +65,8 @@ void *socket_writer(void *vptr);
 
 void set_state(int new_state);
 int  get_state();
+int  get_endfd(int type);
+int  get_sockfd();
 
 int  start_connection(char* addr);
 
