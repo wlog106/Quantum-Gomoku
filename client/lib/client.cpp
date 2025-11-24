@@ -35,7 +35,6 @@ end of ui variable
 --------------------
 */
 
-pthread_mutex_t endfd_mutex = PTHREAD_MUTEX_INITIALIZER;
 int client_end_pipe[2];
 int std_handler_end_pipe[2];
 int ui_end_pipe[2];
@@ -75,14 +74,6 @@ int get_sockfd(){
     sockfd = client_state;
     Pthread_mutex_unlock(&sockfd_mutex);
     return sockfd;
-}
-
-int get_endfd(int type){
-    int endfd;
-    Pthread_mutex_lock(&endfd_mutex);
-    endfd = client_end_pipe[type];
-    Pthread_mutex_unlock(&endfd_mutex);
-    return endfd;
 }
 
 void set_state(int new_state){
