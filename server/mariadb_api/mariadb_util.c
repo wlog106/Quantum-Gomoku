@@ -2,7 +2,6 @@
 #include <mariadb/mysql.h>
 #include <stdlib.h>
 
-
 db_conn *db_init()
 {
     db_conn *db_handler = (db_conn *)malloc(sizeof(db_conn));

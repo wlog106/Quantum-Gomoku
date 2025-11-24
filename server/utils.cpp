@@ -110,7 +110,8 @@ Sigfunc *Signal(int signo, Sigfunc *sighandler){
     return original_action.sa_handler;
 }
 
-void sigchild(int signo){
+void sigchild(int signo)
+{
     pid_t pid;
     int stat;
 
@@ -120,9 +121,17 @@ void sigchild(int signo){
     return;
 }
 
-void split_cmd(const string &cmd, int *cmd_id, string &cmd_info){
+void split_cmd(
+    const string &cmd, 
+    int *cmd_id, 
+    string &cmd_info
+){
     int i = 0;
     while(cmd[i]!=' ') i++;
     sscanf(cmd.substr(0, i).c_str(), "%d", cmd_id);
     cmd_info = cmd.substr(i+1);
+}
+
+bool validator(int clifd, int cmd_id){
+    return 1;
 }
