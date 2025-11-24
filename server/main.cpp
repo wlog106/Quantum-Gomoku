@@ -23,9 +23,8 @@ using std::string;
 
 int main(int argc, char **argv){
     /* store client data*/
-    map<string, int>    sockfd_to_name;
-    map<int, string>    name_to_sockfd;
-    map<int, string>    clibuf;
+    map<int, User>      cli;
+    db_conn             *db_handler;
     /* for epoll*/
     int                 nfds;
     int                 epollfd;
@@ -35,6 +34,8 @@ int main(int argc, char **argv){
     pid_t               childpid;
     struct sockaddr_in  cliaddr, servaddr;
     socklen_t           clilen = sizeof(cliaddr);
+
+    db_handler = db_init();
 
     listenfd = Init_listenfd(&servaddr, sizeof(servaddr));
 
@@ -46,21 +47,22 @@ int main(int argc, char **argv){
 
     Signal(SIGCHLD, sigchild);
 
+    printf("initialize done\n");
     for( ; ; ){
         nfds = Epoll_wait(epollfd, events, MAX_EVENT);
         for(int i=0; i<nfds; i++){
-            if(events[i].data.fd == listenfd){
+            if(evfd == listenfd){
                 connfd = Accept(listenfd, (SA*)&cliaddr, &clilen);
                 set_non_block(connfd);
                 set_close_exe(connfd);
                 ev.events = EPOLLIN | EPOLLOUT;
                 ev.data.fd = connfd;
                 Epoll_ctl_add(epollfd, connfd, &ev);
+                cli.insert({connfd, User(connfd, US_ANONYMOUS)});
             }
             else{
                 /* how to cope with fork() request? */
-                Client_handler(events[i].data.fd, 
-                         (clibuf.find(events[i].data.fd))->second);
+                client_handler(db_handler, (cli.find(evfd))->second);
             }
         }
     }
