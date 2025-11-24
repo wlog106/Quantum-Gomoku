@@ -45,11 +45,13 @@ ${CLI_TARGET} : ${CLI_OBJS}
 -include $(SERV_DEP)
 -include $(CLI_DEP)
 
-all: clean create_dir_all ${SERV_TARGET} ${CLI_TARGET}
+all: create_dir_all ${SERV_TARGET} ${CLI_TARGET}
 
-client: clean create_dir_cli ${CLI_TARGET}
+client: create_dir_cli ${CLI_TARGET}
 
-server: clean create_dir_serv ${SERV_TARGET}
+server: create_dir_serv ${SERV_TARGET}
+
+clean: clean
 
 create_dir_all: 
 	mkdir -p ${DIRS}
