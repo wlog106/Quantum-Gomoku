@@ -1,8 +1,10 @@
 /*
     TABLE: users>
     attributes:
+        id:         INT AUTO_INCREMENT PRIMARY
         name:       string <-> VARCHAR(50) UNIQUE NOT NULL
         passwd:     string <-> CHAR(64) NOT NULL
+        create_at   TIMESTAMP
         ...
 
 */
@@ -49,6 +51,12 @@ unsigned int Mysql_stmt_execute(MYSQL_STMT *stmt);
 
 /*-----------------mariadb_util--------------------*/
 
+// wrap C api endpoint with `extern "C"` since C++ code would call it 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 db_conn *db_init();
 
 /* add new user */
@@ -64,3 +72,7 @@ unsigned int db_get_hash(
     char *username, 
     char *passwd_hash
 );
+
+#ifdef __cplusplus
+}
+#endif
