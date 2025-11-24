@@ -40,6 +40,8 @@ using std::queue;
 using std::max;
 using std::min;
 using std::stringstream;
+using std::pair;
+using std::make_pair;
 
 typedef void Sigfunc(int);
 

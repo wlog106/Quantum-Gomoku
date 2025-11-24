@@ -3,8 +3,9 @@
 
 
 void *socket_reader(void *vptr){
+    (void)vptr;
 
-    int sockfd = *(int*)vptr;
+    int sockfd = get_sockfd();
     string remain = "";
     queue<string> commands;
 
@@ -32,14 +33,16 @@ void *socket_reader(void *vptr){
             /*process command*/
             while(commands.size()){
                 state = get_state();
-                string command = commands.front();
-                commands.pop();
+                string &command = commands.front();
                 switch (state) {
                     case S_login_with_account:
-
+                        login_with_account_recv(command);
+                    case S_creating_account:
+                        creating_account_recv(command);
                     default:
                     break;
                 }
+                commands.pop();
             }
             
         }
