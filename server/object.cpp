@@ -1,3 +1,4 @@
+#include "server.h"
 #include <set>
 #include <string>
 #include <ctime>
@@ -5,9 +6,16 @@
 using std::string;
 using std::set;
 
-struct Room{
+typedef struct {
 
-};
+} Room;
+
+
+User::User(){}
+User::User(int sockfd, int state){
+    this->sockfd = sockfd;
+    this->state = state;
+}
 
 struct Fork_req{
     
