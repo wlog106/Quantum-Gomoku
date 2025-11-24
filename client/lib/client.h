@@ -50,6 +50,7 @@ end of ui variable
 /*
 end pipe
 */
+#define CLOSE_CLIENT() write(client_end_pipe[1], "x", 1)
 extern int client_end_pipe[2];
 extern int std_handler_end_pipe[2];
 extern int ui_end_pipe[2];
