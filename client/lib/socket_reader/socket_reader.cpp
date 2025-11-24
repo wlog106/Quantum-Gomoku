@@ -11,6 +11,7 @@ void *socket_reader(void *vptr){
 
     fd_set rset;
     int maxfdp1 = max(socket_reader_end_pipe[0], sockfd) + 1;
+    int state;
     while(true){
         
         FD_ZERO(&rset);
@@ -30,6 +31,18 @@ void *socket_reader(void *vptr){
         if(FD_ISSET(sockfd, &rset)){
             Read_commamd(sockfd, remain, commands);
             /*process command*/
+            while(commands.size()){
+                state = get_state();
+                string command = commands.front();
+                commands.pop();
+                switch (state) {
+                    case S_login_with_account:
+
+                    default:
+                    break;
+                }
+            }
+            
         }
     }
     return NULL;
