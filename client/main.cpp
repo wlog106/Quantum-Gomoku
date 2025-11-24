@@ -17,13 +17,13 @@ int main(int argc, char **argv){
     Pthread_create(&tid_end, NULL, &terminator, NULL);
 
     signal(SIGINT, [](int){
-        write(client_end_pipe[1], "x", 1);
+        CLOSE_CLIENT();
     });
 
-    set_terminal();
     client_state = S_login_option;
-
     sockfd = start_connection(argv[1]);
+
+    set_terminal();
     
     pthread_t tid_ui, tid_std, tid_socket_writer, tid_socket_reader;
 
