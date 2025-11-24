@@ -54,17 +54,21 @@ void login_with_account_std(const string &key){
         unlock_ui();
     }
     else if(key == "ENTER"){
-        if(account_input_box.empty() || password_input_box.empty()){
+        lock_ui();
+        string account = account_input_box;
+        string password = password_input_box;
+        string password_confirm = password_confirm_input_box;
+        unlock_ui();
+        if(account.empty() || password.empty()){
             lock_ui();
             login_err = 1;
             signal_ui();
             unlock_ui();
         }
         else{
-            const char* password = password_input_box.c_str();
             char hex[SHA256_HEX_SIZE];
-            sha256_hex(password, strlen(password), hex);
-            string command = std::to_string(C_login_to_server) + " " + account_input_box + " " + hex + "\n";
+            sha256_hex(password.c_str(), password.size(), hex);
+            string command = std::to_string(C_login_to_server) + " " + account + " " + hex + "\n";
             lock_writer();
             command_to_be_sent.push(command);
             signal_writer();
@@ -127,23 +131,27 @@ void creating_account_std(const string &key){
         unlock_ui();
     }
     else if(key == "ENTER"){
-        if(account_input_box.empty() || password_input_box.empty() || password_confirm_input_box.empty()){
+        lock_ui();
+        string account = account_input_box;
+        string password = password_input_box;
+        string password_confirm = password_confirm_input_box;
+        unlock_ui();
+        if(account.empty() || password.empty() || password_confirm.empty()){
             lock_ui();
             login_err = 1;
             signal_ui();
             unlock_ui();
         }
-        else if(password_input_box != password_confirm_input_box){
+        else if(password != password_confirm){
             lock_ui();
             login_err = 2;
             signal_ui();
             unlock_ui();
         }
         else{
-            const char* password = password_input_box.c_str();
             char hex[SHA256_HEX_SIZE];
-            sha256_hex(password, strlen(password), hex);
-            string command = std::to_string(C_create_new_account) + " " + account_input_box + " " + hex + "\n";
+            sha256_hex(password.c_str(), password.size(), hex);
+            string command = std::to_string(C_create_new_account) + " " + account + " " + hex + "\n";
             lock_writer();
             command_to_be_sent.push(command);
             signal_writer();
