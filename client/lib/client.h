@@ -55,7 +55,12 @@ void reset_login_ui();
 
 //select page
 extern int opselect_option;
-extern int opselect_reply;
+typedef enum{
+    OSR_no_error,
+    OSR_waiting
+}opselect_reply_t;
+extern opselect_reply_t opselect_reply;
+void reset_opselect_ui();
 /*
 --------------------
 end of ui variable

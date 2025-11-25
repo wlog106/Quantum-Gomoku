@@ -41,7 +41,12 @@ void reset_login_ui(){
 
 //select page
 int opselect_option = 0;
-int select_reply = 0;
+opselect_reply_t select_reply = OSR_no_error;
+void reset_opselect_ui(){
+    opselect_option = 0;
+    select_reply = OSR_no_error;
+    return;
+}
 /*
 --------------------
 end of ui variable
