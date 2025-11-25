@@ -16,6 +16,8 @@
 
 typedef struct {
     char passwd_hash[65];
+    unsigned long recvlen;
+    my_bool is_null;
 } db_response;
 
 typedef struct{
@@ -26,6 +28,8 @@ typedef struct{
 } db_conn;
 
 /*-----------------mariadb_wrap--------------------*/
+
+unsigned int Mysql_commit(MYSQL *conn);
 
 void Mysql_real_connect(
     MYSQL *conn, 

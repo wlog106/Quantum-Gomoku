@@ -1,6 +1,17 @@
 #include "mariadb_api.h"
 #include <mariadb/mysql.h>
 #include <stdint.h>
+#include <stdio.h>
+
+unsigned int Mysql_commit(MYSQL *conn)
+{
+    if(mysql_commit(conn)!=0){
+        fprintf(stderr, "Error: code: %u, desc: %s\n",
+                mysql_errno(conn), mysql_error(conn));
+        return 1;
+    }
+    return 0;
+}
 
 void Mysql_real_connect(
     MYSQL *conn, 
@@ -56,6 +67,8 @@ void Mysql_stmt_bind_result(MYSQL_STMT *stmt, MYSQL_BIND *bnd)
                 mysql_stmt_errno(stmt), mysql_stmt_error(stmt));
         exit(1);
     }
+        //fprintf(stderr, "?Error: code: %u, desc: %s\n",
+                //mysql_stmt_errno(stmt), mysql_stmt_error(stmt));
 }
 
 unsigned int Mysql_stmt_execute(MYSQL_STMT *stmt)

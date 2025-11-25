@@ -1,6 +1,10 @@
 #include "mariadb_api.h"
 #include <mariadb/mysql.h>
+#include <stdio.h>
 #include <stdlib.h>
+
+static unsigned long len = 8;
+static my_bool name_null = 1;
 
 db_conn *db_init()
 {
@@ -16,8 +20,8 @@ db_conn *db_init()
     Mysql_real_connect(db_handler->conn, host, user, passwd, db);
 
     /* initialize statement handlers */
-    const char *sql_add_user = "SELECT passwd FROM users WHERE name = ?;";
-    const char *sql_get_hash = "INSERT INTO users (name, passwd) VALUES (?, ?);";
+    const char *sql_add_user = "INSERT INTO users (name, passwd) VALUES (?, ?);";
+    const char *sql_get_hash = "SELECT passwd FROM users WHERE name = '?';";
     db_handler->stmt_add_user = Mysql_stmt_init(db_handler->conn);
     db_handler->stmt_get_hash = Mysql_stmt_init(db_handler->conn);
     Mysql_stmt_prepare(
@@ -37,9 +41,10 @@ db_conn *db_init()
     db_handler->res_info = (db_response *)malloc(sizeof(db_response));
     bind_result[0].buffer_type     = MYSQL_TYPE_STRING;
     bind_result[0].buffer          = db_handler->res_info->passwd_hash;
-    bind_result[0].buffer_length   = 65;
-    bind_result[0].length          = NULL;
-
+    bind_result[0].buffer_length   = sizeof(db_handler->res_info->passwd_hash);
+    bind_result[0].length          = &len;
+    bind_result[0].is_null         = &name_null;
+    Mysql_stmt_bind_result(db_handler->stmt_get_hash, bind_result);
     return db_handler;
 }
 
@@ -51,12 +56,17 @@ unsigned int db_add_user(
     unsigned int error = 0;
     MYSQL_BIND bind_param[2];
     memset(bind_param, 0, 2*sizeof(MYSQL_BIND));
-    bind_param[0].buffer_type = MYSQL_TYPE_VAR_STRING;
-    bind_param[0].buffer      = username;
-    bind_param[1].buffer_type = MYSQL_TYPE_STRING;
-    bind_param[1].buffer      = passwd_hash;
+    bind_param[0].buffer_type   = MYSQL_TYPE_VAR_STRING;
+    bind_param[0].buffer        = username;
+    bind_param[0].buffer_length = strlen(username);
+    bind_param[1].buffer_type   = MYSQL_TYPE_STRING;
+    bind_param[1].buffer        = passwd_hash;
+    bind_param[1].buffer_length = strlen(passwd_hash);
     error |= Mysql_stmt_bind_param(db_handler->stmt_add_user, bind_param);
     error |= Mysql_stmt_execute(db_handler->stmt_add_user);
+    mysql_stmt_free_result(db_handler->stmt_add_user);
+    mysql_stmt_reset(db_handler->stmt_add_user);
+    error |= Mysql_commit(db_handler->conn);
     return error;
 }
 
@@ -70,8 +80,17 @@ unsigned int db_get_hash(
     memset(bind_param, 0, sizeof(MYSQL_BIND));
     bind_param[0].buffer_type = MYSQL_TYPE_VAR_STRING;
     bind_param[0].buffer      = username;
+    bind_param[0].buffer_length = strlen(username);
+    printf("name: %s\n", username);
+    db_handler->res_info->recvlen = 3;
+    printf("name len: %lu\n", len);
     error |= Mysql_stmt_bind_param(db_handler->stmt_get_hash, bind_param);
     error |= Mysql_stmt_execute(db_handler->stmt_get_hash);
-    mysql_stmt_fetch(db_handler->stmt_get_hash);
+    error |= (mysql_stmt_fetch(db_handler->stmt_get_hash) != 0);
+    error |= (mysql_stmt_fetch(db_handler->stmt_get_hash) != MYSQL_NO_DATA);
+    printf("name len: %lu\n", len);
+    if(name_null) printf("name is null\n");
+    mysql_stmt_free_result(db_handler->stmt_get_hash);
+    mysql_stmt_reset(db_handler->stmt_get_hash);
     return error;
 }
