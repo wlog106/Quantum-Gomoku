@@ -1,6 +1,7 @@
 #include "server.h"
 #include <csignal>
 #include <cstdio>
+#include <cstring>
 #include <sys/epoll.h>
 #include <sys/select.h>
 using std::map;
@@ -64,15 +65,30 @@ int main(int argc, char **argv){
             }
             else if(evtype & EPOLLIN){
                 printf("client with fd: %d is readable.\n", evfd);
-                if(client_handler(db_handler, (cli.find(evfd))->second)==0)
+                User *cur_usr = &(cli.find(evfd))->second;
+                int n = client_handler(db_handler, cur_usr);
+                if(n == CLT_SHUTDOWN)
                 {
                     printf("client with fd: %d won't send any command\n", evfd);
                     epoll_ctl(epollfd, EPOLL_CTL_DEL, evfd, events);
                 }
+                else if(n == CLT_CAN_WRITE){
+                    ev.events = EPOLLIN | EPOLLOUT;
+                    ev.data.fd = cur_usr->sockfd;
+                    epoll_ctl(epollfd, EPOLL_CTL_MOD, cur_usr->sockfd, &ev);
+                }
             }
-            //else if(evtype & EPOLLOUT){
-                //printf("client with fd: %d is writable", evfd);
-            //}
+            else if(evtype & EPOLLOUT){
+                printf("client with fd: %d is writable\n", evfd);
+                User *cur_usr = &(cli.find(evfd))->second;
+                printf("send %s", cur_usr->wbuf.c_str());
+                Write(evfd, 
+                      cur_usr->wbuf.c_str(), 
+                      strlen(cur_usr->wbuf.c_str()));
+                ev.events = EPOLLIN;
+                ev.data.fd = cur_usr->sockfd;
+                epoll_ctl(epollfd, EPOLL_CTL_MOD, cur_usr->sockfd, &ev);
+            }
         }
     }
 }

@@ -14,6 +14,9 @@ using std::string;
 
 #define US_ANONYMOUS 0
 
+#define CLT_SHUTDOWN 500
+#define CLT_CAN_WRITE 501
+
 class User
 {
 public:
@@ -28,7 +31,7 @@ public:
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr);
 void Bind(int fd, const struct sockaddr *sa, socklen_t salen);
-int client_handler(db_conn *db_handler, User &user);
+int client_handler(db_conn *db_handler, User *user);
 int Epoll_create();
 void Epoll_ctl_add(int epollfd, int sockfd, struct epoll_event *ev);
 int Epoll_wait(int epollfd, struct epoll_event *events, int maxevents);
@@ -40,6 +43,6 @@ Sigfunc *Signal(int signo, Sigfunc *sighandler);
 void sigchild(int signo);
 
 bool Login(db_conn *db_handler, stringstream &str);
-bool SignUp(db_conn *db_handler, stringstream &str);
+unsigned int SignUp(db_conn *db_handler, stringstream &str);
 
 bool validator(int clifd, int cmd_id);
