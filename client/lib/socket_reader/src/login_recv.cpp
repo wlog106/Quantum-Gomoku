@@ -7,6 +7,7 @@ void login_with_account_recv(const string &command){
     switch (cmd_id) {
         case C_account_does_not_exist:
             lock_ui();
+            account_input_box = "";
             login_err = LE_account_does_not_exist;
             signal_ui();
             unlock_ui();
@@ -19,6 +20,7 @@ void login_with_account_recv(const string &command){
         break;
         case C_already_login:
             lock_ui();
+            account_input_box = "";
             login_err = LE_already_login;
             signal_ui();
             unlock_ui();
@@ -41,6 +43,7 @@ void creating_account_recv(const string &command){
     switch (cmd_id) {
         case C_account_already_exist:
             lock_ui();
+            account_input_box = "";
             login_err = LE_account_already_exist;
             signal_ui();
             unlock_ui();

@@ -1,6 +1,5 @@
 #include "../stdin_handler.h"
 #include "sha256.h"
-#include <string>
 
 void login_option_std(const string &key){
     if(key == "1"){
@@ -53,7 +52,6 @@ void login_with_account_std(const string &key){
         lock_ui();
         string account = account_input_box;
         string password = password_input_box;
-        string password_confirm = password_confirm_input_box;
         unlock_ui();
         if(account.empty() || password.empty()){
             lock_ui();
@@ -67,6 +65,7 @@ void login_with_account_std(const string &key){
             string command = std::to_string(C_login_to_server) + " " + account + " " + hex + "\n";
             lock_ui();
             login_err = LE_waiting;
+            password_input_box = "";
             signal_ui();
             unlock_ui();
             lock_writer();
@@ -149,6 +148,8 @@ void creating_account_std(const string &key){
             sha256_hex(password.c_str(), password.size(), hex);
             string command = std::to_string(C_create_new_account) + " " + account + " " + hex + "\n";
             lock_ui();
+            password_input_box = "";
+            password_confirm_input_box = "";
             login_err = LE_waiting;
             signal_ui();
             unlock_ui();
