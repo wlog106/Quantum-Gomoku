@@ -65,6 +65,10 @@ void login_with_account_std(const string &key){
             char hex[SHA256_HEX_SIZE];
             sha256_hex(password.c_str(), password.size(), hex);
             string command = std::to_string(C_login_to_server) + " " + account + " " + hex + "\n";
+            lock_ui();
+            login_err = LE_waiting;
+            signal_ui();
+            unlock_ui();
             lock_writer();
             command_to_be_sent.push(command);
             signal_writer();
@@ -144,6 +148,10 @@ void creating_account_std(const string &key){
             char hex[SHA256_HEX_SIZE];
             sha256_hex(password.c_str(), password.size(), hex);
             string command = std::to_string(C_create_new_account) + " " + account + " " + hex + "\n";
+            lock_ui();
+            login_err = LE_waiting;
+            signal_ui();
+            unlock_ui();
             lock_writer();
             command_to_be_sent.push(command);
             signal_writer();

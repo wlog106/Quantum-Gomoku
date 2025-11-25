@@ -46,7 +46,8 @@ typedef enum{
     LE_account_does_not_exist,
     LE_password_incorrect,
     LE_already_login,
-    LE_account_already_exist
+    LE_account_already_exist,
+    LE_waiting
 }login_error_t;
 extern login_error_t login_err;
 extern int choose_enter;//0 enter account, 1 enter password, 2 comfirm password
