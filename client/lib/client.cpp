@@ -69,11 +69,11 @@ int get_state(){
 }
 
 int get_sockfd(){
-    int sockfd;
+    int result;
     Pthread_mutex_lock(&sockfd_mutex);
-    sockfd = client_state;
+    result = sockfd;
     Pthread_mutex_unlock(&sockfd_mutex);
-    return sockfd;
+    return result;
 }
 
 void set_state(int new_state){
