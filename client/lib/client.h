@@ -50,12 +50,17 @@ end of ui variable
 /*
 end pipe
 */
-#define CLOSE_CLIENT() write(client_end_pipe[1], "x", 1)
-extern int client_end_pipe[2];
-extern int std_handler_end_pipe[2];
-extern int ui_end_pipe[2];
-extern int socket_reader_end_pipe[2];
-extern int socket_writer_end_pipe[2];
+#define CLOSE_CLIENT(x) \
+    do { \
+        char _tmp = (x); \
+        write(client_end_pipe[1], &_tmp, 1); \
+    } while (0)
+extern char client_end_code;
+extern int  client_end_pipe[2];
+extern int  std_handler_end_pipe[2];
+extern int  ui_end_pipe[2];
+extern int  socket_reader_end_pipe[2];
+extern int  socket_writer_end_pipe[2];
 
 void *terminator(void *vptr);
 void *stdin_handler(void *vptr);

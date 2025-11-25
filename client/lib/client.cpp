@@ -35,6 +35,8 @@ end of ui variable
 --------------------
 */
 
+//ending variable
+char client_end_code;
 int client_end_pipe[2];
 int std_handler_end_pipe[2];
 int ui_end_pipe[2];
@@ -51,8 +53,7 @@ void *terminator(void *vptr){
     FD_ZERO(&set);
     FD_SET(client_end_pipe[0], &set);
     Select(client_end_pipe[0]+1, &set, nullptr, nullptr, nullptr);
-    char ch;
-    Read(client_end_pipe[0], &ch, 1);
+    Read(client_end_pipe[0], &client_end_code, 1);
     write(std_handler_end_pipe[1], "x", 1);
     write(ui_end_pipe[1], "x", 1); //order does matter
     write(socket_reader_end_pipe[1], "x", 1);

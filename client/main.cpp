@@ -17,7 +17,7 @@ int main(int argc, char **argv){
     Pthread_create(&tid_end, NULL, &terminator, NULL);
 
     signal(SIGINT, [](int){
-        CLOSE_CLIENT();
+        CLOSE_CLIENT('c');
     });
 
     client_state = S_login_option;
@@ -40,5 +40,8 @@ int main(int argc, char **argv){
 
     shutdown(sockfd, SHUT_RDWR);
     restore_terminal();
+    if(client_end_code == 'c'){
+        cout << "Ctrl-C keyboard interrupt" << endl;
+    }
     exit(0);
 }
