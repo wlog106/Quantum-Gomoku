@@ -14,11 +14,17 @@ using std::set;
 #define MAX_EVENT 10
 #define MAX_CLIENT 50
 
+/*----client state-----*/
 #define US_ANONYMOUS 0
 #define US_IN_LOBBY 1
 
+/*----user state-----*/
 #define CLT_SHUTDOWN 500
 #define CLT_CAN_WRITE 501
+
+/*----error code-----*/
+#define ELOGIN_ACC_DNE  550
+#define ELOGIN_PWD_INCORRECT 551
 
 class User
 {

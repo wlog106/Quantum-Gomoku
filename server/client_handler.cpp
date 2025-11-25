@@ -20,7 +20,7 @@ int client_handler(db_conn *db_handler, User *user, set<string> &login_user)
         stringstream ss(cur_cmd);
         ss >> cmd_id;
         if(!validator(user->state, cmd_id)) continue;
-        int n;
+        unsigned int n;
         if(cmd_id == C_create_new_account){
             if((n = SignUp(db_handler, ss, user))!=0){
                 if(n == 1062){
@@ -29,7 +29,7 @@ int client_handler(db_conn *db_handler, User *user, set<string> &login_user)
                     return CLT_CAN_WRITE;
                 }
                 else{
-                    printf("unknown sign up fail\n");
+                    printf("unknown sign up failiure\n");
                     exit(1);
                 } 
             }
@@ -43,12 +43,28 @@ int client_handler(db_conn *db_handler, User *user, set<string> &login_user)
         }
         else if(cmd_id == C_login_to_server)
         {
-            if(login_user.find(user->name) != login_user.end()){
+            if(login_user.find(user->name) != login_user.end())
+            {
                 printf("user: %s has already login\n", user->name.c_str());
                 user->wbuf = PUT_MSG(C_already_login);
+                return CLT_CAN_WRITE;
             }
-            if(!Login(db_handler, ss, user)){
-                printf("login fail\n");
+            if((n = Login(db_handler, ss, user)) != 0)
+            {
+                switch (n) 
+                {
+                case ELOGIN_ACC_DNE:
+                    printf("client %d: account DNE\n", user->sockfd);
+                    user->wbuf = PUT_MSG(C_account_does_not_exist);
+                    return CLT_CAN_WRITE;
+                case ELOGIN_PWD_INCORRECT:
+                    printf("client %d: passwd incorrect\n", user->sockfd);
+                    user->wbuf = PUT_MSG(C_password_incorrect);
+                    return CLT_CAN_WRITE;
+                default:
+                    printf("unknown login failiure\n");
+                    exit(1);
+                }
             }
             else {
                 printf("login success\n");
@@ -68,13 +84,15 @@ bool Login(db_conn *db_handler, stringstream &ss, User *user)
     ss >> username >> passwd_hash;
     user->name = username;
     db_get_hash(db_handler, username.data(), passwd_hash.data());
+    if(db_handler->res_info->is_null){
+        return ELOGIN_ACC_DNE;
+    }
     db_handler->res_info->passwd_hash[64] = 0;
     string legit_code = db_handler->res_info->passwd_hash;
     if(legit_code!=passwd_hash){
-        
+        return ELOGIN_PWD_INCORRECT;
     }
-    cout << legit_code << "\n";
-    return (legit_code==passwd_hash);
+    return 0;
 }
 
 unsigned int SignUp(db_conn *db_handler, stringstream &ss, User *user)
