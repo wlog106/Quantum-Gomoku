@@ -6,21 +6,21 @@
 #include <sys/wait.h>
 
 #define cur_cmd cmd_q.front()
-using std::string;
-using std::queue;
 
-void client_handler(db_conn *db_handler, User &user)
+
+int client_handler(db_conn *db_handler, User &user)
 {
     int cmd_id;
     string cmd_info;
     queue<string> cmd_q;
-    Read_commamd(user.sockfd, user.rbuf, cmd_q);
-    while(!cmd_q.size())
+    if(Read_commamd(user.sockfd, user.rbuf, cmd_q)==0) return 0;
+    while(!cmd_q.empty())
     {
-        split_cmd(cur_cmd, &cmd_id, cmd_info);
+        stringstream ss(cur_cmd);
+        ss >> cmd_id;
         if(!validator(user.state, cmd_id)) continue;
         if(cmd_id == C_create_new_account){
-            if(!SignUp(db_handler, cmd_info)){
+            if(!SignUp(db_handler, ss)){
                 printf("sign up fail\n");
             }
             else {
@@ -29,7 +29,7 @@ void client_handler(db_conn *db_handler, User &user)
             }
         }
         else if(cmd_id == C_login_to_server){
-            if(!Login(db_handler, cmd_info)){
+            if(!Login(db_handler, ss)){
                 printf("login fail\n");
             }
             else {
@@ -39,22 +39,29 @@ void client_handler(db_conn *db_handler, User &user)
         }
         cmd_q.pop();
     }
+    return 1;
 }
 
-bool Login(db_conn *db_handler, string &str)
+bool Login(db_conn *db_handler, stringstream &ss)
 {
-    auto pos = str.find(' ');
-    string username = str.substr(0, pos);
-    string passwd_hash = str.substr(pos).c_str();
+    string username, passwd_hash;
+    ss >> username >> passwd_hash;
+    cout << "name: " << username << " pwd: " << passwd_hash << "\n";
     db_get_hash(db_handler, username.data(), passwd_hash.data());
+    cout << "len: " << db_handler->res_info->recvlen << "\n";
+    db_handler->res_info->passwd_hash[64] = 0;
     string legit_code = db_handler->res_info->passwd_hash;
+    cout << legit_code << "\n";
     return (legit_code==passwd_hash);
 }
 
-bool SignUp(db_conn *db_handler, string &str)
+bool SignUp(db_conn *db_handler, stringstream &ss)
 {
-    auto pos = str.find(' ');
-    string username = str.substr(0, pos);
-    string passwd_hash = str.substr(pos);
-    return (db_add_user(db_handler, username.data(), passwd_hash.data())==0);
+    string username, passwd_hash;
+    ss >> username >> passwd_hash;
+    return (db_add_user(
+        db_handler, 
+        username.data(), 
+        passwd_hash.data()
+    )==0);
 }

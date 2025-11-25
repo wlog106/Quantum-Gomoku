@@ -56,7 +56,7 @@ int main(int argc, char **argv){
                 connfd = Accept(listenfd, (SA*)&cliaddr, &clilen);
                 set_non_block(connfd);
                 set_close_exe(connfd);
-                ev.events = EPOLLIN | EPOLLOUT;
+                ev.events = EPOLLIN;
                 ev.data.fd = connfd;
                 Epoll_ctl_add(epollfd, connfd, &ev);
                 cli.insert({connfd, User(connfd, US_ANONYMOUS)});
@@ -64,11 +64,15 @@ int main(int argc, char **argv){
             }
             else if(evtype & EPOLLIN){
                 printf("client with fd: %d is readable.\n", evfd);
-                client_handler(db_handler, (cli.find(evfd))->second);
+                if(client_handler(db_handler, (cli.find(evfd))->second)==0)
+                {
+                    printf("client with fd: %d won't send any command\n", evfd);
+                    epoll_ctl(epollfd, EPOLL_CTL_DEL, evfd, events);
+                }
             }
-            else if(evtype & EPOLLOUT){
+            //else if(evtype & EPOLLOUT){
                 //printf("client with fd: %d is writable", evfd);
-            }
+            //}
         }
     }
 }
