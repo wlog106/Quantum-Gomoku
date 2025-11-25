@@ -43,5 +43,8 @@ int main(int argc, char **argv){
     if(client_end_code == 'c'){
         cout << "Ctrl-C keyboard interrupt" << endl;
     }
+    else if(client_end_code == 's'){
+        cout << "Server closed permanently" << endl;
+    }
     exit(0);
 }

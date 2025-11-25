@@ -25,7 +25,7 @@ void *ui(void *vptr){
         if(FD_ISSET(STDOUT_FILENO, &wset)){
             lock_ui();
 
-            if(!ui_new_info){
+            if(!ui_new_info && !ui_end){
                 wait_ui();
             }
             ui_new_info = 0;

@@ -23,7 +23,7 @@ void *socket_writer(void *vptr){
         if(FD_ISSET(sockfd, &wset)){
             lock_writer();
 
-            if(int(command_to_be_sent.size()) == 0){
+            if(int(command_to_be_sent.size()) == 0 && !writer_end){
                 wait_writer();
             }
             if(writer_end){
