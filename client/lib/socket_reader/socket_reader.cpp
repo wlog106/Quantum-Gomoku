@@ -11,12 +11,13 @@ void *socket_reader(void *vptr){
 
     fd_set rset;
     int maxfdp1 = max(socket_reader_end_pipe[0], sockfd) + 1;
-    int state;
+    int state, n;
+    int has_end = 0;//end if read 0
     while(true){
         
         FD_ZERO(&rset);
         FD_SET(socket_reader_end_pipe[0], &rset);
-        FD_SET(sockfd, &rset);
+        if(!has_end) FD_SET(sockfd, &rset);
         Select(maxfdp1, &rset, nullptr, nullptr, nullptr);
         if(FD_ISSET(socket_reader_end_pipe[0], &rset)){
             /*
@@ -29,7 +30,12 @@ void *socket_reader(void *vptr){
             break;
         }
         if(FD_ISSET(sockfd, &rset)){
-            Read_commamd(sockfd, remain, commands);
+            n= Read_commamd(sockfd, remain, commands);
+            if(n == 0){
+                CLOSE_CLIENT('s');
+                has_end = 1;
+                continue;
+            }
             /*process command*/
             while(commands.size()){
                 state = get_state();
