@@ -42,6 +42,9 @@ void *stdin_handler(void *vptr){
             case S_creating_account:
                 creating_account_std(key);
                 break;
+            case S_select_option:
+                select_option_std(key);
+                break;
             default:
                 break;
             }
