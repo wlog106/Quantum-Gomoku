@@ -11,7 +11,8 @@ void *socket_reader(void *vptr){
 
     fd_set rset;
     int maxfdp1 = max(socket_reader_end_pipe[0], sockfd) + 1;
-    int state, n;
+    State_t state;
+    int n;
     int has_end = 0;//end if read 0
     while(true){
         

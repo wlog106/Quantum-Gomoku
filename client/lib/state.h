@@ -1,8 +1,9 @@
 #pragma once
 
-#define S_end 0
-#define S_login_option 1
-#define S_login_with_account 2
-#define S_creating_account 3
-
-#define S_select_option 4
+typedef enum{
+    S_end,
+    S_login_option,
+    S_login_with_account,
+    S_creating_account,
+    S_select_option
+}State_t;

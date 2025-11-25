@@ -16,7 +16,7 @@ see extern variable in client_variable.cpp
 extern int sockfd;
 extern pthread_mutex_t sockfd_mutex;
 
-extern int client_state;
+extern State_t client_state;
 extern pthread_mutex_t client_state_mutex;
 
 extern pthread_mutex_t writer_mutex;
@@ -38,7 +38,16 @@ extern bool ui_new_info;
 extern string account_input_box;
 extern string password_input_box;
 extern string password_confirm_input_box;
-extern int login_err;//0 no error, 1 input empty, 2 password confirm does not match
+extern int login_err;
+/*
+0 no error
+1 input empt
+2 password confirm does not match
+3 account does not exist
+4 password incorrect
+5 already login
+6 account already exist
+*/
 extern int choose_enter;//0 enter account, 1 enter password, 2 comfirm password
 
 //select page
@@ -72,9 +81,9 @@ void *ui(void *vptr);
 void *socket_reader(void *vptr);
 void *socket_writer(void *vptr);
 
-void set_state(int new_state);
-int  get_state();
-int  get_sockfd();
+void     set_state(State_t new_state);
+State_t  get_state();
+int      get_sockfd();
 
 int  start_connection(char* addr);
 

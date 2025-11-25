@@ -6,7 +6,7 @@
 void *ui(void *vptr){
     (void)vptr;
 
-    int client_state;
+    State_t client_state;
 
     while(true){
         fd_set rset, wset;

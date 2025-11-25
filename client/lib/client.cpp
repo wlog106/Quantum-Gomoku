@@ -1,9 +1,10 @@
 #include "client.h"
+#include "state.h"
 #include <pthread.h>
 #include <sys/select.h>
 
 
-int client_state;
+State_t client_state;
 int sockfd;
 pthread_mutex_t sockfd_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t client_state_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -65,8 +66,8 @@ void *terminator(void *vptr){
     return NULL;
 }
 
-int get_state(){
-    int state;
+State_t get_state(){
+    State_t state;
     Pthread_mutex_lock(&client_state_mutex);
     state = client_state;
     Pthread_mutex_unlock(&client_state_mutex);
@@ -81,7 +82,7 @@ int get_sockfd(){
     return result;
 }
 
-void set_state(int new_state){
+void set_state(State_t new_state){
     Pthread_mutex_lock(&client_state_mutex);
     client_state = new_state;
     Pthread_mutex_unlock(&client_state_mutex);
