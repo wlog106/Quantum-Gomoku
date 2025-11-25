@@ -1,6 +1,8 @@
 typedef enum {
     C_create_new_account,
     C_login_to_server,
+    C_client_logout,
+    /*above is client->server, below is server->client*/
     C_account_does_not_exist,
     C_account_already_exist,
     C_password_incorrect,
