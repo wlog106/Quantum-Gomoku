@@ -34,21 +34,23 @@ extern pthread_cond_t ui_cond;
 extern bool ui_end;
 extern bool ui_new_info;
 
+
 //login page
 extern string account_input_box;
 extern string password_input_box;
 extern string password_confirm_input_box;
-extern int login_err;
-/*
-0 no error
-1 input empt
-2 password confirm does not match
-3 account does not exist
-4 password incorrect
-5 already login
-6 account already exist
-*/
+typedef enum{
+    LE_no_error,
+    LE_input_empty,
+    LE_password_confirm_does_not_match,
+    LE_account_does_not_exist,
+    LE_password_incorrect,
+    LE_already_login,
+    LE_account_already_exist
+}login_error_t;
+extern login_error_t login_err;
 extern int choose_enter;//0 enter account, 1 enter password, 2 comfirm password
+void reset_login_ui();
 
 //select page
 extern int opselect_option;

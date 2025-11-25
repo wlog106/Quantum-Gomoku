@@ -28,8 +28,16 @@ bool ui_new_info = 1;
 string account_input_box;
 string password_input_box;
 string password_confirm_input_box;
-int login_err = 0;
+login_error_t login_err = LE_no_error;
 int choose_enter = 0;
+void reset_login_ui(){
+    account_input_box = "";
+    password_input_box = "";
+    password_confirm_input_box = "";
+    login_err = LE_no_error;
+    choose_enter = 0;
+    return;
+}
 
 //select page
 int opselect_option = 0;

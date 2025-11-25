@@ -22,11 +22,7 @@ void login_with_account_std(const string &key){
     if(key == "ESC"){
         set_state(S_login_option);
         lock_ui();
-        choose_enter = 0;
-        account_input_box = "";
-        password_input_box = "";
-        password_confirm_input_box = "";
-        login_err = 0;
+        reset_login_ui();
         signal_ui();
         unlock_ui();
     }
@@ -61,7 +57,7 @@ void login_with_account_std(const string &key){
         unlock_ui();
         if(account.empty() || password.empty()){
             lock_ui();
-            login_err = 1;
+            login_err = LE_input_empty;
             signal_ui();
             unlock_ui();
         }
@@ -94,11 +90,7 @@ void creating_account_std(const string &key){
     if(key == "ESC"){
         set_state(S_login_option);
         lock_ui();
-        choose_enter = 0;
-        account_input_box = "";
-        password_input_box = "";
-        password_confirm_input_box = "";
-        login_err = 0;
+        reset_login_ui();
         signal_ui();
         unlock_ui();
     }
@@ -138,13 +130,13 @@ void creating_account_std(const string &key){
         unlock_ui();
         if(account.empty() || password.empty() || password_confirm.empty()){
             lock_ui();
-            login_err = 1;
+            login_err = LE_input_empty;
             signal_ui();
             unlock_ui();
         }
         else if(password != password_confirm){
             lock_ui();
-            login_err = 2;
+            login_err = LE_password_confirm_does_not_match;
             signal_ui();
             unlock_ui();
         }
