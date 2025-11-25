@@ -11,7 +11,7 @@ void *socket_reader(void *vptr){
 
     fd_set rset;
     int maxfdp1 = max(socket_reader_end_pipe[0], sockfd) + 1;
-    State_t state;
+    State_t client_state;
     int n;
     int has_end = 0;//end if read 0
     while(true){
@@ -39,9 +39,9 @@ void *socket_reader(void *vptr){
             }
             /*process command*/
             while(commands.size()){
-                state = get_state();
+                client_state = get_state();
                 string &command = commands.front();
-                switch (state) {
+                switch (client_state) {
                     case S_login_with_account:
                         login_with_account_recv(command);
                     case S_creating_account:

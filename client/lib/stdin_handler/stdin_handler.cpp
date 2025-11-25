@@ -4,7 +4,7 @@
 void *stdin_handler(void *vptr){
     (void)vptr;
 
-    int state;
+    State_t client_state;
     string key;
     char ch;
     fd_set rset;
@@ -31,8 +31,8 @@ void *stdin_handler(void *vptr){
                 CLOSE_CLIENT('d');
                 continue;
             }
-            state = get_state();
-            switch (state){
+            client_state = get_state();
+            switch (client_state){
             case S_login_option:
                 login_option_std(key);
                 break;
