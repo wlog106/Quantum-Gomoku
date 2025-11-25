@@ -13,7 +13,7 @@ void *socket_writer(void *vptr){
         FD_ZERO(&rset);
         FD_SET(socket_writer_end_pipe[0], &rset);
         FD_ZERO(&wset);
-        FD_SET(sockfd, &wset);
+        if(!writer_end) FD_SET(sockfd, &wset);
         Select(maxfdp1, &rset, &wset, nullptr, nullptr);
         if(FD_ISSET(socket_writer_end_pipe[0], &rset)){
             char ch;

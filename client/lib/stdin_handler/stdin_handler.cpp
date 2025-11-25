@@ -9,10 +9,11 @@ void *stdin_handler(void *vptr){
     char ch;
     fd_set rset;
     int maxfdp1 = max(STDIN_FILENO, std_handler_end_pipe[0]) + 1;
+    int std_has_end = 0;//end if read ctrl-d
     
     while(true){
         FD_ZERO(&rset);
-        FD_SET(STDIN_FILENO, &rset);
+        if(!std_has_end) FD_SET(STDIN_FILENO, &rset);
         FD_SET(std_handler_end_pipe[0], &rset);
         Select(maxfdp1, &rset, nullptr, nullptr, nullptr);
         if(FD_ISSET(std_handler_end_pipe[0], &rset)){
@@ -25,6 +26,11 @@ void *stdin_handler(void *vptr){
         }
         if(FD_ISSET(STDIN_FILENO, &rset)){
             key = get_key();
+            if(key == "EOF"){
+                std_has_end = 1;
+                CLOSE_CLIENT('d');
+                continue;
+            }
             state = get_state();
             switch (state){
             case S_login_option:
@@ -82,6 +88,9 @@ string get_key(){
     }
     else if(ch == 10){
         return "ENTER";
+    }
+    else if(ch == 4){
+        return "EOF";
     }
     else if(ch >= 33 && ch <= 126){
         key += ch;

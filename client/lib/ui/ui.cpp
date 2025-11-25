@@ -13,7 +13,7 @@ void *ui(void *vptr){
         FD_ZERO(&rset);
         FD_SET(ui_end_pipe[0], &rset);
         FD_ZERO(&wset);
-        FD_SET(STDOUT_FILENO, &wset);
+        if(!ui_end) FD_SET(STDOUT_FILENO, &wset);
         int maxfdp1 = max(STDOUT_FILENO, ui_end_pipe[0]) + 1;
         Select(maxfdp1, &rset, &wset, nullptr, nullptr);
         if(FD_ISSET(ui_end_pipe[0], &rset)){
