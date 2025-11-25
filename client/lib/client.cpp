@@ -116,6 +116,25 @@ int start_connection(char* addr){
     return sockfd;
 }
 
+//enter spanning
+long long now_ms() {
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return ts.tv_sec * 1000LL + ts.tv_nsec / 1000000;
+}
+
+long long last_enter_time = 0;
+const int ENTER_COOLDOWN = 300; // 300ms
+
+bool enter_press_check() {
+    long long t = now_ms();
+    if (t - last_enter_time >= ENTER_COOLDOWN) {
+        last_enter_time = t;
+        return true;
+    }
+    return false;
+}
+
 //terminal
 struct termios oldt, newt;
 

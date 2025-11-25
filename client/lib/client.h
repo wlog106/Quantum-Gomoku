@@ -93,6 +93,8 @@ void     set_state(State_t new_state);
 State_t  get_state();
 int      get_sockfd();
 
+bool enter_press_check();
+
 int  start_connection(char* addr);
 
 void set_terminal();
