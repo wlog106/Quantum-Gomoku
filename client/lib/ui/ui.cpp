@@ -48,6 +48,8 @@ void *ui(void *vptr){
             case S_creating_account:
                 creating_account_ui();
                 break;
+            case S_select_option:
+                select_option_ui();
             default:
                 break;
             }

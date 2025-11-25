@@ -15,7 +15,7 @@ void login_with_account_ui(){
     cout << ((choose_enter == 1) ? ">" : " ");
     cout << "\x1b[1mPassword:\x1b[0m ";
     for(int i = 0; i < int(password_input_box.size()); i++) cout << "*";
-    cout << "\nPress Esc to leave\nPress enter to confirm\nPress up/down arrow to select" << flush;
+    cout << "\nPress Esc to leave\nPress Enter to confirm\nPress Up/Down arrow to select" << flush;
 }
 
 void creating_account_ui(){
@@ -29,7 +29,7 @@ void creating_account_ui(){
     cout << ((choose_enter == 2) ? ">" : " ");
     cout << "\x1b[1mPassword confirm:\x1b[0m ";
     for(int i = 0; i < int(password_confirm_input_box.size()); i++) cout << "*";
-    cout << "\nPress Esc to leave\nPress enter to confirm\nPress up/down arrow to select" << flush;
+    cout << "\nPress Esc to leave\nPress Enter to confirm\nPress Up/Down arrow to select" << flush;
     return;
 }
 

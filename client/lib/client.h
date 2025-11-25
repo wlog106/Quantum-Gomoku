@@ -40,6 +40,10 @@ extern string password_input_box;
 extern string password_confirm_input_box;
 extern int login_err;//0 no error, 1 input empty, 2 password confirm does not match
 extern int choose_enter;//0 enter account, 1 enter password, 2 comfirm password
+
+//select page
+extern int opselect_option;
+extern int opselect_reply;
 /*
 --------------------
 end of ui variable

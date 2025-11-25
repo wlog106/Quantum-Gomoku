@@ -29,6 +29,10 @@ string password_input_box;
 string password_confirm_input_box;
 int login_err = 0;
 int choose_enter = 0;
+
+//select page
+int opselect_option = 0;
+int select_reply = 0;
 /*
 --------------------
 end of ui variable

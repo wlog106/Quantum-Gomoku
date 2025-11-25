@@ -15,3 +15,6 @@
 void login_option_ui();
 void login_with_account_ui();
 void creating_account_ui();
+
+//select page
+void select_option_ui();
