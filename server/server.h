@@ -4,7 +4,9 @@
 #include <sstream>
 #include <sys/epoll.h>
 #include <fcntl.h>
+#include <set>
 using std::string;
+using std::set;
 
 #define evfd events[i].data.fd
 #define evtype events[i].events
@@ -13,6 +15,7 @@ using std::string;
 #define MAX_CLIENT 50
 
 #define US_ANONYMOUS 0
+#define US_IN_LOBBY 1
 
 #define CLT_SHUTDOWN 500
 #define CLT_CAN_WRITE 501
@@ -31,18 +34,22 @@ public:
 
 int Accept(int fd, struct sockaddr *sa, socklen_t *salenptr);
 void Bind(int fd, const struct sockaddr *sa, socklen_t salen);
-int client_handler(db_conn *db_handler, User *user);
-int Epoll_create();
-void Epoll_ctl_add(int epollfd, int sockfd, struct epoll_event *ev);
-int Epoll_wait(int epollfd, struct epoll_event *events, int maxevents);
 void Listen(int fd, int backlog);
 int Init_listenfd(struct sockaddr_in *servaddr, socklen_t salen);
-void set_non_block(int fd);
-void set_close_exe(int fd);
 Sigfunc *Signal(int signo, Sigfunc *sighandler);
 void sigchild(int signo);
 
-bool Login(db_conn *db_handler, stringstream &str);
-unsigned int SignUp(db_conn *db_handler, stringstream &str);
-
+void set_non_block(int fd);
+void set_close_exe(int fd);
+int client_handler(db_conn *db_handler, User *user, set<string> &login_user);
 bool validator(int clifd, int cmd_id);
+
+int Epoll_create();
+void Epoll_ctl_add(int epollfd, int sockfd, struct epoll_event *ev);
+int Epoll_wait(int epollfd, struct epoll_event *events, int maxevents);
+void Epoll_ctl_del(int epollfd, int sockfd, struct epoll_event *ev);
+void Epoll_ctl_mod(int epollfd, int sockfd, struct epoll_event *ev);
+
+bool Login(db_conn *db_handler, stringstream &str, User *user);
+unsigned int SignUp(db_conn *db_handler, stringstream &str, User *user);
+

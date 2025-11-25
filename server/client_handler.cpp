@@ -6,9 +6,9 @@
 #include <sys/wait.h>
 
 #define cur_cmd cmd_q.front()
+#define PUT_MSG(msg) std::to_string(msg) + "\n" 
 
-
-int client_handler(db_conn *db_handler, User *user)
+int client_handler(db_conn *db_handler, User *user, set<string> &login_user)
 {
     int cmd_id;
     string cmd_info;
@@ -22,28 +22,39 @@ int client_handler(db_conn *db_handler, User *user)
         if(!validator(user->state, cmd_id)) continue;
         int n;
         if(cmd_id == C_create_new_account){
-            if((n = SignUp(db_handler, ss))!=0){
+            if((n = SignUp(db_handler, ss, user))!=0){
                 if(n == 1062){
                     printf("nickname existed\n");
-                    user->wbuf = std::to_string(C_account_already_exist) + "\n\0";
+                    user->wbuf = PUT_MSG(C_account_already_exist);
                     return CLT_CAN_WRITE;
                 }
                 else{
-                    printf("sign up fail\n");
+                    printf("unknown sign up fail\n");
+                    exit(1);
                 } 
             }
             else {
                 printf("sign up success\n");
-                
+                login_user.insert(user->name);
+                user->state = US_IN_LOBBY;
+                user->wbuf = PUT_MSG(C_login_success);
+                return CLT_CAN_WRITE;
             }
         }
-        else if(cmd_id == C_login_to_server){
-            if(!Login(db_handler, ss)){
+        else if(cmd_id == C_login_to_server)
+        {
+            if(login_user.find(user->name) != login_user.end()){
+                printf("user: %s has already login\n", user->name.c_str());
+                user->wbuf = PUT_MSG(C_already_login);
+            }
+            if(!Login(db_handler, ss, user)){
                 printf("login fail\n");
             }
             else {
                 printf("login success\n");
-                //return user information
+                user->state = US_IN_LOBBY;
+                user->wbuf = PUT_MSG(C_login_success);
+                return CLT_CAN_WRITE;
             }
         }
         cmd_q.pop();
@@ -51,22 +62,26 @@ int client_handler(db_conn *db_handler, User *user)
     return 1;
 }
 
-bool Login(db_conn *db_handler, stringstream &ss)
+bool Login(db_conn *db_handler, stringstream &ss, User *user)
 {
     string username, passwd_hash;
     ss >> username >> passwd_hash;
+    user->name = username;
     db_get_hash(db_handler, username.data(), passwd_hash.data());
     db_handler->res_info->passwd_hash[64] = 0;
     string legit_code = db_handler->res_info->passwd_hash;
+    if(legit_code!=passwd_hash){
+        
+    }
     cout << legit_code << "\n";
     return (legit_code==passwd_hash);
 }
 
-unsigned int SignUp(db_conn *db_handler, stringstream &ss)
+unsigned int SignUp(db_conn *db_handler, stringstream &ss, User *user)
 {
     string username, passwd_hash;
     ss >> username >> passwd_hash;
-    unsigned int n;
+    user->name = username;
     return (db_add_user(
         db_handler, 
         username.data(), 

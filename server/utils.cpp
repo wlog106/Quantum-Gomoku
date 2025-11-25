@@ -1,6 +1,7 @@
 #include "server.h"
 #include <cerrno>
 #include <cstdio>
+#include <cstdlib>
 #include <sys/epoll.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -47,7 +48,21 @@ int Epoll_create(){
 
 void Epoll_ctl_add(int epollfd, int sockfd, struct epoll_event *ev){
     if((epoll_ctl(epollfd, EPOLL_CTL_ADD, sockfd, ev)) < 0){
-        cout << "fail to add " << sockfd << " to epoll.\n";
+        fprintf(stderr, "epoll: fail to add %d\n", sockfd);
+        exit(1);
+    }
+}
+
+void Epoll_ctl_del(int epollfd, int sockfd, struct epoll_event *ev){
+    if(epoll_ctl(epollfd, EPOLL_CTL_DEL, sockfd, ev) < 0){
+        fprintf(stderr, "epoll: fail to delete %d\n", sockfd);
+        exit(1);
+    }
+}
+
+void Epoll_ctl_mod(int epollfd, int sockfd, struct epoll_event *ev){
+    if(epoll_ctl(epollfd, EPOLL_CTL_MOD, sockfd, ev) < 0){
+        fprintf(stderr, "epoll: fail to modify info of %d", sockfd);
         exit(1);
     }
 }

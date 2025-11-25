@@ -26,6 +26,7 @@ using std::string;
 int main(int argc, char **argv){
     /* store client data*/
     map<int, User>      cli;
+    set<string>         login_user;
     db_conn             *db_handler;
     /* for epoll*/
     int                 nfds;
@@ -66,16 +67,18 @@ int main(int argc, char **argv){
             else if(evtype & EPOLLIN){
                 printf("client with fd: %d is readable.\n", evfd);
                 User *cur_usr = &(cli.find(evfd))->second;
-                int n = client_handler(db_handler, cur_usr);
+                int n = client_handler(db_handler, cur_usr, login_user);
                 if(n == CLT_SHUTDOWN)
                 {
                     printf("client with fd: %d won't send any command\n", evfd);
-                    epoll_ctl(epollfd, EPOLL_CTL_DEL, evfd, events);
+                    // can't delete yet see if wbuf have something to send or not
+                    Epoll_ctl_del(epollfd, evfd, NULL);
                 }
-                else if(n == CLT_CAN_WRITE){
+                else if(n == CLT_CAN_WRITE)
+                {
                     ev.events = EPOLLIN | EPOLLOUT;
                     ev.data.fd = cur_usr->sockfd;
-                    epoll_ctl(epollfd, EPOLL_CTL_MOD, cur_usr->sockfd, &ev);
+                    Epoll_ctl_mod(epollfd, evfd, &ev);
                 }
             }
             else if(evtype & EPOLLOUT){
