@@ -1,6 +1,7 @@
 #pragma once
 #include "../../lib/universal.h"
 #include "../../lib/command.h"
+#include "../../lib/board.h"
 #include "state.h"
 #include <pthread.h>
 
