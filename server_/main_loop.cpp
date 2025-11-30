@@ -1,4 +1,5 @@
 #include "server_.h"
+#include "utils/utils.h"
 #include <sys/epoll.h>
 #include <assert.h>
 
@@ -9,10 +10,10 @@ int main(int arg, char **argv){
     */
     char argv_buf[10];
     int rmgr_fd[2], dw_fd[2];
-    pid_t rm_pid, dw_pid;
+    pid_t rmgr_pid, dw_pid;
     Socketpair(AF_UNIX, SOCK_STREAM, 0, rmgr_fd);
     Socketpair(AF_UNIX, SOCK_STREAM, 0, dw_fd);
-    if((rm_pid = Fork()) == 0){
+    if((rmgr_pid = Fork()) == 0){
         Close(dw_fd[0]);
         Close(dw_fd[1]);
         Close(rmgr_fd[0]);
@@ -70,6 +71,12 @@ int main(int arg, char **argv){
     ev.events = EPOLLET;
     ev.data.fd = listenfd;
     Epoll_ctl(epfd, EPOLL_CTL_ADD, listenfd, &ev);
+    ev.events = EPOLLET;
+    ev.data.fd = *dw_fd;
+    Epoll_ctl(epfd, EPOLL_CTL_ADD, *dw_fd, &ev);
+    ev.events = EPOLLET;
+    ev.data.fd = *rmgr_fd;
+    Epoll_ctl(epfd, EPOLL_CTL_ADD, *rmgr_fd, &ev);
 
     /* pack some fds together */
     ServerContext *scxt = new ServerContext(
