@@ -1,4 +1,6 @@
-#include "io.h"
+#include "server_.h"
+#include <sys/epoll.h>
+#include <assert.h>
 
 int main(int arg, char **argv){
     /*
@@ -89,12 +91,12 @@ int main(int arg, char **argv){
                 /* handle rmmgr result*/
                 continue;
             }
-            if(evtype == EPOLLET){
+            if(evtype & EPOLLET){
                 scxt->cur_fd = evfd;
                 on_readable(scxt, fd_to_conn);
                 continue;
             }
-            if(evtype == EPOLLOUT){
+            if(evtype & EPOLLOUT){
                 on_writable(scxt, fd_to_conn);
                 continue;
             }
