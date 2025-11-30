@@ -2,6 +2,10 @@ typedef enum {
     C_create_new_account,
     C_login_to_server,
     C_client_logout,
+    C_create_room,
+    C_join_room_by_id,
+    C_pair_randomly,
+    C_observe_randomly,
     /*above is client->server, below is server->client*/
     C_account_does_not_exist,
     C_account_already_exist,

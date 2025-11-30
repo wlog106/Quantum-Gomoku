@@ -76,10 +76,10 @@ void login_with_account_std(const string &key){
     }
     else if(int(key.size()) == 1){
         lock_ui();
-        if(choose_enter == 0 && int(account_input_box.size() < MAX_ACCOUNT_LEN)){
+        if(choose_enter == 0 && int(account_input_box.size()) < MAX_ACCOUNT_LEN){
             account_input_box += key;
         }
-        else if(choose_enter == 1 && int(password_input_box.size() < MAX_ACCOUNT_LEN)){
+        else if(choose_enter == 1 && int(password_input_box.size()) < MAX_ACCOUNT_LEN){
             password_input_box += key;
         }
         signal_ui();

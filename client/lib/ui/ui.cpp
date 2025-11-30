@@ -50,6 +50,13 @@ void *ui(void *vptr){
                 break;
             case S_select_option:
                 select_option_ui();
+                break;
+            case S_select_enter_room_id:
+                select_enter_room_id_ui();
+            break;
+            case S_debug:
+                debug_ui();
+            break;
             default:
                 break;
             }

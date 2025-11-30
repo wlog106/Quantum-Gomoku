@@ -5,5 +5,7 @@ typedef enum{
     S_login_option,
     S_login_with_account,
     S_creating_account,
-    S_select_option
+    S_select_option,
+    S_select_enter_room_id,
+    S_debug
 }State_t;

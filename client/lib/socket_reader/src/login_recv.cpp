@@ -31,6 +31,7 @@ void login_with_account_recv(const string &command){
             reset_login_ui();
             signal_ui();
             unlock_ui();
+        break;
         default:
         break;
     }
@@ -54,6 +55,7 @@ void creating_account_recv(const string &command){
             reset_login_ui();
             signal_ui();
             unlock_ui();
+        break;
         default:
         break;
     }

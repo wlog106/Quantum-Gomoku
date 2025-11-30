@@ -45,6 +45,9 @@ void *stdin_handler(void *vptr){
             case S_select_option:
                 select_option_std(key);
                 break;
+            case S_select_enter_room_id:
+                select_enter_room_id_std(key);
+                break;
             default:
                 break;
             }

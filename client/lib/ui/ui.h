@@ -18,3 +18,8 @@ void creating_account_ui();
 
 //select page
 void select_option_ui();
+void select_enter_room_id_ui();
+
+//debug
+void debug_ui();
+void clear_board_ui();

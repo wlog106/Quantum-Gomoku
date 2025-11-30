@@ -41,11 +41,17 @@ void reset_login_ui(){
 
 //select page
 int opselect_option = 0;
-opselect_reply_t select_reply = OSR_no_error;
+opselect_reply_t opselect_reply = OSR_no_error;
 void reset_opselect_ui(){
     opselect_option = 0;
-    select_reply = OSR_no_error;
+    opselect_reply = OSR_no_error;
     return;
+}
+//select room id
+string room_id_input_box;
+void reset_opselect_room_id(){
+    room_id_input_box = "";
+    opselect_reply = OSR_no_error;
 }
 /*
 --------------------

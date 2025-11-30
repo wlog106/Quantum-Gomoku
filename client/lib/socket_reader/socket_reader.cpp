@@ -44,8 +44,10 @@ void *socket_reader(void *vptr){
                 switch (client_state) {
                     case S_login_with_account:
                         login_with_account_recv(command);
+                        break;
                     case S_creating_account:
                         creating_account_recv(command);
+                        break;
                     default:
                     break;
                 }

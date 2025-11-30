@@ -6,6 +6,7 @@
 #include <pthread.h>
 
 #define MAX_ACCOUNT_LEN 20
+#define ROOM_ID_LEN 6
 
 #define ALT_SCREEN_ON   "\x1b[?1049h"
 #define ALT_SCREEN_OFF  "\x1b[?1049l"
@@ -58,10 +59,16 @@ void reset_login_ui();
 extern int opselect_option;
 typedef enum{
     OSR_no_error,
-    OSR_waiting
+    OSR_waiting,
+    OSR_room_id_len_error
 }opselect_reply_t;
 extern opselect_reply_t opselect_reply;
 void reset_opselect_ui();
+
+//select room id page
+extern string room_id_input_box;
+void reset_opselect_room_id();
+
 /*
 --------------------
 end of ui variable

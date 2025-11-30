@@ -11,3 +11,4 @@ void creating_account_std(const string &key);
 
 //opselect
 void select_option_std(const string &key);
+void select_enter_room_id_std(const string &key);
