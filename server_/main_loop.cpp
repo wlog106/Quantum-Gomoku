@@ -1,5 +1,6 @@
 #include "server_.h"
 #include "utils/utils.h"
+#include <fcntl.h>
 #include <sys/epoll.h>
 #include <assert.h>
 
@@ -17,6 +18,8 @@ int main(int arg, char **argv){
         Close(dw_fd[0]);
         Close(dw_fd[1]);
         Close(rmgr_fd[0]);
+        int flags = Fcntl(rmgr_fd[1], F_GETFL, 0);
+        Fcntl(rmgr_fd[1], F_SETFL, flags | O_NONBLOCK);
         sprintf(argv_buf, "%d", rmgr_fd[1]);
         char *rm_argv[] = {argv_buf};
         Execv("./rm_mgr", rm_argv);
@@ -26,6 +29,8 @@ int main(int arg, char **argv){
         Close(rmgr_fd[0]);
         Close(rmgr_fd[1]);
         Close(dw_fd[0]);
+        int flags = Fcntl(dw_fd[1], F_GETFL, 0);
+        Fcntl(dw_fd[1], F_SETFL, flags | O_NONBLOCK);
         sprintf(argv_buf, "%d", dw_fd[1]);
         char *dw_argv[] = {argv_buf};
         Execv("./db_worker", dw_argv);
