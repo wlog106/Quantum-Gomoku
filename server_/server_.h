@@ -8,6 +8,7 @@
 #include "parser/parser.h"
 #include "utils/utils.h"
 #include "mariadb_api/mariadb_api.h"
+#include "db_worker/db_worker.h"
 
 #define MAX_JOB 10
 #define MAX_EVENT 50
