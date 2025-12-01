@@ -14,13 +14,13 @@
 #include <string.h>
 #include <mariadb/mysql.h>
 
-typedef struct {
+typedef struct db_response{
     char passwd_hash[65];
     unsigned long recvlen;
     my_bool is_null;
 } db_response;
 
-typedef struct{
+typedef struct db_conn{
     MYSQL *conn;
     MYSQL_STMT *stmt_add_user;
     MYSQL_STMT *stmt_get_hash;
