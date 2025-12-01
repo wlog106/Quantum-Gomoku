@@ -15,6 +15,7 @@
 #include <mariadb/mysql.h>
 
 typedef struct db_response{
+    int id;
     char passwd_hash[65];
     unsigned long recvlen;
     my_bool is_null;
@@ -24,6 +25,7 @@ typedef struct db_conn{
     MYSQL *conn;
     MYSQL_STMT *stmt_add_user;
     MYSQL_STMT *stmt_get_hash;
+    MYSQL_STMT *stmt_get_id_by_name;
     db_response *res_info;
 } db_conn;
 
