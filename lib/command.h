@@ -14,7 +14,7 @@ typedef enum {
     C_login_success,
     C_already_login,
     
-    //"room info" : "room id p1_exist p2_exist ob1_exist ob2_exist ob3_exist p1_ready p2_ready {user name by order}"
+    //"room info" : "room_id p1_exist p2_exist ob1_exist ob2_exist ob3_exist p1_ready p2_ready {user name by order}"
     /*
     p1:andy(ready)
     p2:NULL
@@ -22,7 +22,7 @@ typedef enum {
     ob2:NULL
     ob3:david
 
-    "CF4DS 1 0 1 0 1 1 0 andy judy"
+    "CF4DS 1 0 1 0 1 1 0 andy judy david"
     */
     //create room
     C_create_room_success, //cid "room info"
