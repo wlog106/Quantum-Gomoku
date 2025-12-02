@@ -3,34 +3,23 @@
 
 #include "dw_io/dw_io.h"
 #include "dw_dispatcher/dw_dispatcher.h"
+#include "dw_objects/dw_objects.h"
 
 #include <queue>
 
-struct conn_t;
-struct db_conn;
+#define MSG(msg) std::to_string(msg) + "\n"
 
-struct DB_result_t{
-    int type;
-    int result;
-    conn_t *user;
+enum Dw_response_job_t{
+    DW_JOB_SIGNUP,
+    DW_JOB_LOGIN
 };
 
-struct DwContext{
-    int mainfd, epfd;
-    db_conn *dc;
-    std::queue<DB_result_t> *resultq;
-    DwContext(){}
-    DwContext(
-        int mainfd, 
-        int epfd,
-        db_conn *dc, 
-        std::queue<DB_result_t> *rq
-    ){
-        this->mainfd = mainfd;
-        this->epfd = epfd;
-        this->dc = dc;
-        this->resultq = rq;
-    }
+enum Dw_response_result_t{
+    DW_RESULT_SUCCESS,
+    /* error result */
+    DW_ERESULT_DUPNAME,
+    DW_ERESULT_USERDNE,
+    DW_ERESULT_PWDFAIL
 };
 
 #endif

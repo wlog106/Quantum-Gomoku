@@ -12,7 +12,7 @@ int main(int arg, char** argv){
     int nfds;
     int epfd;
     struct epoll_event ev, events[MAX_EVENT];
-    std::queue<DB_result_t> resultq;
+    std::queue<Dw_response_t> resultq;
 
     sscanf(argv[0], "%d", &mainfd);
 

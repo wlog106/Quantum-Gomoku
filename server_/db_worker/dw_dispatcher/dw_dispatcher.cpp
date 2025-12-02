@@ -13,10 +13,10 @@ void dw_dispatcher(
         switch(job_ptr->action)
         {
             case(DB_SIGNUP):
-                dwcxt->resultq->push(dw_signup());
+                dw_signup(dwcxt, job_ptr->user);
                 break;
             case(DB_LOGIN):
-                dwcxt->resultq->push(dw_login());
+                dw_login(dwcxt, job_ptr->user);
                 break;
         }
     }
