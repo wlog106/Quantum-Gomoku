@@ -96,7 +96,7 @@ int main(int arg, char **argv){
                 continue;
             }
             if(evfd == *dw_fd){
-                /* handle db result */
+                on_dw_res(scxt, fd_to_conn);
                 continue;
             }
             if(evfd == *rmgr_fd){

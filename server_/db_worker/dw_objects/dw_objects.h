@@ -1,5 +1,5 @@
-#ifndef DW_OBJECTS
-#define DW_OBJECTS
+#ifndef DW_OBJECTS_H
+#define DW_OBJECTS_H
 
 #include <queue>
 
