@@ -16,9 +16,11 @@
 
 typedef struct db_response{
     int id;
-    char passwd_hash[65];
-    unsigned long recvlen;
-    my_bool is_null;
+    char hash[65];
+    unsigned long id_recvlen;
+    unsigned long pwd_recvlen;
+    my_bool id_is_null;
+    my_bool pwd_is_null;
 } db_response;
 
 typedef struct db_conn{
@@ -77,6 +79,11 @@ unsigned int db_get_hash(
     db_conn *db_handler, 
     char *username, 
     char *passwd_hash
+);
+
+unsigned int db_get_id_by_name(
+    db_conn *db_handler,
+    char *username
 );
 
 #ifdef __cplusplus

@@ -40,10 +40,10 @@ db_conn *db_init()
     MYSQL_BIND bind_get_hash_result[1];
     memset(bind_get_hash_result, 0, sizeof(MYSQL_BIND));
     bind_get_hash_result[0].buffer_type     = MYSQL_TYPE_STRING;
-    bind_get_hash_result[0].buffer          = db_handler->res_info->passwd_hash;
-    bind_get_hash_result[0].buffer_length   = sizeof(db_handler->res_info->passwd_hash);
-    bind_get_hash_result[0].length          = &db_handler->res_info->recvlen;
-    bind_get_hash_result[0].is_null         = &db_handler->res_info->is_null;
+    bind_get_hash_result[0].buffer          = db_handler->res_info->hash;
+    bind_get_hash_result[0].buffer_length   = sizeof(db_handler->res_info->hash);
+    bind_get_hash_result[0].length          = &db_handler->res_info->pwd_recvlen;
+    bind_get_hash_result[0].is_null         = &db_handler->res_info->pwd_is_null;
     Mysql_stmt_bind_result(
         db_handler->stmt_get_hash, 
         bind_get_hash_result
@@ -55,8 +55,8 @@ db_conn *db_init()
     bind_get_id_by_name_result[0].buffer_type   = MYSQL_TYPE_LONG;
     bind_get_id_by_name_result[0].buffer        = &db_handler->res_info->id;
     bind_get_id_by_name_result[0].buffer_length = sizeof(int);
-    bind_get_hash_result[0].length              = &db_handler->res_info->recvlen;
-    bind_get_hash_result[0].is_null             = &db_handler->res_info->is_null;
+    bind_get_hash_result[0].length              = &db_handler->res_info->id_recvlen;
+    bind_get_hash_result[0].is_null             = &db_handler->res_info->id_is_null;
     Mysql_stmt_bind_result(
         db_handler->stmt_get_id_by_name, 
         bind_get_id_by_name_result
