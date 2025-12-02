@@ -7,11 +7,38 @@ typedef enum {
     C_pair_randomly,
     C_observe_randomly,
     /*above is client->server, below is server->client*/
+    //login
     C_account_does_not_exist,
     C_account_already_exist,
     C_password_incorrect,
     C_login_success,
-    C_already_login
+    C_already_login,
+    
+    //"room info" : "room_id p1_exist p2_exist ob1_exist ob2_exist ob3_exist p1_ready p2_ready {user name by order}"
+    /*
+    p1:andy(ready)
+    p2:NULL
+    ob1:judy
+    ob2:NULL
+    ob3:david
+
+    "CF4DS 1 0 1 0 1 1 0 andy judy david"
+    */
+    //create room
+    C_create_room_success, //cid "room info"
+    C_too_much_room, //cid
+
+    //join room by id
+    C_join_by_id_success_waiting,//cid "room info"
+    C_join_by_id_success_playing,//to be decided
+    C_join_by_id_fail, //cid "reason" (1:id DNE, 2:room full)
+
+    //pair randomly
+    C_pair_success_start_playing,
+    C_leave_orphan_success,
+
+    //observe randomly
+    C_go_fuck_yourself
 } Command_t;
 
 /*
