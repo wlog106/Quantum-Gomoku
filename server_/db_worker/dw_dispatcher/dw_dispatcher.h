@@ -1,7 +1,8 @@
 #ifndef DW_DISPATCHER_H
 #define DW_DISPATCHER_H
 
-struct DB_result_t;
+struct Dw_response_t;
+struct conn_t;
 struct DwContext;
 
 void dw_dispatcher(
@@ -10,7 +11,7 @@ void dw_dispatcher(
     DwContext *dwcxt
 );
 
-DB_result_t dw_signup();
-DB_result_t dw_login();
+void dw_signup(DwContext *dwcxt, conn_t *u);
+void dw_login(DwContext *dwcxt, conn_t *u);
 
 #endif

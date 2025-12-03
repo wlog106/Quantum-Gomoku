@@ -1,4 +1,5 @@
 #include "../server_.h"
+#include <assert.h>
 
 linear_buf_t::linear_buf_t(){assert(1==0);}
 

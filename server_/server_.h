@@ -17,7 +17,11 @@
 #define evtype events[i].events
 
 typedef enum{
-    ACT_SEND,
+    RES_SIGNUP_SUCCESS,
+    RES_SIGNUP_DUPNAME,
+    RES_LOGIN_SUCCESS,
+    RES_LOGIN_USERDNE,
+    RES_LOGIN_PWDFAIL,
     DB_LOGIN,
     DB_SIGNUP,
 } Action_t;
