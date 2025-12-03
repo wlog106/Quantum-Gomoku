@@ -24,6 +24,7 @@ typedef enum {
 
     "CF4DS 1 0 1 0 1 1 0 andy judy david"
     */
+    //opselect
     //create room
     C_create_room_success, //cid "room info"
     C_too_much_room, //cid
@@ -34,11 +35,13 @@ typedef enum {
     C_join_by_id_fail, //cid "reason" (1:id DNE, 2:room full)
 
     //pair randomly
-    C_pair_success_start_playing,
-    C_leave_orphan_success,
+    C_pair_success_start_waiting,//cid "room info"
+    C_pair_fail,//cid 
 
     //observe randomly
-    C_go_fuck_yourself
+    C_start_observing,
+    C_no_current_playing_room
+
 } Command_t;
 
 /*
