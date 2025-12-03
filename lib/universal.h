@@ -31,6 +31,7 @@
 #define LIS_BACKLOG 1024
 
 #define MAXLINE 50000
+#define ROOM_ID_LEN 6
 
 using std::cin;
 using std::cout;

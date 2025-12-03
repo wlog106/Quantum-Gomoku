@@ -5,7 +5,6 @@
 #include "state.h"
 
 #define MAX_ACCOUNT_LEN 20
-#define ROOM_ID_LEN 6
 
 #define ALT_SCREEN_ON   "\x1b[?1049h"
 #define ALT_SCREEN_OFF  "\x1b[?1049l"
