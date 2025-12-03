@@ -60,7 +60,9 @@ typedef enum{
     OSR_no_error,
     OSR_waiting,
     OSR_room_id_len_error,
-    OSR_too_much_room
+    OSR_too_much_room,
+    OSR_room_id_dne,
+    OSR_room_already_full
 }opselect_reply_t;
 extern opselect_reply_t opselect_reply;
 void reset_opselect_ui();

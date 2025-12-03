@@ -16,6 +16,7 @@ void select_option_recv(const string &command){
             read_room_info(ss);
             set_state(S_waiting_room);
             lock_ui();
+            reset_opselect_ui();
             signal_ui();
             unlock_ui();
             break;
@@ -39,10 +40,31 @@ void select_enter_room_id_recv(const string &command){
     ss >> cmd_id;
     switch (cmd_id){
         case C_join_by_id_success_waiting:
+            read_room_info(ss);
+            set_state(S_waiting_room);
+            lock_ui();
+            reset_opselect_room_id();
+            signal_ui();
+            unlock_ui();
             break;
         case C_join_by_id_success_playing:
             break;
         case C_join_by_id_fail:
+            int reason;
+            ss >> reason;
+            lock_ui();
+            switch (reason) {
+                case 1:
+                    opselect_reply = OSR_room_id_dne;
+                    break;
+                case 2:
+                    opselect_reply = OSR_room_already_full;
+                    break;
+                default:
+                    break;
+            }
+            signal_ui();
+            unlock_ui();
             break;
         default:
             break;
