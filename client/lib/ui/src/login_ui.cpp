@@ -35,7 +35,7 @@ void login_with_account_ui(){
         default:
         break;
     }
-    cout << "\x1b[0m----------------------------------------\n";
+    cout << "\x1b[0m────────────────────────────────────────\n";
     cout << "Press Esc to leave\nPress Enter to login\nPress Up/Down arrow to select" << flush;
     return;
 }
@@ -68,7 +68,7 @@ void creating_account_ui(){
         default:
         break;
     }
-    cout << "\x1b[0m----------------------------------------\n";
+    cout << "\x1b[0m────────────────────────────────────────\n";
     cout << "Press Esc to leave\nPress Enter to create account and login\nPress Up/Down arrow to select" << flush;
     return;
 }

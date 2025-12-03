@@ -1,6 +1,4 @@
 #include "ui.h"
-#include <sys/select.h>
-#include <unistd.h>
 
 
 void *ui(void *vptr){
@@ -53,10 +51,13 @@ void *ui(void *vptr){
                 break;
             case S_select_enter_room_id:
                 select_enter_room_id_ui();
-            break;
+                break;
+            case S_waiting_room:
+                waiting_room_ui();
+                break;
             case S_debug:
                 debug_ui();
-            break;
+                break;
             default:
                 break;
             }

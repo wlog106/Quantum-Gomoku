@@ -1,5 +1,4 @@
 #include "../ui.h"
-#include <ostream>
 
 #define Board_pos_x 1
 #define Board_pos_y 1

@@ -1,7 +1,4 @@
 #include "client.h"
-#include "state.h"
-#include <pthread.h>
-#include <sys/select.h>
 
 
 State_t client_state;
@@ -52,6 +49,20 @@ string room_id_input_box;
 void reset_opselect_room_id(){
     room_id_input_box = "";
     opselect_reply = OSR_no_error;
+}
+
+//waiting room page
+string waiting_room_id = "";
+bool waiting_user_existance[5] = {false, false, false, false, false};
+string waiting_username[5] = {"", "", "", "", ""};
+bool waiting_is_ready[2] = {false, false};
+
+void reset_waiting_room(){
+    waiting_room_id = "";
+    for(int i = 0; i < 5; i++) waiting_user_existance[i] = false;
+    for(int i = 0; i < 5; i++) waiting_username[i] = "";
+    for(int i = 0; i < 2; i++) waiting_is_ready[i] = false;
+    return;
 }
 /*
 --------------------

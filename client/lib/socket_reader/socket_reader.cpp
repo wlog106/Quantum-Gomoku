@@ -1,5 +1,4 @@
 #include "socket_reader.h"
-#include <sys/select.h>
 
 
 void *socket_reader(void *vptr){
@@ -47,6 +46,12 @@ void *socket_reader(void *vptr){
                         break;
                     case S_creating_account:
                         creating_account_recv(command);
+                        break;
+                    case S_select_option:
+                        select_option_recv(command);
+                        break;
+                    case S_select_enter_room_id:
+                        select_enter_room_id_recv(command);
                         break;
                     default:
                     break;

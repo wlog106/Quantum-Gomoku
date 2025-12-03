@@ -1,5 +1,4 @@
 # include "../stdin_handler.h"
-#include <string>
 
 void select_option_std(const string &key){
     if(key == "UP"){

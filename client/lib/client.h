@@ -3,7 +3,6 @@
 #include "../../lib/command.h"
 #include "../../lib/board.h"
 #include "state.h"
-#include <pthread.h>
 
 #define MAX_ACCOUNT_LEN 20
 #define ROOM_ID_LEN 6
@@ -60,7 +59,8 @@ extern int opselect_option;
 typedef enum{
     OSR_no_error,
     OSR_waiting,
-    OSR_room_id_len_error
+    OSR_room_id_len_error,
+    OSR_too_much_room
 }opselect_reply_t;
 extern opselect_reply_t opselect_reply;
 void reset_opselect_ui();
@@ -69,6 +69,13 @@ void reset_opselect_ui();
 extern string room_id_input_box;
 void reset_opselect_room_id();
 
+//waiting room page
+extern string waiting_room_id;
+extern bool waiting_user_existance[5];
+extern string waiting_username[5];
+extern bool waiting_is_ready[2];
+
+void reset_waiting_room();
 /*
 --------------------
 end of ui variable

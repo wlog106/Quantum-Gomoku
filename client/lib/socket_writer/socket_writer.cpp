@@ -1,5 +1,4 @@
 #include "socket_writer.h"
-#include <sys/select.h>
 
 
 void *socket_writer(void *vptr){

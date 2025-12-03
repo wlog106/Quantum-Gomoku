@@ -93,7 +93,12 @@ string get_key(){
         return "BACKSPACE";
     }
     else if(ch == 10){
-        return "ENTER";
+        if(enter_press_check()){
+            return "ENTER";
+        }
+        else{
+            return "UNKNOWN";
+        }
     }
     else if(ch == 4){
         return "EOF";
