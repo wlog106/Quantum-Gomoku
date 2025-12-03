@@ -9,6 +9,24 @@ void select_option_ui(){
     cout << "────────────────────────────────────────\n";
     cout << "Press Esc to log out\nPress Enter to confirm\nPress Up/Down arrow to select\n" << flush;
     cout << "────────────────────────────────────────\n";
+    switch (opselect_reply) {
+        case OSR_waiting:
+            cout << "\x1b[1mWaiting...\n";
+            break;
+        case OSR_too_much_room:
+            cout << "\x1b[1;31mThere are too many rooms already exist. Please try again later.\n";
+            break;
+        case OSR_no_empty_waiting_room:
+            cout << "\x1b[1;31mThere are currently no rooms with an available battle slot to join.\n";
+            cout << "Please try again later\n";
+            break;
+        case OSR_no_current_playing_room:
+            cout << "\x1b[1;31mNo rooms are currently playing. Please try again later.\n";
+            break;
+        default:
+            break;
+    }
+    cout << "\x1b[0m" << flush;
 }
 
 void select_enter_room_id_ui(){
@@ -17,4 +35,21 @@ void select_enter_room_id_ui(){
     cout << "────────────────────────────────────────\n";
     cout << "Press Esc to cancel\nPress Enter to confirm\n" << flush;
     cout << "────────────────────────────────────────\n";
+    switch (opselect_reply) {
+        case OSR_waiting:
+            cout << "\x1b[1mWaiting...\n";
+            break;
+        case OSR_room_id_len_error:
+            cout << "\x1b[1;31mRoom ID length error.\nThe room ID should be " << ROOM_ID_LEN << " charactors.\n";
+            break;
+        case OSR_room_id_dne:   
+            cout << "\x1b[1;31mThis room ID does not exist. Please try another one.\n";
+            break;
+        case OSR_room_already_full:
+            cout << "\x1b[1;31mThis room is already full. Please try again later.\n";
+            break;
+        default:
+            break;
+    }
+    cout << "\x1b[0m" << flush;
 }
