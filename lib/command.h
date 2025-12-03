@@ -39,8 +39,8 @@ typedef enum {
     C_pair_fail,//cid 
 
     //observe randomly
-    C_start_observing,
-    C_no_current_playing_room
+    C_start_observing, //to be dicided
+    C_no_current_playing_room // cid
 
 } Command_t;
 

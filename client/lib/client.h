@@ -62,7 +62,9 @@ typedef enum{
     OSR_room_id_len_error,
     OSR_too_much_room,
     OSR_room_id_dne,
-    OSR_room_already_full
+    OSR_room_already_full,
+    OSR_no_empty_waiting_room,//for pair randomly
+    OSR_no_current_playing_room //for observe randomly
 }opselect_reply_t;
 extern opselect_reply_t opselect_reply;
 void reset_opselect_ui();

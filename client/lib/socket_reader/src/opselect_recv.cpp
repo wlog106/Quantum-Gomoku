@@ -27,7 +27,29 @@ void select_option_recv(const string &command){
             unlock_ui();
             break;
         //pair randomly
+        case C_pair_success_start_waiting:
+            read_room_info(ss);
+            set_state(S_waiting_room);
+            lock_ui();
+            reset_opselect_ui();
+            signal_ui();
+            unlock_ui();
+            break;
+        case C_pair_fail:
+            lock_ui();
+            opselect_reply = OSR_no_empty_waiting_room;
+            signal_ui();
+            unlock_ui();
+            break;
         //observe randomly
+        case C_start_observing:
+            break;
+        case C_no_current_playing_room:
+            lock_ui();
+            opselect_reply = OSR_no_current_playing_room;
+            signal_ui();
+            unlock_ui();
+            break;
         default:
             break;
     }
