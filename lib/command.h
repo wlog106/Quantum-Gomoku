@@ -1,11 +1,11 @@
 #pragma once
 typedef enum {
-    C_create_new_account,//cid
+    C_create_new_account,//cid "account" "password hash"
     /*reply
         C_account_already_exist
         C_login_success
     */
-    C_login_to_server,//cid
+    C_login_to_server,//cid "account" "password hash"
     /*reply
         C_account_does_not_exist
         C_password_incorrect
@@ -38,7 +38,7 @@ typedef enum {
     /*reply
         C_new_waiting_room_message
     */
-    
+
     //------------------------------------------------//
     /*above is client->server, below is server->client*/
     //------------------------------------------------//
@@ -84,9 +84,3 @@ typedef enum {
     C_leave_waiting_room_success //cid
 
 } Command_t;
-
-/*
-    command format>
-        C_create_new_accout:    100:int username:str passwd_hash:str
-        C_login_to_server:      101:int username:str passwd_hash:str 
-*/
