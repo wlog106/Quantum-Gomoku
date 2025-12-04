@@ -1,5 +1,6 @@
 #pragma once
 typedef enum {
+    //login
     C_create_new_account,//cid "account" "password hash"
     /*reply
         C_account_already_exist
@@ -14,11 +15,30 @@ typedef enum {
     */
     C_client_logout,//cid //no reply
 
+
     //opselect
     C_create_room,//cid
+    /*reply
+        C_create_room_success
+        C_too_much_room
+    */
     C_join_room_by_id,//cid "room id"
+    /*reply
+        C_join_by_id_success_waiting
+        C_join_by_id_success_playing
+        C_join_by_id_fail
+    */
     C_pair_randomly,//cid
+    /*reply
+        C_pair_success_start_waiting
+        C_pair_fail
+    */
     C_observe_randomly,//cid
+    /*reply
+        C_start_observing
+        C_no_current_playing_room
+    */
+
 
     //waiting room
     C_change_ready,//cid
@@ -39,6 +59,8 @@ typedef enum {
         C_new_waiting_room_message
     */
 
+
+    
     //------------------------------------------------//
     /*above is client->server, below is server->client*/
     //------------------------------------------------//
