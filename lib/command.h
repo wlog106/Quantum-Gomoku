@@ -1,12 +1,27 @@
 typedef enum {
-    C_create_new_account,
-    C_login_to_server,
-    C_client_logout,
+    C_create_new_account,//cid
+    /*reply
+        C_account_already_exist
+        C_login_success
+    */
+    C_login_to_server,//cid
+    /*reply
+        C_account_does_not_exist
+        C_password_incorrect
+        C_already_login
+        C_login_success
+    */
+    C_client_logout,//cid //no reply
+
+    //opselect
     C_create_room,
     C_join_room_by_id,
     C_pair_randomly,
     C_observe_randomly,
+    //------------------------------------------------//
     /*above is client->server, below is server->client*/
+    //------------------------------------------------//
+
     //login
     C_account_does_not_exist,
     C_account_already_exist,
