@@ -1,3 +1,4 @@
+#pragma once
 typedef enum {
     C_create_new_account,//cid
     /*reply

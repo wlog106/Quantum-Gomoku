@@ -3,6 +3,7 @@
 #include "../../lib/command.h"
 #include "../../lib/board.h"
 #include "state.h"
+#include "ui_variable.h"
 
 #define MAX_ACCOUNT_LEN 20
 
@@ -10,85 +11,32 @@
 #define ALT_SCREEN_OFF  "\x1b[?1049l"
 #define CURSOR_SHOW     "\x1b[?25h"
 
-/*
-see extern variable in client_variable.cpp
-*/
-extern int sockfd;
+//sockfd
+extern int             server_sockfd;
 extern pthread_mutex_t sockfd_mutex;
+int    get_sockfd();
+void   start_connection(char* addr);
 
-extern State_t client_state;
+//state
+extern State_t         client_state;
 extern pthread_mutex_t client_state_mutex;
+State_t  get_state();
+void     set_state(State_t new_state);
 
+
+//mutex of socket writer
 extern pthread_mutex_t writer_mutex;
 extern pthread_cond_t writer_cond;
 extern bool writer_end;
 extern queue<string> command_to_be_sent;
 
-/*
---------------------
-start of ui variable
---------------------
-*/
+//mutex of ui
 extern pthread_mutex_t ui_mutex;
 extern pthread_cond_t ui_cond;
 extern bool ui_end;
 extern bool ui_new_info;
 
-
-//login page
-extern string account_input_box;
-extern string password_input_box;
-extern string password_confirm_input_box;
-typedef enum{
-    LE_no_error,
-    LE_input_empty,
-    LE_password_confirm_does_not_match,
-    LE_account_does_not_exist,
-    LE_password_incorrect,
-    LE_already_login,
-    LE_account_already_exist,
-    LE_waiting
-}login_error_t;
-extern login_error_t login_err;
-extern int choose_enter;//0 enter account, 1 enter password, 2 comfirm password
-void reset_login_ui();
-
-//select page
-extern int opselect_option;
-typedef enum{
-    OSR_no_error,
-    OSR_waiting,
-    OSR_room_id_len_error,
-    OSR_too_much_room,
-    OSR_room_id_dne,
-    OSR_room_already_full,
-    OSR_no_empty_waiting_room,//for pair randomly
-    OSR_no_current_playing_room //for observe randomly
-}opselect_reply_t;
-extern opselect_reply_t opselect_reply;
-void reset_opselect_ui();
-
-//select room id page
-extern string room_id_input_box;
-void reset_opselect_room_id();
-
-//waiting room page
-extern string waiting_room_id;
-extern bool waiting_user_existance[5];
-extern string waiting_username[5];
-extern bool waiting_is_ready[2];
-
-void reset_waiting_room();
-/*
---------------------
-end of ui variable
---------------------
-*/
-
-
-/*
-end pipe
-*/
+//end pipe
 #define CLOSE_CLIENT(x) \
     do { \
         char _tmp = (x); \
@@ -101,20 +49,15 @@ extern int  ui_end_pipe[2];
 extern int  socket_reader_end_pipe[2];
 extern int  socket_writer_end_pipe[2];
 
+//thread
 void *terminator(void *vptr);
 void *stdin_handler(void *vptr);
 void *ui(void *vptr);
 void *socket_reader(void *vptr);
 void *socket_writer(void *vptr);
 
-void     set_state(State_t new_state);
-State_t  get_state();
-int      get_sockfd();
-
+//other function
 bool enter_press_check();
-
-int  start_connection(char* addr);
-
 void set_terminal();
 void restore_terminal();
 

@@ -1,76 +1,63 @@
 #include "client.h"
 
-
-State_t client_state;
-int sockfd;
+//sockfd
+int             server_sockfd;
 pthread_mutex_t sockfd_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t client_state_mutex = PTHREAD_MUTEX_INITIALIZER;
+int get_sockfd(){
+    int sockfd;
+    Pthread_mutex_lock(&sockfd_mutex);
+    sockfd = server_sockfd;
+    Pthread_mutex_unlock(&sockfd_mutex);
+    return sockfd;
+}
+void start_connection(char* addr){
+    int sockfd;
+    struct sockaddr_in servaddr;
+    sockfd = Socket(AF_INET, SOCK_STREAM, 0);
 
+    bzero(&servaddr, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(TEST_PORT);
+    Inet_pton(AF_INET, addr, &servaddr.sin_addr);
+
+    Connect(sockfd, (SA *) &servaddr, sizeof(servaddr));
+
+    Pthread_mutex_lock(&sockfd_mutex);
+    server_sockfd = sockfd;
+    Pthread_mutex_unlock(&sockfd_mutex);
+    return;
+}
+
+//state
+State_t         client_state;
+pthread_mutex_t client_state_mutex = PTHREAD_MUTEX_INITIALIZER;
+State_t get_state(){
+    State_t state;
+    Pthread_mutex_lock(&client_state_mutex);
+    state = client_state;
+    Pthread_mutex_unlock(&client_state_mutex);
+    return state;
+}
+void set_state(State_t new_state){
+    Pthread_mutex_lock(&client_state_mutex);
+    client_state = new_state;
+    Pthread_mutex_unlock(&client_state_mutex);
+    return;
+}
+
+//mutex of socket writer
 pthread_mutex_t writer_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t writer_cond;
 bool writer_end = 0;
 queue<string> command_to_be_sent;
 
-/*
---------------------
-start of ui variable
---------------------
-*/
-pthread_mutex_t ui_mutex = PTHREAD_MUTEX_INITIALIZER; //lock everything about ui
+//mutex of ui
+pthread_mutex_t ui_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t ui_cond;
 bool ui_end = 0;
 bool ui_new_info = 1;
 
-//login page
-string account_input_box;
-string password_input_box;
-string password_confirm_input_box;
-login_error_t login_err = LE_no_error;
-int choose_enter = 0;
-void reset_login_ui(){
-    account_input_box = "";
-    password_input_box = "";
-    password_confirm_input_box = "";
-    login_err = LE_no_error;
-    choose_enter = 0;
-    return;
-}
-
-//select page
-int opselect_option = 0;
-opselect_reply_t opselect_reply = OSR_no_error;
-void reset_opselect_ui(){
-    opselect_option = 0;
-    opselect_reply = OSR_no_error;
-    return;
-}
-//select room id
-string room_id_input_box;
-void reset_opselect_room_id(){
-    room_id_input_box = "";
-    opselect_reply = OSR_no_error;
-}
-
-//waiting room page
-string waiting_room_id = "";
-bool waiting_user_existance[5] = {false, false, false, false, false};
-string waiting_username[5] = {"", "", "", "", ""};
-bool waiting_is_ready[2] = {false, false};
-
-void reset_waiting_room(){
-    waiting_room_id = "";
-    for(int i = 0; i < 5; i++) waiting_user_existance[i] = false;
-    for(int i = 0; i < 5; i++) waiting_username[i] = "";
-    for(int i = 0; i < 2; i++) waiting_is_ready[i] = false;
-    return;
-}
-/*
---------------------
-end of ui variable
---------------------
-*/
-
-//ending variable
+//end pipe
 char client_end_code;
 int client_end_pipe[2];
 int std_handler_end_pipe[2];
@@ -94,43 +81,6 @@ void *terminator(void *vptr){
     write(socket_reader_end_pipe[1], "x", 1);
     write(socket_writer_end_pipe[1], "x", 1); //order does matter
     return NULL;
-}
-
-State_t get_state(){
-    State_t state;
-    Pthread_mutex_lock(&client_state_mutex);
-    state = client_state;
-    Pthread_mutex_unlock(&client_state_mutex);
-    return state;
-}
-
-int get_sockfd(){
-    int result;
-    Pthread_mutex_lock(&sockfd_mutex);
-    result = sockfd;
-    Pthread_mutex_unlock(&sockfd_mutex);
-    return result;
-}
-
-void set_state(State_t new_state){
-    Pthread_mutex_lock(&client_state_mutex);
-    client_state = new_state;
-    Pthread_mutex_unlock(&client_state_mutex);
-    return;
-}
-
-int start_connection(char* addr){
-    int sockfd;
-    struct sockaddr_in servaddr;
-    sockfd = Socket(AF_INET, SOCK_STREAM, 0);
-
-    bzero(&servaddr, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(TEST_PORT);
-    Inet_pton(AF_INET, addr, &servaddr.sin_addr);
-
-    Connect(sockfd, (SA *) &servaddr, sizeof(servaddr));
-    return sockfd;
 }
 
 //enter spanning

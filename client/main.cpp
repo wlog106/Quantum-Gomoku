@@ -21,7 +21,7 @@ int main(int argc, char **argv){
     });
 
     client_state = S_login_option;
-    sockfd = start_connection(argv[1]);
+    start_connection(argv[1]);
 
     set_terminal();
     
@@ -38,7 +38,7 @@ int main(int argc, char **argv){
     Pthread_join(tid_socket_reader, NULL);
     Pthread_join(tid_end, NULL);
 
-    shutdown(sockfd, SHUT_RDWR);
+    shutdown(server_sockfd, SHUT_RDWR);
     restore_terminal();
     if(client_end_code == 'c'){
         cout << "Ctrl-C keyboard interrupt" << endl;
