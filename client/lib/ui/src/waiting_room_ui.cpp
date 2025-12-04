@@ -3,8 +3,8 @@
 void waiting_room_ui(){
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE;
     int ready_pos = max(16, max((waiting_user_existance[0] ? int(waiting_username[0].size()) : 7), (waiting_user_existance[1] ? int(waiting_username[1].size()) : 7)));
-    cout << "\x1b[1mWaiting Room" << endl;
-    cout << "Room id: " << waiting_room_id << endl;
+    cout << "\x1b[1m              Waiting Room" << endl;
+    cout << "            Room id : " << waiting_room_id << "\x1b[0m" << endl;
     cout << "════════════════════════════════════════" << endl;
     cout << "\x1b[0m\x1b[40;37m1.Player Black:\x1b[0m ";
     cout << (waiting_user_existance[0] ? waiting_username[0] : "(empty)");
@@ -20,7 +20,19 @@ void waiting_room_ui(){
     cout << (waiting_user_existance[3] ? waiting_username[3] : "(empty)") << endl;
     cout << "\x1b[0m\x1b[40;37m5.Observer 3  :\x1b[0m ";
     cout << (waiting_user_existance[4] ? waiting_username[4] : "(empty)") << endl;
+    cout << "═════════════════Chat═══════════════════" << endl;
+    for(int i = 5; i > int(waiting_room_history_message.size()); i--) cout << '\n';
+    for(auto it = waiting_room_history_message.rbegin(); it != waiting_room_history_message.rend(); it++){
+        cout << *it << endl;
+    }
     cout << "════════════════════════════════════════" << endl;
-    cout << "Press Esc to leave room\nPress R to ready/unready\n" << flush;
-    cout << "Press Number 1~5 to change position\n";
+    if(waiting_room_entering){
+        cout << "Text: " << waiting_room_input_box << endl;
+        cout << "Press Enter to send or leave" << endl;
+    }
+    else{
+        cout << "Press Esc to leave room\nPress R to ready/unready\n" << flush;
+        cout << "Press Number 1~5 to change position\n";
+        cout << "Press Enter to enter message" << endl; 
+    }
 }
