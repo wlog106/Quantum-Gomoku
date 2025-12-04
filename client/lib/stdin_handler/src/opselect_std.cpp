@@ -29,6 +29,7 @@ void select_option_std(const string &key){
         unlock_writer();
     }
     else if(key == "ENTER"){
+        if(!key_press_check(key)) return;
         switch (opselect_option) {
         case 0:
             lock_ui();
@@ -83,6 +84,7 @@ void select_enter_room_id_std(const string &key){
         unlock_ui();
     }
     else if(key == "ENTER"){
+        if(!key_press_check(key)) return;
         if(int(room_id_input_box.size()) == ROOM_ID_LEN){
             lock_ui();
             opselect_reply = OSR_waiting;

@@ -49,6 +49,7 @@ void login_with_account_std(const string &key){
         unlock_ui();
     }
     else if(key == "ENTER"){
+        if(!key_press_check(key)) return;
         lock_ui();
         string account = account_input_box;
         string password = password_input_box;
@@ -126,6 +127,7 @@ void creating_account_std(const string &key){
         unlock_ui();
     }
     else if(key == "ENTER"){
+        if(!key_press_check(key)) return;
         lock_ui();
         string account = account_input_box;
         string password = password_input_box;
