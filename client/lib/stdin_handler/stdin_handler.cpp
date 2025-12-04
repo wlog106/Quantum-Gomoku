@@ -48,6 +48,9 @@ void *stdin_handler(void *vptr){
             case S_select_enter_room_id:
                 select_enter_room_id_std(key);
                 break;
+            case S_waiting_room:
+                waiting_room_std(key);
+                break;
             default:
                 break;
             }
@@ -93,12 +96,7 @@ string get_key(){
         return "BACKSPACE";
     }
     else if(ch == 10){
-        if(enter_press_check()){
-            return "ENTER";
-        }
-        else{
-            return "UNKNOWN";
-        }
+        return "ENTER";
     }
     else if(ch == 4){
         return "EOF";
