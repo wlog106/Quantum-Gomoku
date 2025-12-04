@@ -6,6 +6,7 @@
 #include "ui_variable.h"
 
 #define MAX_ACCOUNT_LEN 20
+#define MAX_MESSAGE_LEN 100
 
 #define ALT_SCREEN_ON   "\x1b[?1049h"
 #define ALT_SCREEN_OFF  "\x1b[?1049l"
@@ -57,7 +58,7 @@ void *socket_reader(void *vptr);
 void *socket_writer(void *vptr);
 
 //other function
-bool enter_press_check();
+bool key_press_check(const string &key);
 void set_terminal();
 void restore_terminal();
 

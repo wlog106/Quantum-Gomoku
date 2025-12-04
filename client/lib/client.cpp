@@ -90,13 +90,13 @@ long long now_ms() {
     return ts.tv_sec * 1000LL + ts.tv_nsec / 1000000;
 }
 
-long long last_enter_time = 0;
-const int ENTER_COOLDOWN = 300; // 300ms
+map<string, long long> key_last_press;
+const int KEY_COOLDOWN = 300; // 300ms
 
-bool enter_press_check() {
+bool key_press_check(const string &key) {
     long long t = now_ms();
-    if (t - last_enter_time >= ENTER_COOLDOWN) {
-        last_enter_time = t;
+    if (t - key_last_press[key] >= KEY_COOLDOWN) {
+        key_last_press[key] = t;
         return true;
     }
     return false;
@@ -112,7 +112,6 @@ void set_terminal(){
     ECHONL | ECHOPRT | ECHOKE | ICRNL);
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
     cout << ALT_SCREEN_ON << flush;
-
 }
 
 void restore_terminal(){
