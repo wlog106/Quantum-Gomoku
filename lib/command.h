@@ -15,20 +15,40 @@ typedef enum {
     C_client_logout,//cid //no reply
 
     //opselect
-    C_create_room,
-    C_join_room_by_id,
-    C_pair_randomly,
-    C_observe_randomly,
+    C_create_room,//cid
+    C_join_room_by_id,//cid "room id"
+    C_pair_randomly,//cid
+    C_observe_randomly,//cid
+
+    //waiting room
+    C_change_ready,//cid
+    /*reply
+        C_new_room_info
+        check if all members are ready, if yes, start the game
+    */
+    C_change_waiting_position,//cid "position[1,5]"
+    /*reply
+        C_new_room_info
+    */
+    C_leave_waiting_room,//cid
+    /*reply
+        C_leave_waiting_room_success
+    */
+    C_send_message_waiting_room,//cid "message"
+    /*reply
+        C_new_waiting_room_message
+    */
+    
     //------------------------------------------------//
     /*above is client->server, below is server->client*/
     //------------------------------------------------//
 
     //login
-    C_account_does_not_exist,
-    C_account_already_exist,
-    C_password_incorrect,
-    C_login_success,
-    C_already_login,
+    C_account_does_not_exist,//cid
+    C_account_already_exist,//cid
+    C_password_incorrect,//cid
+    C_login_success,//cid
+    C_already_login,//cid
     
     //"room info" : "room_id p1_exist p2_exist ob1_exist ob2_exist ob3_exist p1_ready p2_ready {user name by order}"
     /*
@@ -56,7 +76,12 @@ typedef enum {
 
     //observe randomly
     C_start_observing, //to be dicided
-    C_no_current_playing_room // cid
+    C_no_current_playing_room, // cid
+
+    //waiting room
+    C_new_room_info, //cid "room info"
+    C_new_waiting_room_message, //cid "message"
+    C_leave_waiting_room_success //cid
 
 } Command_t;
 
