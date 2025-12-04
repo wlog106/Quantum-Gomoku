@@ -53,5 +53,8 @@ extern string waiting_room_id;
 extern bool waiting_user_existance[5];
 extern string waiting_username[5];
 extern bool waiting_is_ready[2];
+extern int waiting_room_entering;
+extern deque<string> waiting_room_history_message;
+extern string waiting_room_input_box;
 
 void reset_waiting_room();
