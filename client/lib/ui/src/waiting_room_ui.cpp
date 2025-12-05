@@ -22,7 +22,7 @@ void waiting_room_ui(){
     cout << (waiting_user_existance[4] ? waiting_username[4] : "(empty)") << endl;
     cout << "═════════════════Chat═══════════════════" << endl;
     for(int i = 5; i > int(waiting_room_history_message.size()); i--) cout << '\n';
-    for(auto it = waiting_room_history_message.rbegin(); it != waiting_room_history_message.rend(); it++){
+    for(auto it = waiting_room_history_message.begin(); it != waiting_room_history_message.end(); it++){
         cout << *it << endl;
     }
     cout << "════════════════════════════════════════" << endl;
