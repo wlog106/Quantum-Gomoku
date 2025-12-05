@@ -53,6 +53,7 @@ typedef enum {
     C_leave_waiting_room,//cid
     /*reply
         C_leave_waiting_room_success
+        c_new_room_info
     */
     C_send_message_waiting_room,//cid "message"
     /*reply
@@ -60,7 +61,7 @@ typedef enum {
     */
 
 
-    
+
     //------------------------------------------------//
     /*above is client->server, below is server->client*/
     //------------------------------------------------//
