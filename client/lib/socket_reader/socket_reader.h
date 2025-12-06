@@ -12,3 +12,7 @@ void read_room_info(stringstream &ss);
 
 //waiting room
 void waiting_room_recv(const string &command);
+
+//playing room
+void playing_recv(const string &command);
+void read_playing_info(stringstream &ss);

@@ -29,6 +29,15 @@ void waiting_room_recv(const string &command){
             signal_ui();
             unlock_ui();
             break;
+        case C_start_a_playing_room:
+            set_state(S_playing);
+            lock_ui();
+            reset_waiting_room();
+            read_playing_info(ss);
+            playing_ui_operation.push(PUO_initialize);
+            signal_ui();
+            unlock_ui();
+            break;
         default:
             break;
     }
