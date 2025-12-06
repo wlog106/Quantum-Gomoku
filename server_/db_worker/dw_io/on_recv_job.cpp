@@ -1,14 +1,15 @@
 #include "../../server_.h"
 #include <cerrno>
+#include <cstdio>
 #include <sys/uio.h>
 #include <bits/types/struct_iovec.h>
 
 
 void on_recv_job(DwContext *dwcxt){
     int n;
-    struct iovec iov[MAX_JOB];
+    char recvbuf[MAXLINE];
     while(1){
-        n = readv(dwcxt->mainfd, iov, MAX_JOB);
+        n = read(dwcxt->mainfd, recvbuf, MAXLINE);
         if(n == -1){
             if(errno == EINTR)
                 continue;
@@ -22,6 +23,7 @@ void on_recv_job(DwContext *dwcxt){
             */
             exit(1);
         }
-        dw_dispatcher(n, iov, dwcxt);
+        recvbuf[n] = 0;
+        dwcxt->stream_buf->append(recvbuf);
     }
 }
