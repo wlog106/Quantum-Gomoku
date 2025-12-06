@@ -2,20 +2,16 @@
 
 void select_option_std(const string &key){
     if(key == "UP"){
-        if(opselect_option > 0){
-            lock_ui();
-            opselect_option--;
-            signal_ui();
-            unlock_ui();
-        }
+        lock_ui();
+        if(opselect_option > 0) opselect_option--;
+        signal_ui();
+        unlock_ui();
     }
     else if(key == "DOWN"){
-        if(opselect_option < 3){
-            lock_ui();
-            opselect_option++;
-            signal_ui();
-            unlock_ui();
-        }
+        lock_ui();
+        if(opselect_option < 3) opselect_option++;
+        signal_ui();
+        unlock_ui();
     }
     else if(key == "ESC"){
         set_state(S_login_option);
