@@ -14,11 +14,11 @@ void waiting_room_ui(){
     cout << (waiting_user_existance[1] ? waiting_username[1] : "(empty)");
     if(waiting_user_existance[1]) cout << MOVE(5, 16 + ready_pos) << (waiting_is_ready[1] ? "  (ready)" : "(unready)");
     cout << endl;
-    cout << "\x1b[0m\x1b[40;37m3.Observer 1  :\x1b[0m ";
+    cout << "\x1b[0m\x1b[38;5;141;48;5;228m3.Observer 1  :\x1b[0m ";
     cout << (waiting_user_existance[2] ? waiting_username[2] : "(empty)") << endl;
-    cout << "\x1b[0m\x1b[40;37m4.Observer 2  :\x1b[0m ";
+    cout << "\x1b[0m\x1b[38;5;141;48;5;228m4.Observer 2  :\x1b[0m ";
     cout << (waiting_user_existance[3] ? waiting_username[3] : "(empty)") << endl;
-    cout << "\x1b[0m\x1b[40;37m5.Observer 3  :\x1b[0m ";
+    cout << "\x1b[0m\x1b[38;5;141;48;5;228m5.Observer 3  :\x1b[0m ";
     cout << (waiting_user_existance[4] ? waiting_username[4] : "(empty)") << endl;
     cout << "═════════════════Chat═══════════════════" << endl;
     for(int i = 5; i > int(waiting_room_history_message.size()); i--) cout << '\n';
