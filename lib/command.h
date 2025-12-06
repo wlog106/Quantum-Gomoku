@@ -27,6 +27,7 @@ typedef enum {
         C_join_by_id_success_waiting
         C_join_by_id_success_playing
         C_join_by_id_fail
+        C_start_a_playing_room
     */
     C_pair_randomly,//cid
     /*reply
@@ -37,6 +38,7 @@ typedef enum {
     /*reply
         C_start_observing
         C_no_current_playing_room
+        C_start_a_playing_room
     */
 
 
@@ -45,6 +47,7 @@ typedef enum {
     /*reply
         C_new_room_info
         check if all members are ready, if yes, start the game
+        C_start_a_playing_room
     */
     C_change_waiting_position,//cid "position[1,5]"
     /*reply
@@ -104,6 +107,16 @@ typedef enum {
     //waiting room
     C_new_room_info, //cid "room info"
     C_new_waiting_room_message, //cid "message"
-    C_leave_waiting_room_success //cid
+    C_leave_waiting_room_success, //cid
+
+    //playing initialize
+    /*
+    "full game info" : "room_id board_info time position"
+    "board_info" : 169 "piece" with 168 space in row-major
+    "piece" : "0" or "1" or "3" or "7" or "9"
+    "time" : "player1_time player2_time"
+    "positon": [1,5] //who you are
+    */
+    C_start_a_playing_room //cid "full game info"
 
 } Command_t;
