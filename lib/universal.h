@@ -32,6 +32,7 @@
 
 #define MAXLINE 50000
 #define ROOM_ID_LEN 6
+#define Board_size 13
 
 using std::cin;
 using std::cout;
