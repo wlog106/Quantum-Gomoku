@@ -7,10 +7,10 @@
 
 void on_listen(
     ServerContext *scxt,
-    std::map<int, conn_t*> &fd_to_conn
+    std::map<int, conn*> &fd_to_conn
 ){
     int newfd, flags;
-    conn_t *newConn;
+    conn *newConn;
     struct epoll_event ev;
     struct sockaddr_in cliaddr;
     socklen_t clilen = sizeof(cliaddr);
@@ -29,7 +29,7 @@ void on_listen(
         ev.events = EPOLLET;
         ev.data.fd = newfd;
         Epoll_ctl(scxt->epfd, EPOLL_CTL_ADD, newfd, &ev);
-        newConn = new conn_t(newfd);
+        newConn = new conn(newfd, UNKNOWN_USR);
         fd_to_conn.insert({newfd, newConn});
     }
 }

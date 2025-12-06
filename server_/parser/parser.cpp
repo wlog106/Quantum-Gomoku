@@ -1,20 +1,33 @@
 #include "../server_.h"
 #include <cstddef>
-#include <sstream>
+#include <cstdio>
+#include <cstdlib>
+#include <queue>
 
 
 void parser(
     ServerContext *scxt,
-    conn_t *u
+    ServerObjects *sobj,
+    conn *u
 ){
-    std::string cmd;
-    int cmd_id;
-    std::string cmd_line;
-    std::stringstream ss;
-    while((cmd = u->r_buf.get_line())!=NULL){
-        ss >> cmd_id >> cmd_line;
+    char *line;
+    std::queue<char *> to_be_freed;
+    std::queue<pair<int, char *>> q;
+    while((line = u->r_buf.getline())!=NULL){
+        /* should validate line here, it will be implement later
         if(!validator(u, cmd_id, cmd_line)) 
             continue;
-        processor(scxt, u, q);
+        */
+        int cmd_id;
+        char *space = strchr(line, ' ');
+        *space++ = 0;
+        sscanf(line, "%d", &cmd_id);
+        to_be_freed.push(line);
+        q.push({cmd_id, space});
+    }
+    if(!q.empty()) processor(scxt, sobj, u, q);
+    while(!to_be_freed.empty()){
+        free(to_be_freed.front());
+        to_be_freed.pop();
     }
 }

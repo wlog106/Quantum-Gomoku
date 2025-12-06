@@ -1,16 +1,25 @@
 #ifndef LOGIC_H
 #define LOGIC_H
 
+#include <map>
 #include <queue>
 #include <string>
 
 struct ServerContext;
-struct conn_t;
+struct ServerObjects;
+struct conn;
+struct dw_res;
 
 void processor(
     ServerContext *scxt, 
-    conn_t *u, 
-    std::queue<std::string> &q
+    ServerObjects *sobj,
+    conn *u, 
+    std::queue<std::pair<int, char*>> &q
+);
+
+void dw_res_processor(
+    ServerContext *scxt,
+    std::queue<dw_res> &q
 );
 
 #endif

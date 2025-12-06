@@ -21,6 +21,9 @@ void dispatcher(
                 iov[0].iov_len = sizeof(job_t);
                 iocnt = sizeof(iov) / sizeof(iovec);
                 writev(scxt->dw_fd, iov, iocnt);
+                break;
+            case (RES_SIGNUP_SUCCESS):
+                break;
         }
     }
 }

@@ -24,12 +24,12 @@ void linear_buf_t::set_buf(std::string &&data){
     if(buf.size() > cap){/* error */}
 }
 
-std::string linear_buf_t::get_line(){
+char *linear_buf_t::getline(){
     int pos;
-    std::string line;
+    char *line;
     if((pos = buf.find("\n", read_pos)) == std::string::npos)
         return NULL;
-    line = buf.substr(read_pos, pos-read_pos);
+    line = strdup(buf.substr(read_pos, pos-read_pos).c_str());
     if(read_pos > cap/2){
         buf.erase(0, read_pos);
         read_pos = 0;
@@ -38,8 +38,4 @@ std::string linear_buf_t::get_line(){
         read_pos = pos + 1;
     }
     return line;
-}
-
-std::string linear_buf_t::write_all(){
-    return buf;
 }

@@ -1,11 +1,10 @@
 #include "../server_.h"
+#include <assert.h>
 
+conn::conn(){}
 
-conn_t::conn_t(){assert(1==0);}
-
-conn_t::conn_t(int fd){
-    id = -1;
+conn::conn(int fd, int state){ 
     this->fd = fd;
-    r_buf = linear_buf_t(MAXLINE);
-    w_buf = linear_buf_t(MAXLINE);
+    this->state = state;
+    this->r_buf = linear_buf_t(MAXLINE);
 }

@@ -1,3 +1,4 @@
+#include "db_worker/dw_objects/dw_objects.h"
 #include "server_.h"
 #include "utils/utils.h"
 #include <fcntl.h>
@@ -42,11 +43,18 @@ int main(int arg, char **argv){
     /* epoll */
     int nfds, epfd;
     struct epoll_event ev, events[MAX_EVENT];
+
     /* connection */
     int flags, listenfd;
     struct sockaddr_in servaddr;
+
     /* user data */
-    std::map<int, conn_t*> fd_to_conn;
+    std::map<int, conn*> fd_to_conn;
+
+    /* dw job queue */
+    std::queue<job_t*> dwq;
+    linear_buf_t dwr_buf(MAXLINE);
+    
 
     bzero(&servaddr, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
@@ -88,15 +96,19 @@ int main(int arg, char **argv){
         epfd, listenfd, *dw_fd, *rmgr_fd
     );
 
+    ServerObjects *sobj = new ServerObjects(
+        &dwq, &dwr_buf, &fd_to_conn
+    );
+
     for( ; ; ){
         nfds = Epoll_wait(epfd, events, MAX_EVENT);
         for(int i=0; i<nfds; i++){
             if(evfd == listenfd){
-                on_listen(scxt, fd_to_conn);
+                on_listen(scxt, sobj);
                 continue;
             }
             if(evfd == *dw_fd){
-                on_dw_res(scxt, fd_to_conn);
+                on_dw_res(scxt, sobj);
                 continue;
             }
             if(evfd == *rmgr_fd){
@@ -105,11 +117,11 @@ int main(int arg, char **argv){
             }
             if(evtype & EPOLLET){
                 scxt->cur_fd = evfd;
-                on_readable(scxt, fd_to_conn);
+                on_readable(scxt, sobj);
                 continue;
             }
             if(evtype & EPOLLOUT){
-                on_writable(scxt, fd_to_conn);
+                on_writable(scxt, sobj);
                 continue;
             }
             assert(1==0);

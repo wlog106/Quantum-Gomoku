@@ -2,11 +2,13 @@
 #define PARSER_H
 
 struct ServerContext;
-struct conn_t;
+struct ServerObjects;
+struct conn;
 
 void parser(
     ServerContext *scxt,
-    conn_t *u
+    ServerObjects *sobj,
+    conn *u
 );
 
 #endif

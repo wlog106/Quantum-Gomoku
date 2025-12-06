@@ -1,4 +1,5 @@
 #include "../server_.h"
+#include "dw_objects/dw_objects.h"
 #include <bits/types/struct_iovec.h>
 #include <cerrno>
 #include <cstdio>
@@ -12,7 +13,9 @@ int main(int arg, char** argv){
     int nfds;
     int epfd;
     struct epoll_event ev, events[MAX_EVENT];
-    std::queue<Dw_response_t> resultq;
+    std::queue<job_res> resultq;
+    std::queue<job_t> jobq; 
+    linear_buf_t stream_buf(MAXLINE);
 
     sscanf(argv[0], "%d", &mainfd);
 
@@ -24,7 +27,14 @@ int main(int arg, char** argv){
     ev.data.fd = mainfd;
     Epoll_ctl(epfd, EPOLL_CTL_ADD, mainfd, &ev);
 
-    DwContext *dwcxt = new DwContext(mainfd, epfd, db_handler, &resultq);
+    DwContext *dwcxt = new DwContext(
+        mainfd, 
+        epfd, 
+        db_handler, 
+        &resultq,
+        &stream_buf,
+        &jobq
+    );
 
     for( ; ; ){
         nfds = Epoll_wait(epfd, events, MAX_EVENT);

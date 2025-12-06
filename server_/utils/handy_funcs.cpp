@@ -2,10 +2,10 @@
 
 #include <map>
 
-conn_t *get_user(
+conn *get_user(
     int fd, 
-    std::map<int, conn_t*> &fd_to_conn
+    std::map<int, conn*> *fd_to_conn
 ){
-    auto it = fd_to_conn.find(fd);
+    auto it = fd_to_conn->find(fd);
     return it->second;
 }

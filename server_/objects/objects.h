@@ -1,4 +1,13 @@
+#ifndef OBJECTS_H
+#define OBJECTS_H
+
 #include <string>
+#include <queue>
+#include <map>
+
+struct conn;
+struct job_t;
+struct linear_buf_t;
 
 struct ServerContext{
     int epfd;
@@ -15,6 +24,18 @@ struct ServerContext{
     );
 };
 
+struct ServerObjects{
+    std::queue<job_t*> *dwq;
+    std::map<int, conn*> *fd_to_conn;
+    linear_buf_t *dwr_buf;
+    ServerObjects();
+    ServerObjects(
+        std::queue<job_t*> *dwq,
+        linear_buf_t *dwr_buf,
+        std::map<int, conn*> *fd_to_conn
+    );
+};
+
 class linear_buf_t{
     std::string buf;
     int cap;
@@ -25,24 +46,38 @@ public:
     void append(char *data);
     void append(std::string &data);
     void set_buf(std::string &&data);
-    std::string get_line();
-    std::string write_all();
-};
-
-struct conn_t{
-    int id, fd;
-    std::string name;
-    char hash[65];
-    int state;
-    linear_buf_t r_buf;
-    linear_buf_t w_buf;
-    conn_t();
-    conn_t(int fd);
+    char *getline();
 };
 
 struct job_t{
-    int action;
-    conn_t *user;
-    job_t();
-    job_t(int action, conn_t *user);
+    int type;
+    char *line;
+    char *r_ptr;
+    int len;
 };
+
+struct conn{
+    /* connection information */
+    int id;
+    int fd;
+    char name[65];
+    char hash[65];
+
+    /* connection metadata */
+    int state;
+    bool db_job_pending;
+    linear_buf_t r_buf;
+    std::queue<job_t*> jobq; // job queue (except db job)
+
+    /* constructor */
+    conn();
+    conn(int fd, int state);
+};
+
+struct dw_res{
+    conn *u;
+    int type;
+    int result;
+};
+
+#endif
