@@ -1,28 +1,28 @@
 #include "../server_.h"
 #include <bits/types/struct_iovec.h>
+#include <cerrno>
 #include <sys/uio.h>
 
 void on_dw_res(
     ServerContext *scxt,
-    std::map<int, conn_t*> &fd_to_conn
+    ServerObjects *sobj
 ){
-    struct iovec iov[1];
-    int iocnt, n;
-    Dw_response_t *dw_res;
+    /* "fd id type:result" */
+    int n;
+    char recvline[MAXLINE+1];
     while(1){
-        n = readv(scxt->dw_fd, iov, MAX_JOB);
+        n = read(scxt->dw_fd, recvline, MAXLINE);
         if(n == -1){
             if(errno == EINTR)
                 continue;
             else if(errno == EWOULDBLOCK || errno == EAGAIN)
                 break;
         }
-        if(n == 0){
-            /* database worker dead */
+        else if(n == 0){
+            /* database worker die */
         }
-        else{
-            dw_res = (Dw_response_t*)iov[0].iov_base;
-        }
+        recvline[n] = 0;
+        sobj->dwr_buf->append(recvline);
     }
-    dw_processor(scxt, fd_to_conn, dw_res);
+    dw_res_parser(scxt, sobj);
 }

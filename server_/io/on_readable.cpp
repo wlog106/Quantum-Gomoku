@@ -3,14 +3,14 @@
 
 void on_readable(
     ServerContext *scxt,
-    std::map<int, conn_t*> &fd_to_conn
+    ServerObjects *sobj
 ){
-    conn_t *u;
+    conn *u;
     int n;
-    char cli_to_serv[MAXLINE+1];
-    u = get_user(scxt->cur_fd, fd_to_conn);
+    char recvline[MAXLINE+1];
+    u = get_user(scxt->cur_fd, sobj->fd_to_conn);
     while(1){
-        n = read(scxt->cur_fd, cli_to_serv, MAXLINE);
+        n = read(scxt->cur_fd, recvline, MAXLINE);
         if(n == -1){
             if(errno == EINTR)
                 continue;
@@ -20,8 +20,8 @@ void on_readable(
         else if(n == 0){
             //u->state = 1;
         }
-        cli_to_serv[n] = 0;
-        u->r_buf.append(cli_to_serv);
+        recvline[n] = 0;
+        u->r_buf.append(recvline);
     }
-    parser(scxt, u);
+    parser(scxt, sobj, u);
 }

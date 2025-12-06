@@ -3,27 +3,28 @@
 
 #include <map>
 
+struct ServerObjects;
 struct ServerContext;
-struct conn_t;
+struct conn;
 
 void on_dw_res(
     ServerContext *scxt,
-    std::map<int, conn_t*> &fd_to_conn
+    ServerObjects *sobj
 );
 
 void on_listen(
     ServerContext *scxt,
-    std::map<int, conn_t*> &fd_to_conn
+    ServerObjects *sobj
 );
 
 void on_readable(
     ServerContext *scxt, 
-    std::map<int, conn_t*> &fd_to_conn
+    ServerObjects *sobj
 );
 
 void on_writable(
     ServerContext *scxt,
-    std::map<int, conn_t*> &fd_to_conn
+    ServerObjects *sobj
 );
 
 #endif
