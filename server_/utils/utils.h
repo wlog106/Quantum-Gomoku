@@ -5,7 +5,7 @@
 #include <map>
 
 typedef void Sigfunc(int);
-struct conn_t;
+struct conn;
 
 /*----------bind utility-----------*/
 void Bind(
@@ -58,9 +58,9 @@ Sigfunc *Signal(
 void sigchild(int signo);
 
 /*-----handy functions utility-----*/
-conn_t *get_user(
+conn *get_user(
     int fd, 
-    std::map<int, conn_t*> &fd_to_conn
+    std::map<int, conn*> *fd_to_conn
 );
 
 #endif
