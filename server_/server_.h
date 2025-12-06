@@ -17,6 +17,17 @@
 #define evtype events[i].events
 
 typedef enum{
+    UNKNOWN_USR,
+    LOGGEDIN_USR,
+} userState;
+
+typedef enum{
+    DW_SIGNUP,
+    DW_LOGIN,
+    RES_USR
+} jobType;
+
+typedef enum{
     RES_SIGNUP_SUCCESS,
     RES_SIGNUP_DUPNAME,
     RES_LOGIN_SUCCESS,
