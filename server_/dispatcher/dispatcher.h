@@ -4,11 +4,12 @@
 #include <queue>
 
 struct ServerContext;
+struct dw_res;
 struct job_t;
 
 void dispatcher(
     ServerContext *scxt,
-    std::queue<job_t> &jobs
+    std::queue<dw_res> &jobs
 );
 
 #endif
