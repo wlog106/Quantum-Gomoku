@@ -112,14 +112,14 @@ typedef enum {
     //playing initialize
     /*
     "full game info" : "room_id player_info board_info time playing_position moving_position"
-    "player_info" : "player_existance player_names"
-    "player_existance" : "[0,1] * 5" //each position have user or not
-    "player_names": all player names split with space
-    "board_info" : 169 "piece" with 168 space in row-major
-    "piece" : "0" or "1" or "3" or "7" or "9"
-    "time" : "player1_time player2_time" //unit: 100ms
-    "playing_position": [1,5] //who you are
-    "moving_position": [1,2] //who is current playing
+    > player_info : "player_existance player_names"
+     - player_existance : "[0,1] * 5" //each position have user or not
+     - player_names : all player names split with space
+    > board_info : 169 "piece" with 168 space in row-major
+     - piece : "0" or "1" or "3" or "7" or "9"
+    > time : "player1_time player2_time" //unit: 100ms
+    > playing_position : [1,5] //who you are
+    > moving_position : [1,2] //who is current playing
     */
     C_start_a_playing_room //cid "full game info"
 
