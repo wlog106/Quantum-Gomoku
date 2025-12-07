@@ -86,6 +86,13 @@ int Socket(int family, int type, int protocol){
     return n;
 }
 
+void Pipe(int* pipedes){
+    if(pipe(pipedes) < 0){
+        cout << "pipe error\n";
+        exit(1);
+    }
+}
+
 void Pthread_create(pthread_t *tid, const pthread_attr_t *attr, void * (*func)(void *), void *arg){
 	int	n;
 	if ((n = pthread_create(tid, attr, func, arg)) == 0) return;
