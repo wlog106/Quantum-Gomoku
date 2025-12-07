@@ -15,3 +15,6 @@ void select_enter_room_id_std(const string &key);
 
 //waiting room
 void waiting_room_std(const string &key);
+
+//playing room
+void playing_std(const string &key);

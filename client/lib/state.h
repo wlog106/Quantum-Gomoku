@@ -8,5 +8,6 @@ typedef enum{
     S_select_option,
     S_select_enter_room_id,
     S_waiting_room,
+    S_playing,
     S_debug
 }State_t;

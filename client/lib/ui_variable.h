@@ -58,3 +58,35 @@ extern deque<string> waiting_room_history_message;
 extern string waiting_room_input_box;
 
 void reset_waiting_room();
+
+
+//playing page
+//-------------------------------------------------------------------------------
+//info be set up with command
+extern string playing_room_id;
+extern bool playing_user_existance[5];
+extern string playing_username[5];
+extern int playing_position;//who you are
+extern int moving_position;//who is current moving
+extern Board playing_board;
+extern int player_remain_time[2];
+extern int cursor_pos_x;
+extern int cursor_pos_y;
+extern int my_piece_type;
+
+extern int observing_chance;
+extern int has_observe;//some one has observe at this round
+
+//timing
+
+
+
+
+void reset_playing_page();
+
+void PP_initialize();
+void PP_move_cursor(int direction);
+void PP_no_time();
+void PP_drop_piece(int x, int y, int type);
+void PP_close_timer();
+void PP_segement_start();

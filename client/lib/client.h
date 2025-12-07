@@ -41,7 +41,7 @@ extern bool ui_new_info;
 #define CLOSE_CLIENT(x) \
     do { \
         char _tmp = (x); \
-        write(client_end_pipe[1], &_tmp, 1); \
+        Write(client_end_pipe[1], &_tmp, 1); \
     } while (0)
 extern char client_end_code;
 extern int  client_end_pipe[2];

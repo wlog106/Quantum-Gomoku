@@ -66,10 +66,12 @@ int socket_reader_end_pipe[2];
 int socket_writer_end_pipe[2];
 
 void *terminator(void *vptr){
-    pipe(ui_end_pipe);
-    pipe(std_handler_end_pipe);
-    pipe(socket_reader_end_pipe);
-    pipe(socket_writer_end_pipe);
+    (void)vptr;
+
+    Pipe(ui_end_pipe);
+    Pipe(std_handler_end_pipe);
+    Pipe(socket_reader_end_pipe);
+    Pipe(socket_writer_end_pipe);
     
     fd_set set;
     FD_ZERO(&set);
