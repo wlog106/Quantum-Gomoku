@@ -1,4 +1,4 @@
-#include <universal.h>
+#include <share_wrap.h>
 #include <server_objects.h>
 #include <server_utils.h>
 #include <mariadb.h>
@@ -44,7 +44,7 @@ int main(int arg, char** argv){
                 on_recv_job(dwcxt);
             }
             else if(events[i].events & EPOLLOUT){
-                on_report(dwcxt);
+                on_response(dwcxt);
             }
         }
         

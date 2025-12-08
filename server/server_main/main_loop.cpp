@@ -1,5 +1,5 @@
 #include <sys/types.h>
-#include <universal.h>
+#include <share_wrap.h>
 #include <server_objects.h>
 #include <server_utils.h>
 

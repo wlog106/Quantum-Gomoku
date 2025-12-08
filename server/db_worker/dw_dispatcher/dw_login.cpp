@@ -2,7 +2,7 @@
 #include <server_utils.h>
 #include <server_cmd.h>
 #include <mariadb.h>
-#include <universal.h>
+#include <share_wrap.h>
 
 #include <sys/epoll.h>
 

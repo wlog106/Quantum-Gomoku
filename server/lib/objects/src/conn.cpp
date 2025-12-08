@@ -1,4 +1,4 @@
-#include <universal.h>
+#include <share_wrap.h>
 #include <server_objects.h>
 
 conn::conn(){}

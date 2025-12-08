@@ -4,6 +4,6 @@
 struct DwContext;
 
 void on_recv_job(DwContext *dwcxt);
-void on_report(DwContext *dwcxt);
+void on_response(DwContext *dwcxt);
 
 #endif

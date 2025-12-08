@@ -1,5 +1,5 @@
-#include <universal.h>
-#include <command.h>
+#include <share_wrap.h>
+#include <share_cmd.h>
 #include <server_cmd.h>
 #include <server_objects.h>
 #include <server_utils.h>

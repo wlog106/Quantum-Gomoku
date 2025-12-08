@@ -1,4 +1,4 @@
-#include <universal.h>
+#include <share_wrap.h>
 #include <server_objects.h>
 #include <server_utils.h>
 #include <server_cmd.h>
@@ -8,7 +8,7 @@
 
 void on_listen(
     ServerContext *scxt,
-    std::map<int, conn*> &fd_to_conn
+    ServerObjects *sobj
 ){
     int newfd, flags;
     conn *newConn;
@@ -32,6 +32,6 @@ void on_listen(
         ev.data.fd = newfd;
         Epoll_ctl(scxt->epfd, EPOLL_CTL_ADD, newfd, &ev);
         newConn = new conn(newfd, UNKNOWN_USR);
-        fd_to_conn.insert({newfd, newConn});
+        sobj->fd_to_conn->insert({newfd, newConn});
     }
 }

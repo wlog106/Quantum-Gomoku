@@ -1,0 +1,3 @@
+SHARECMD_MKDIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+SHARECMD_FLAGS := -I$(SHARECMD_MKDIR)include

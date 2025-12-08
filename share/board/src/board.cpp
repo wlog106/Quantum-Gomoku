@@ -1,4 +1,4 @@
-#include "board.h"
+#include <share_board.h>
 
 Board::Board(int board_size):size(board_size){
     board_data.resize(size, std::vector(size, 0));

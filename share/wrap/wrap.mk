@@ -1,0 +1,9 @@
+SHAREWRAP_MKDIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+SHAREWRAP_FLAGS := -I$(SHAREWRAP_MKDIR)include
+
+SHAREWRAP_SRCS := $(wildcard $(SHAREWRAP_MKDIR)src/*.cpp)
+SHAREWRAP_OBJS := $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SHAREWRAP_SRCS))
+SHAREWRAP_LIBS := 
+
+ALL_DEPS += $(SHAREWRAP_OBJS:.o=.d)

@@ -1,0 +1,9 @@
+LIBOBJECTS_MKDIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+LIBOBJECTS_FLAGS := -I$(LIBOBJECTS_MKDIR)include
+
+LIBOBJECTS_SRCS := $(wildcard $(LIBOBJECTS_MKDIR)src/*.cpp)
+LIBOBJECTS_OBJS := $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(LIBOBJECTS_SRCS))
+LIBOBJECTS_LIBS := 
+
+ALL_DEPS += $(LIBOBJECTS_OBJS:.o=.d)

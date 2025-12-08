@@ -12,5 +12,7 @@ CXXFLAGS := -Wall -Wextra -Wno-unused-variable -Wno-unused-but-set-variable -Wno
 C_EXTRA_FLAGS := 
 CPP_EXTRA_FLAGS := 
 
+ALL_DEPS := 
+
 BUILD_DIR := $(PROJECT_ROOT)/build
 BIN_DIR := $(PROJECT_ROOT)/bin

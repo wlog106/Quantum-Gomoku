@@ -1,7 +1,7 @@
 #pragma once
-#include "../../lib/universal.h"
-#include "../../lib/command.h"
-#include "../../lib/board.h"
+#include <share_wrap.h>
+#include <share_cmd.h>
+#include <share_board.h>
 #include "state.h"
 #include "ui_variable.h"
 

@@ -1,5 +1,5 @@
 #include <server_objects.h>
-#include <universal.h>
+#include <share_wrap.h>
 
 void dw_processor(
     DwContext *dwcxt,

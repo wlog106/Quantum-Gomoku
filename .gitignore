@@ -3,6 +3,7 @@ test
 *.d
 *.o
 client/main
+bin
 build
 qg_server
 qg_client

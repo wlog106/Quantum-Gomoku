@@ -1,0 +1,9 @@
+SHAREBOARD_MKDIR := $(dir $(lastword $(MAKEFILE_LIST)))
+
+SHAREBOARD_FLAGS := -I$(SHAREBOARD_MKDIR)include
+
+SHAREBOARD_SRCS := $(wildcard $(SHAREBOARD_MKDIR)src/*.cpp)
+SHAREBOARD_OBJS := $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SHAREBOARD_SRCS))
+SHAREBOARD_LIBS := 
+
+ALL_DEPS += $(SHAREBOARD_OBJS:.o=.d)
