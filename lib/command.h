@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMMAND_H
+#define COMMAND_H
+
 typedef enum {
     //login
     C_create_new_account,//cid "account" "password hash"
@@ -124,3 +126,5 @@ typedef enum {
     C_start_a_playing_room //cid "full game info"
 
 } Command_t;
+
+#endif

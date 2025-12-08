@@ -1,4 +1,7 @@
-#pragma once
+
+#ifndef BOARD_H
+#define BOARD_H
+
 #include<vector>
 
 struct Board{
@@ -7,3 +10,5 @@ struct Board{
     Board(int);
     int set_piece(int, int, int);
 };
+
+#endif

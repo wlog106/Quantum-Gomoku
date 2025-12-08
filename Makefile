@@ -1,67 +1,51 @@
-SHELL := /bin/bash
-CC := gcc
-CXX := g++
+include config.mk
 
-CFLAGS := -Wall -Wextra -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter -O2 -g -MMD -MP
-CFLAGS += $(shell mariadb_config --cflags)
-CXXFLAGS := -Wall -Wextra -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter -O2 -g -MMD -MP
-CXXFLAGS += 
+# common modules
+#
 
-LIBS :=
-LIBS += $(shell mariadb_config --libs)
+# server modules
+include server/libs/mariadb/mariadb.mk
+include server/libs/objects/objects.mk
+include server/libs/server_cmd/server_cmd.mk
+include server/libs/utils/utils.mk
 
-SERV_TARGET := qg_server
-CLI_TARGET := qg_client
+include server/server_main/server_main.mk
+include server/db_worker/db_worker.mk
 
-SERV_SRCS_DIR := server lib
-CLI_SRCS_DIR := client lib 
-BUILD_DIR := build
+# client modules
+#
 
-SERV_SRCS := $(shell find ${SERV_SRCS_DIR} -type f \( -name '*.c' -o -name '*.cpp' \))
-SERV_OBJS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SERV_SRCS)))
-SERV_DEP = $(SERV_OBJS:.o=.d)
+# server objects' flags
+$(LIBMARIADB_OBJS): C_EXTRA_FLAGS 	:= $(LIBMARIADB_FLAGS)
+$(LIBOBJECTS_OBJS): CPP_EXTRA_FLAGS := $(LIBOBJECTS_FLAGS)
+$(LIBUTILS_OBJS): 	CPP_EXTRA_FLAGS := $(LIBUTILS_FLAGS)
+$(SERVERMAIN_OBJS): CPP_EXTRA_FLAGS := $(SERVERMAIN_FLAGS)
+$(DBWORKER_OBJS):	CPP_EXTRA_FLAGS := $(DBWORKER_FLAGS)
+
+# server targets
+$(SERVERMAIN_TARGET): $(SERVERMAIN_OBJS) $(SERVERMAIN_LIBS)
+	@mkdir -p $(dir $@)
+	$(CXX) $^ -o $@
+
+$(DBWORKER_TARGET): $(DBWORKER_OBJS) $(DBWORKER_LIBS)
+	@mkdir -p $(dir $@)
+	$(CXX) $^ -o $@
+
+# generic rules
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(C_EXTRA_FLAGS) $< -o $@
+
+$(BUILD_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(CPP_EXTRA_FLAGS) $< -o $@
 
 
-CLI_SRCS := $(shell find ${CLI_SRCS_DIR} -type f \( -name '*.c' -o -name '*.cpp' \))
-CLI_OBJS := $(patsubst %.c,$(BUILD_DIR)/%.o,$(patsubst %.cpp,$(BUILD_DIR)/%.o,$(CLI_SRCS)))
-CLI_DEP = $(CLI_OBJS:.o=.d)
+all: $(SERVERMAIN_TARGET) $(DBWORKER_TARGET)
 
-SERV_DIRS := $(sort $(dir ${SERV_OBJS}))
-CLI_DIRS := $(sort $(dir ${CLI_OBJS}))
-DIRS := $(sort $(dir $(SERV_OBJS) $(CLI_OBJS)))
+clean:
+	@echo "Clean build directory..."
+	@rm -rf $(BUILD_DIR)/*
+	@echo "done"
 
-${BUILD_DIR}/%.o:	%.c
-	${CC} ${CFLAGS} -c $< -o $@
-
-${BUILD_DIR}/%.o:	%.cpp
-	${CXX} ${CXXFLAGS} -c $< -o $@
-
-${SERV_TARGET} : ${SERV_OBJS}
-	${CXX} ${SERV_OBJS} -o ${SERV_TARGET} ${LIBS}
-
-${CLI_TARGET} : ${CLI_OBJS}
-	${CXX} ${CLI_OBJS} -o ${CLI_TARGET} ${LIBS}
-
--include $(SERV_DEP)
--include $(CLI_DEP)
-
-all: create_dir_all ${SERV_TARGET} ${CLI_TARGET}
-
-client: create_dir_cli ${CLI_TARGET}
-
-server: create_dir_serv ${SERV_TARGET}
-
-create_dir_all: 
-	mkdir -p ${DIRS}
-
-create_dir_cli: 
-	mkdir -p ${CLI_DIRS}
-
-create_dir_serv: 
-	mkdir -p ${SERV_DIRS}
-
-clean: 
-	@echo "clean all the object files in build directory"
-	@rm -rf ${BUILD_DIR}/*
-
-.PHONY:	all clean create_dir
+.PHONY: clean

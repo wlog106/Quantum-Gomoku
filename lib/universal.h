@@ -1,4 +1,5 @@
-#pragma once
+#ifndef UNIVERSAL_H
+#define UNIVERSAL_H
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -65,3 +66,5 @@ void Pthread_join(pthread_t tid, void **status);
 void Pthread_mutex_lock(pthread_mutex_t *mptr);
 void Pthread_mutex_unlock(pthread_mutex_t *mptr);
 void Write(int fd, const void *ptr, size_t nbytes);
+
+#endif
