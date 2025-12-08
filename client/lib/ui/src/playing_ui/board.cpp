@@ -112,5 +112,22 @@ void draw_piece(int x, int y, int piece_type){
             break;
     }
     cout << "\x1b[0m";
+}
 
+void draw_read_piece(int x, int y, int piece_type){ // 1 black 2 white
+    cout << MOVE(Board_pos_x + (vertical_bar + 1) * x, Board_pos_y + (horizontal_bar + 1) * y - 1);
+    switch (piece_type) {
+        case 0:
+            //cout << "\x1b[0m┼";
+            break;
+        case 1:
+            cout << "\x1b[38;5;0;48;5;255;1m   ";
+            break;
+        case 2:
+            cout << "\x1b[38;5;255;48;5;0;1m   ";
+            break;
+        default:
+            break;
+    }
+    cout << "\x1b[0m";
 }

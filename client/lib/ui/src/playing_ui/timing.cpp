@@ -20,8 +20,9 @@ void set_timer(){
     return;
 }
 
-void PP_close_timer(){ //close timer and set the remain time
-    if(timer_start == 0) return;
+bool PP_close_timer(){ //close timer and set the remain time
+    if(timer_start == 0) return 0;
+    bool flag = timer_runing;
     timer_start = 0;
     timer_runing = 0;
     unlock_ui();
@@ -29,7 +30,7 @@ void PP_close_timer(){ //close timer and set the remain time
     lock_ui();
     player_remain_time[0] = timer_finish_player_remain_time[0];
     player_remain_time[1] = timer_finish_player_remain_time[1];
-    return;
+    return flag;
 }
 
 void print_time(int remain_time){
@@ -85,12 +86,13 @@ void *time_countdown(void *vptr){
     }
     timer_finish_player_remain_time[0] = player1_time;
     timer_finish_player_remain_time[1] = player2_time;
+    lock_ui();
     if(timer_runing && moving_position == playing_position){
         bool success = 0;
         int x, y, type;
-        lock_ui();
         x = cursor_pos_x;
         y = cursor_pos_y;
+        moving_position = 0;
         if(playing_board.board_data[x][y] == 0){
             type = my_piece_type;
             if(my_piece_type == 1){
@@ -106,11 +108,10 @@ void *time_countdown(void *vptr){
                 my_piece_type = 7;
             }
             success = 1;
-            moving_position = 0;
         }
         unlock_ui();
+        lock_writer();
         if(success){
-            lock_writer();
             command_to_be_sent.push(
                 std::to_string(C_playing_move_finish)+" "+
                 std::to_string(x) + " " +
@@ -119,12 +120,18 @@ void *time_countdown(void *vptr){
                 std::to_string(timer_finish_player_remain_time[0]) + " " +
                 std::to_string(timer_finish_player_remain_time[1]) + "\n"
             );
-            signal_writer();
-            unlock_writer();
         }
         else{
+            command_to_be_sent.push(
+                std::to_string(C_run_out_of_time) + "\n"
+            );
             
         }
+        signal_writer();
+        unlock_writer();
+    }
+    else{
+        unlock_ui();
     }
     timer_runing = 0;
     return NULL;

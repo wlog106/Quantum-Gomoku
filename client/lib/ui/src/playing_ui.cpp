@@ -17,7 +17,15 @@ void PP_initialize(){
     cout << MOVE(Timer_pos_x+1, Timer_pos_y - 11) << "Time left:" << flush;
 }
 
+void PP_refresh_observe_chance_info(){
+    cout << MOVE(Observe_chance_pos_x, Observe_chance_pos_y) << "Observe chance: " << observing_chance;
+    cout << MOVE(Observe_chance_pos_x+1, Observe_chance_pos_y) << "Press O to observe after this hand." << flush;
+}
+
 void PP_segement_start(){
+    has_observe = 0;
+    cout << MOVE(Observe_chance_pos_x, Observe_chance_pos_y) << "Observe chance: " << observing_chance;
+    cout << MOVE(Observe_chance_pos_x+1, Observe_chance_pos_y) << "Press O to observe after this hand." << flush;
     if(moving_position == playing_position) {
         cursor_pos_x = (Board_size - 1) / 2;
         cursor_pos_y = (Board_size - 1) / 2;
@@ -60,4 +68,27 @@ void PP_drop_piece(int x, int y, int type){
     playing_board.board_data[x][y] = type;
     draw_piece(x, y, type);
     return;
+}
+
+void PP_observe(stringstream &ss){
+    cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[1m" << flush;
+    cout << "                   Quantun Gomoku Playing Room\n";
+    cout << "                         Room ID: " << playing_room_id << "\x1b[0m" << flush;
+    clear_board_ui();
+    int piece_type;
+    for(int i = 0; i < Board_size; i++){
+        for(int j = 0; j < Board_size; j++){
+            ss >> piece_type;
+            draw_piece(i, j, piece_type);
+        }
+    }
+    show_all_user();
+}
+
+void PP_show_playing_result(stringstream &ss){
+    string winner;
+    int origin_elo, new_elo;
+    ss >> winner >> origin_elo >> new_elo;
+    cout << MOVE(Game_result_pos_x, Game_result_pos_y);
+    //TODO: show result at the bottom
 }

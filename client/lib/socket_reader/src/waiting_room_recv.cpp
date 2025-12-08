@@ -34,7 +34,6 @@ void waiting_room_recv(const string &command){
             lock_ui();
             reset_waiting_room();
             read_playing_info(ss);
-            PP_initialize();
             unlock_ui();
             break;
         default:

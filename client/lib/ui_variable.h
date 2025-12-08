@@ -73,9 +73,11 @@ extern int player_remain_time[2];
 extern int cursor_pos_x;
 extern int cursor_pos_y;
 extern int my_piece_type;
+extern int playing_page_type;
 
 extern int observing_chance;
-extern int has_observe;//some one has observe at this round
+extern int has_observe;//has observe at this round
+extern int game_over;
 
 //timing
 
@@ -88,5 +90,9 @@ void PP_initialize();
 void PP_move_cursor(int direction);
 void PP_no_time();
 void PP_drop_piece(int x, int y, int type);
-void PP_close_timer();
+bool PP_close_timer();
 void PP_segement_start();
+void PP_observe(stringstream &ss);
+void PP_show_playing_result(stringstream &ss);
+void PP_refresh_observe_chance_info();
+void PP_user_change(stringstream &ss);

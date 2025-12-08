@@ -70,22 +70,16 @@ int playing_position = -1;//who you are
 int moving_position = 0;//who is current moving
 Board playing_board(Board_size);
 int player_remain_time[2];
-int my_piece_type;
-
 int cursor_pos_x = (Board_size - 1) / 2;
 int cursor_pos_y = (Board_size - 1) / 2;
-int playing_timer;
-int observing_chance;
+int my_piece_type;
+int playing_page_type = -1;
+int observing_chance = 5;
 int has_observe = 0;
-
-//timing
-
-
-
+int game_over = 0;
 
 
 void reset_playing_page(){
-    //TODO
+    //TODO reset variable
     return;
 }
-

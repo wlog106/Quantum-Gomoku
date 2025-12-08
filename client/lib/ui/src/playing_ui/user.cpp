@@ -1,5 +1,18 @@
 #include "playing_ui.h"
 
+void PP_user_change(stringstream &ss){
+    erase_all_user();
+    for(int i = 0; i < 5; i++){
+        ss >> playing_user_existance[i];
+    }
+    for(int i = 0; i < 5; i++){
+        if(playing_user_existance[i]){
+            ss >> playing_username[i];
+        }
+    }
+    show_all_user();
+}
+
 void show_all_user(){
     cout << MOVE(User_info_pos_x, User_info_pos_y);
     cout << "\x1b[0m\x1b[38;5;255;48;5;0m1.Player Black:\x1b[0m ";
@@ -18,8 +31,11 @@ void show_all_user(){
     cout << (playing_user_existance[4] ? playing_username[4] : "(empty)") << flush;
 }
 
-void user_change(int pos){
-    pos = 1;
-    if(pos){}
-    //TODO
+void erase_all_user(){
+    cout << "\x1b[0m";
+    for(int i = 0; i < 5; i++){
+        cout << MOVE(User_info_pos_x + i, User_info_pos_y);
+        for(int j = 0; j < 36; j++)cout << ' ';
+        cout << flush;
+    }    
 }

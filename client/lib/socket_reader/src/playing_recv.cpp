@@ -7,8 +7,29 @@ void playing_recv(const string &command){
     switch (cmd_id){
         case C_playing_new_segement:
             lock_ui();
+            if(playing_page_type != 1){
+                playing_page_type = 1;
+                PP_initialize();
+            }
             read_segment_info(ss);
             PP_segement_start();
+            unlock_ui();
+            break;
+        case C_start_observing:
+            lock_ui();
+            playing_page_type = 2;
+            PP_observe(ss);
+            unlock_ui();
+            break;
+        case C_game_over:
+            lock_ui();
+            game_over = 1;
+            PP_show_playing_result(ss);
+            unlock_ui();
+            break;
+        case C_playing_users_change:
+            lock_ui();
+            PP_user_change(ss);
             unlock_ui();
             break;
         default:

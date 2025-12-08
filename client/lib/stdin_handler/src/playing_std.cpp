@@ -3,7 +3,7 @@
 void playing_std(const string &key){
     if(key == "UP"){
         lock_ui();
-        if(playing_position == moving_position){
+        if(playing_position == moving_position && playing_page_type == 1 && !game_over){
             if(cursor_pos_x > 0){
                 PP_move_cursor(0);
             }
@@ -12,7 +12,7 @@ void playing_std(const string &key){
     }
     else if(key == "DOWN"){
         lock_ui();
-        if(playing_position == moving_position){
+        if(playing_position == moving_position && playing_page_type == 1 && !game_over){
             if(cursor_pos_x < Board_size - 1){
                 PP_move_cursor(2);
             }
@@ -21,7 +21,7 @@ void playing_std(const string &key){
     }
     else if(key == "LEFT"){
         lock_ui();
-        if(playing_position == moving_position){
+        if(playing_position == moving_position && playing_page_type == 1 && !game_over){
             if(cursor_pos_y > 0){
                 PP_move_cursor(3);
             }
@@ -30,7 +30,7 @@ void playing_std(const string &key){
     }
     else if(key == "RIGHT"){
         lock_ui();
-        if(playing_position == moving_position){
+        if(playing_position == moving_position && playing_page_type == 1 && !game_over){
             if(cursor_pos_y < Board_size - 1){
                 PP_move_cursor(1);
             }
@@ -38,11 +38,17 @@ void playing_std(const string &key){
         unlock_ui();
     }
     else if(key == "ENTER"){
-        if(playing_position == moving_position){
+        lock_ui();
+        if(game_over){
+            set_state(S_select_option);
+            signal_ui();
+            unlock_ui();
+            return;
+        }
+        if(playing_position == moving_position && playing_page_type == 1){
             bool success = 0;
             int x, y, type;
             int remain_time[2];
-            lock_ui();
             x = cursor_pos_x;
             y = cursor_pos_y;
             if(playing_board.board_data[x][y] == 0){
@@ -59,9 +65,8 @@ void playing_std(const string &key){
                 else if(my_piece_type == 9){
                     my_piece_type = 7;
                 }
-                success = 1;
-                moving_position = 0;
-                PP_close_timer();
+                success = PP_close_timer();
+                if(success) moving_position = 0;
                 remain_time[0] = player_remain_time[0];
                 remain_time[1] = player_remain_time[1];
             }
@@ -79,6 +84,28 @@ void playing_std(const string &key){
                 signal_writer();
                 unlock_writer();
             }
+        }
+        else{
+            unlock_ui();
+        }
+    }
+    else if(key == "O" || key == "o"){
+        bool observe = 0;
+        lock_ui();
+        if(playing_page_type == 1 && has_observe == 0 && !game_over && observing_chance > 0){
+            has_observe = 1;
+            observe = 1;
+            observing_chance--;
+            PP_refresh_observe_chance_info();
+        }
+        unlock_ui();
+        if(observe){
+            lock_writer();
+            command_to_be_sent.push(
+                    std::to_string(C_want_to_observe) + "\n"
+                );
+            signal_writer();
+            unlock_writer();
         }
     }
 }

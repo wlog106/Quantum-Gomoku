@@ -11,6 +11,11 @@
 #define User_info_pos_y 5
 
 
+//TODO : check ther observe pos and game over pos
+#define Observe_chance_pos_x 10
+#define Observe_chance_pos_y 100
+#define Game_result_pos_x 40
+#define Game_result_pos_y 10
 
 //board
 void clear_board_ui();
@@ -26,4 +31,4 @@ void print_time(int remain_time);
 
 //user
 void show_all_user();
-void user_change(int pos);
+void erase_all_user();
