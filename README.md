@@ -10,9 +10,9 @@
 #### Note
 - run `source ./load_env.sh` to set required environment variables
 - if it wasn't an executable run `chmod +x ./load_env.sh`
-- add this in your *** ${PROJECT_ROOT}/.vscode/settings.json *** to shut up clangd server
-```json
-"clangd.fallbackFlags": [
+- add this in your `${PROJECT_ROOT}/.vscode/settings.json` to shut up clangd server
+ ```json
+  "clangd.fallbackFlags": [
     "-I${workspaceFolder}/server/lib/server_cmd/include",
     "-I${workspaceFolder}/server/lib/mariadb/include",
     "-I${workspaceFolder}/server/lib/objects/include",
@@ -20,7 +20,7 @@
     "-I${workspaceFolder}/share/board/include",
     "-I${workspaceFolder}/share/cmd/include",
     "-I${workspaceFolder}/share/wrap/include"
-]
+  ]
 ```
 
 #### Reference
