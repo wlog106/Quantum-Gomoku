@@ -34,8 +34,7 @@ void waiting_room_recv(const string &command){
             lock_ui();
             reset_waiting_room();
             read_playing_info(ss);
-            playing_ui_operation.push(PUO_initialize);
-            signal_ui();
+            PP_initialize();
             unlock_ui();
             break;
         default:

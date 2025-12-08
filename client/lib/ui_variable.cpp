@@ -58,3 +58,34 @@ void reset_waiting_room(){
     waiting_room_input_box = "";
     return;
 }
+
+
+//playing page
+//-------------------------------------------------------------------------------
+//info be set up with command
+string playing_room_id = "";
+bool playing_user_existance[5];
+string playing_username[5];
+int playing_position = -1;//who you are
+int moving_position = 0;//who is current moving
+Board playing_board(Board_size);
+int player_remain_time[2];
+int my_piece_type;
+
+int cursor_pos_x = (Board_size - 1) / 2;
+int cursor_pos_y = (Board_size - 1) / 2;
+int playing_timer;
+int observing_chance;
+int has_observe = 0;
+
+//timing
+
+
+
+
+
+void reset_playing_page(){
+    //TODO
+    return;
+}
+

@@ -12,7 +12,7 @@ int main(int argc, char **argv){
         cout << "usage: main <IPaddress>" << endl;
         exit(0);
     }
-    pipe(client_end_pipe);
+    Pipe(client_end_pipe);
     pthread_t tid_end;
     Pthread_create(&tid_end, NULL, &terminator, NULL);
 

@@ -64,5 +64,26 @@ void *ui(void *vptr){
             unlock_ui();
         }
     }
+    PP_close_timer();
     return NULL;
+}
+
+void debug_ui(){
+    set_state(S_playing);
+    playing_room_id = "KKKKKK";
+    playing_user_existance[0] = 1;
+    playing_username[0] = "01234567890123456789";
+    playing_position = 1;
+    moving_position = 1;
+    playing_board.board_data.resize(Board_size, std::vector<int>(Board_size, 0));
+    playing_board.board_data[1][1] = 1;
+    playing_board.board_data[1][2] = 3;
+    playing_board.board_data[1][3] = 7;
+    playing_board.board_data[1][4] = 9;
+    player_remain_time[0] = 100;
+    player_remain_time[1] = 700;
+    my_piece_type = 9;
+    PP_initialize();
+    PP_segement_start();
+    return;
 }

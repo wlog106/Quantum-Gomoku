@@ -51,6 +51,8 @@ void *stdin_handler(void *vptr){
             case S_waiting_room:
                 waiting_room_std(key);
                 break;
+            case S_playing:
+                playing_std(key);
             default:
                 break;
             }

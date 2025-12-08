@@ -59,6 +59,7 @@ ssize_t Read(int fd, void *ptr, size_t nbytes);
 int Select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
 void Shutdown(int fd, int how);
 int Socket(int domain, int type, int protocol);
+void Pipe(int* pipedes);
 void Pthread_create(pthread_t *tid, const pthread_attr_t *attr, void * (*func)(void *), void *arg);
 void Pthread_cond_signal(pthread_cond_t *cptr);
 void Pthread_cond_wait(pthread_cond_t *cptr, pthread_mutex_t *mptr);
