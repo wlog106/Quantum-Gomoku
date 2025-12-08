@@ -2,6 +2,7 @@
 test
 *.d
 *.o
+.env
 client/main
 bin
 build
