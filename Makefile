@@ -66,7 +66,7 @@ $(BUILD_DIR)/%.o: %.cpp
 
 -include $(sort $(ALL_DEPS))
 
-all: server client send_complete
+all: $(CLIENT_TARGET) $(SERVERMAIN_TARGET) $(DBWORKER_TARGET) send_complete
 
 server: $(SERVERMAIN_TARGET) $(DBWORKER_TARGET) send_complete
 
