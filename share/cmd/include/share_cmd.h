@@ -45,22 +45,22 @@ typedef enum {
 
 
     //waiting room
-    C_change_ready,//cid
+    C_change_ready,//cid room_id
     /*reply
         C_new_room_info
         check if all members are ready, if yes, start the game
         C_start_a_playing_room
     */
-    C_change_waiting_position,//cid "position[1,5]"
+    C_change_waiting_position,//cid room_id "position[1,5]"
     /*reply
         C_new_room_info
     */
-    C_leave_waiting_room,//cid
+    C_leave_waiting_room,//cid room_id
     /*reply
         C_leave_waiting_room_success
         c_new_room_info
     */
-    C_send_message_waiting_room,//cid "message"
+    C_send_message_waiting_room,//cid room_id "message"
     /*reply
         C_new_waiting_room_message
     */

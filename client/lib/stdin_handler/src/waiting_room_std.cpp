@@ -15,8 +15,11 @@ void waiting_room_std(const string &key){
             unlock_ui();
             if(int(message.size()) != 0){
                 if(!key_press_check(key)) return;
+                lock_ui();
+                string room_id = waiting_room_id;
+                unlock_ui();
                 lock_writer();
-                command_to_be_sent.push(std::to_string(C_send_message_waiting_room) + " " + message + "\n");
+                command_to_be_sent.push(std::to_string(C_send_message_waiting_room) + " " + room_id + " " + message + "\n");
                 signal_writer();
                 unlock_writer();
             }
@@ -39,15 +42,21 @@ void waiting_room_std(const string &key){
     else{
         if(key == "ESC"){
             if(!key_press_check(key)) return;
+            lock_ui();
+            string room_id = waiting_room_id;
+            unlock_ui();
             lock_writer();
-            command_to_be_sent.push(std::to_string(C_leave_waiting_room) + "\n");
+            command_to_be_sent.push(std::to_string(C_leave_waiting_room) + " " + room_id + "\n");
             signal_writer();
             unlock_writer();
         }
         else if(key == "R" || key == "r"){
+            lock_ui();
+            string room_id = waiting_room_id;
+            unlock_ui();
             if(!key_press_check(key)) return;
             lock_writer();
-            command_to_be_sent.push(std::to_string(C_change_ready) + "\n");
+            command_to_be_sent.push(std::to_string(C_change_ready) + " " + room_id + "\n");
             signal_writer();
             unlock_writer();
         }
@@ -55,10 +64,11 @@ void waiting_room_std(const string &key){
             if(!key_press_check(key)) return;
             lock_ui();
             bool has_player = waiting_user_existance[key[0]-'1'];
+            string room_id = waiting_room_id;
             unlock_ui();
             if(has_player) return;
             lock_writer();
-            command_to_be_sent.push(std::to_string(C_change_waiting_position) + " " + key + "\n");
+            command_to_be_sent.push(std::to_string(C_change_waiting_position) + " " + room_id + " " + key + "\n");
             signal_writer();
             unlock_writer();
         }
