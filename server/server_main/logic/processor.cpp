@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <share_wrap.h>
 #include <share_cmd.h>
 #include <server_objects.h>
@@ -40,6 +41,36 @@ void processor(
                 break;
             
             case (C_create_room):
+                newJob->type = CREATE_ROOM;
+                newJob->line = NULL;
+                newJob->r_ptr = NULL;
+                newJob->len = 0;
+                u->jobq.push_back(newJob);
+                break;
+
+            case (C_join_room_by_id):
+                newJob->type = JOIN_ROOM_BY_ID;
+                sprintf(cmd, "%s", q.front().second);
+                newJob->line = cmd;
+                newJob->r_ptr = cmd;
+                newJob->len = strlen(cmd);
+                u->jobq.push_back(newJob);
+                break;
+            
+            case (C_pair_randomly):
+                newJob->type = PAIR_RANDOMLY;
+                newJob->line = NULL;
+                newJob->r_ptr = NULL;
+                newJob->len = 0;
+                u->jobq.push_back(newJob);
+                break;
+
+            case (C_observe_randomly):
+                newJob->type = OBSERVER_RANDOMLY;
+                newJob->line = NULL;
+                newJob->r_ptr = NULL;
+                newJob->len = 0;
+                u->jobq.push_back(newJob);
                 break;
         }
         q.pop();

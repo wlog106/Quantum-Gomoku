@@ -7,8 +7,17 @@ typedef enum{
 } userState;
 
 typedef enum{
+    /* db_worker */
     DW_SIGNUP,
     DW_LOGIN,
+
+    /* opselect */
+    CREATE_ROOM,
+    JOIN_ROOM_BY_ID,
+    PAIR_RANDOMLY,
+    OBSERVER_RANDOMLY,
+
+    /* on writable */
     RES_USR
 } jobType;
 

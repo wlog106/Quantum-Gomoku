@@ -1,13 +1,14 @@
 #ifndef SERVER_OBJECTS_H
 #define SERVER_OBJECTS_H
 
-#include "share_wrap.h"
+#include <share_wrap.h>
 #include <string>
 #include <queue>
 #include <map>
 
 struct conn;
 struct db_conn;
+struct Room;
 struct job_t;
 struct linear_buf_t;
 
@@ -29,12 +30,14 @@ struct ServerContext{
 struct ServerObjects{
     std::queue<job_t*> *dwq;
     std::map<int, conn*> *fd_to_conn;
+    std::map<int, Room*> *id_to_room;
     linear_buf_t *dwr_buf;
     ServerObjects();
     ServerObjects(
         std::queue<job_t*> *dwq,
         linear_buf_t *dwr_buf,
-        std::map<int, conn*> *fd_to_conn
+        std::map<int, conn*> *fd_to_conn,
+        std::map<int, Room*> *id_to_room
     );
 };
 
@@ -108,7 +111,7 @@ struct DwContext{
 };
 
 struct Room{
-    
+
 };
 
 #endif

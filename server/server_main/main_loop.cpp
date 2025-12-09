@@ -59,6 +59,7 @@ int main(int arg, char **argv){
 
     /* user data */
     std::map<int, conn*> fd_to_conn;
+    std::map<int, Room*> id_to_room;
 
     /* dw job queue */
     std::queue<job_t*> dwq;
@@ -113,7 +114,7 @@ int main(int arg, char **argv){
     );
 
     ServerObjects *sobj = new ServerObjects(
-        &dwq, &dwr_buf, &fd_to_conn
+        &dwq, &dwr_buf, &fd_to_conn, &id_to_room
     );
 
     for( ; ; ){
