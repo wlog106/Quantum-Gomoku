@@ -107,4 +107,8 @@ struct DwContext{
     );
 };
 
+struct Room{
+    
+};
+
 #endif
