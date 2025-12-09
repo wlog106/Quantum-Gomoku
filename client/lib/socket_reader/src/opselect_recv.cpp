@@ -50,6 +50,13 @@ void select_option_recv(const string &command){
             signal_ui();
             unlock_ui();
             break;
+        case C_start_a_playing_room:
+            set_state(S_playing);
+            lock_ui();
+            reset_opselect_ui();
+            read_playing_info(ss);
+            unlock_ui();
+            break;
         default:
             break;
     }

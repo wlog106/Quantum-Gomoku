@@ -22,6 +22,7 @@ void clear_board_ui();
 void draw_cursor(int x, int y);
 void erase_cursor(int x, int y);
 void draw_piece(int x, int y, int piece_type);
+void draw_real_piece(int x, int y, int piece_type);
 
 //timing
 void set_timer();
