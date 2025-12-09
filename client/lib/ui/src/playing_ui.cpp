@@ -79,7 +79,7 @@ void PP_observe(stringstream &ss){
     for(int i = 0; i < Board_size; i++){
         for(int j = 0; j < Board_size; j++){
             ss >> piece_type;
-            draw_piece(i, j, piece_type);
+            draw_real_piece(i, j, piece_type);
         }
     }
     show_all_user();

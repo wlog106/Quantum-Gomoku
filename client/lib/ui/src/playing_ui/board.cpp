@@ -114,7 +114,7 @@ void draw_piece(int x, int y, int piece_type){
     cout << "\x1b[0m";
 }
 
-void draw_read_piece(int x, int y, int piece_type){ // 1 black 2 white
+void draw_real_piece(int x, int y, int piece_type){ // 1 black 2 white
     cout << MOVE(Board_pos_x + (vertical_bar + 1) * x, Board_pos_y + (horizontal_bar + 1) * y - 1);
     switch (piece_type) {
         case 0:
