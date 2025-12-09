@@ -112,6 +112,16 @@ struct DwContext{
 
 struct Room{
 
+    std::string room_id;
+    std::string user_name[5];
+    bool user_existance[5];
+    bool user_ready[2];
+    Room(std::string rm_id);
+    bool add_user(string new_user);
+    bool user_leave(string leaving_user);
+    bool user_change_position(string user, int pos);
+    bool change_ready(string user);
+    string get_room_info();
 };
 
 #endif
