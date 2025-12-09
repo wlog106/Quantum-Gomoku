@@ -2,6 +2,8 @@
 #include <server_utils.h>
 #include <server_cmd.h>
 
+#include "../dispatcher/dispatcher.h"
+
 #include <cassert>
 #include <cerrno>
 #include <sys/epoll.h>
@@ -34,7 +36,7 @@ void on_writable(
             }
             else if(n == cur_job->len){
                 free(cur_job->line);
-                free(cur_job);
+                delete(cur_job);
                 sobj->dwq->pop();
             }
         }
@@ -47,10 +49,10 @@ void on_writable(
     else{
         conn *u;
         u = get_user(scxt->cur_fd, sobj->fd_to_conn);
-        cur_job = u->jobq.front();
-        if(u->db_job_pending || cur_job->type != RES_USR)
-            goto del_cur_fd_from_epollout;
-        while(1){
+        while(!u->jobq.empty()){
+            cur_job = u->jobq.front();
+            if(cur_job->type != RES_USR)
+                goto del_cur_fd_from_epollout;
             n = write(u->fd, cur_job->r_ptr, cur_job->len);
             if(n == -1){
                 if(errno == EINTR)
@@ -65,10 +67,11 @@ void on_writable(
             }
             else if(n == cur_job->len){
                 free(cur_job->line);
-                free(cur_job);
-                u->jobq.pop();
-                /* set the needs for next job */
-                assert(1==0);
+                delete(cur_job);
+                u->jobq.pop_front();
+                // process further jobs
+                dispatcher(scxt, sobj, u);
+                //assert(1==0);
             }
         }
     }

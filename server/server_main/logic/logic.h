@@ -19,6 +19,7 @@ void processor(
 
 void dw_res_processor(
     ServerContext *scxt,
+    ServerObjects *sobj,
     std::queue<dw_res> &q
 );
 

@@ -67,9 +67,8 @@ struct conn{
 
     /* connection metadata */
     int state;
-    bool db_job_pending;
     linear_buf_t *r_buf;
-    std::queue<job_t*> jobq; // job queue (except db job)
+    std::deque<job_t*> jobq; // job queue (except db job)
 
     /* constructor */
     conn();

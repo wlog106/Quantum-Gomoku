@@ -4,10 +4,13 @@
 #include <server_objects.h>
 #include <server_utils.h>
 
+#include "../dispatcher/dispatcher.h"
+
 #include <sys/epoll.h>
 
 void dw_res_processor(
     ServerContext *scxt,
+    ServerObjects *sobj,
     std::queue<dw_res> &q
 ){
     while(!q.empty()){
@@ -24,7 +27,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push(newJob);
+                    cur_dw_res->u->jobq.push_front(newJob);
                     cur_dw_res->u->state = LOGGEDIN_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_DUPNAME){
@@ -33,7 +36,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push(newJob);
+                    cur_dw_res->u->jobq.push_front(newJob);
                     //cur_dw_res->u->state = UNKNOWN_USR;
                 }
                 break;
@@ -44,7 +47,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push(newJob);
+                    cur_dw_res->u->jobq.push_front(newJob);
                     cur_dw_res->u->state = LOGGEDIN_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_USERDNE){
@@ -53,7 +56,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push(newJob);
+                    cur_dw_res->u->jobq.push_front(newJob);
                     //cur_dw_res->u->state = UNKNOWN_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_PWDFAIL){
@@ -62,16 +65,12 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push(newJob);
+                    cur_dw_res->u->jobq.push_front(newJob);
                     //cur_dw_res->u->state = UNKNOWN_USR;
                 }
                 break;
         }
-        if(cur_dw_res->u->jobq.size() == 1){
-            struct epoll_event ev;
-            ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
-            ev.data.fd = cur_dw_res->u->fd;
-            Epoll_ctl(scxt->epfd, EPOLL_CTL_MOD, cur_dw_res->u->fd, &ev);
-        }
+        dispatcher(scxt, sobj, cur_dw_res->u);
+        q.pop();
     }
 }

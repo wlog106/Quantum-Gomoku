@@ -25,9 +25,8 @@ void dw_res_parser(
                &fd, &id, &newDwres.type, &newDwres.result);
         newDwres.u = get_user(fd, sobj->fd_to_conn);
         newDwres.u->id = id;
-        newDwres.u->db_job_pending = false;
         q.push(newDwres);
         free(line);
     }
-    dw_res_processor(scxt, q);
+    dw_res_processor(scxt, sobj, q);
 }

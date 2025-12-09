@@ -1,4 +1,5 @@
 #include <mariadb.h>
+#include <mariadb/mysql.h>
 
 db_conn *db_init()
 {
@@ -114,17 +115,22 @@ unsigned int db_get_hash(
     char *username, 
     char *passwd_hash
 ){
-    unsigned int error = 0;
+    unsigned int fetch_result;
     MYSQL_BIND bind_param[1];
     memset(bind_param, 0, sizeof(MYSQL_BIND));
     bind_param[0].buffer_type = MYSQL_TYPE_VAR_STRING;
     bind_param[0].buffer      = username;
     bind_param[0].buffer_length = strlen(username);
-    error |= Mysql_stmt_bind_param(db_handler->stmt_get_hash, bind_param);
-    error |= Mysql_stmt_execute(db_handler->stmt_get_hash);
-    error |= (mysql_stmt_fetch(db_handler->stmt_get_hash) != 0);
-    error |= (mysql_stmt_fetch(db_handler->stmt_get_hash) != MYSQL_NO_DATA);
+    Mysql_stmt_bind_param(db_handler->stmt_get_hash, bind_param);
+    Mysql_stmt_execute(db_handler->stmt_get_hash);
+    fetch_result = mysql_stmt_fetch(db_handler->stmt_get_hash);
+    if(fetch_result == MYSQL_NO_DATA){
+        fprintf(stdout, "no such user\n");
+    }
+    else if(fetch_result == 0){
+        fprintf(stdout, "fetch success\n");
+    }
     mysql_stmt_free_result(db_handler->stmt_get_hash);
     mysql_stmt_reset(db_handler->stmt_get_hash);
-    return error;
+    return fetch_result;
 }
