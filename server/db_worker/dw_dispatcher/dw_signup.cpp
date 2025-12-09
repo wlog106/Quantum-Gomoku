@@ -24,7 +24,7 @@ void dw_signup(DwContext *dwcxt){
     if(n == 1062){
         job_result = DW_ERESULT_DUPNAME;
     }
-    if(n != 0){
+    else if(n != 0){
         /* unknown error */
         exit(1);
     }

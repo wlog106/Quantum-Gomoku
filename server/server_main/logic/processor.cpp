@@ -4,6 +4,8 @@
 #include <server_utils.h>
 #include <server_cmd.h>
 
+#include "../dispatcher/dispatcher.h"
+
 #include <sys/epoll.h>
 
 void processor(
@@ -19,34 +21,28 @@ void processor(
         {
             case (C_create_new_account):
                 sscanf(q.front().second, "%s %s", u->name, u->hash);
-                u->db_job_pending = 1;
                 newJob->type = DW_SIGNUP;
                 sprintf(cmd, "%d %d %s\n", DW_SIGNUP, u->fd, q.front().second);
                 newJob->line = cmd;
                 newJob->r_ptr = cmd;
                 newJob->len = strlen(cmd);
-                sobj->dwq->push(newJob);
-                if(sobj->dwq->size()==1) goto add_dw_to_epoll;
+                u->jobq.push_back(newJob);
                 break;
                 
             case (C_login_to_server):
                 sscanf(q.front().second, "%s %s", u->name, u->hash);
-                u->db_job_pending = 1;
                 newJob->type = DW_LOGIN;
                 sprintf(cmd, "%d %d %s\n", DW_LOGIN, u->fd, q.front().second);
                 newJob->line = cmd;
                 newJob->r_ptr = cmd;
                 newJob->len = strlen(cmd);
-                sobj->dwq->push(newJob);
-                if(sobj->dwq->size()==1) goto add_dw_to_epoll;
+                u->jobq.push_back(newJob);
                 break;
-
-            add_dw_to_epoll:
-                struct epoll_event ev;
-                ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
-                ev.data.fd = scxt->dw_fd;
-                Epoll_ctl(scxt->epfd, EPOLL_CTL_MOD, scxt->dw_fd, &ev);
+            
+            case (C_create_room):
+                break;
         }
         q.pop();
     }
+    dispatcher(scxt, sobj, u);
 }

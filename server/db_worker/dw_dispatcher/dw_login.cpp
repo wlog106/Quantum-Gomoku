@@ -21,7 +21,8 @@ void dw_login(DwContext *dwcxt){
         name,
         hash
     );
-    if(dwcxt->dc->res_info->pwd_is_null){
+    if(n == 100){
+        /* MYSQL_NO_DATA */
         job_result = DW_ERESULT_USERDNE;
     }
     else if(strcmp(
@@ -30,7 +31,7 @@ void dw_login(DwContext *dwcxt){
     ){
         job_result = DW_ERESULT_PWDFAIL;
     }
-    if(n != 0){
+    else if(n != 0){
         /* unknown error */
         exit(1);
     }
