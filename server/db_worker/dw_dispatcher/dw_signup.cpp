@@ -1,8 +1,10 @@
 #include <share_wrap.h>
 #include <server_objects.h>
+#include <server_utils.h>
 #include <server_cmd.h>
 #include <mariadb.h>
 #include <cstdio>
+#include <sys/epoll.h>
 
 void dw_signup(DwContext *dwcxt){
     int job_result;
@@ -47,6 +49,17 @@ void dw_signup(DwContext *dwcxt){
             user_fd, user_id, job_type, job_result);
     newRes.r_ptr = newRes.line;
     newRes.len = strlen(newRes.line);
+    if(dwcxt->resultq->empty()){
+        struct epoll_event ev;
+        ev.events = EPOLLIN | EPOLLET | EPOLLOUT;
+        ev.data.fd = dwcxt->mainfd;
+        Epoll_ctl(
+            dwcxt->epfd,
+            EPOLL_CTL_MOD, 
+            dwcxt->mainfd,
+            &ev
+        );
+    }
     dwcxt->resultq->push(newRes);
     dwcxt->jobq->pop();
 }

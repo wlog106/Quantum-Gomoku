@@ -24,6 +24,7 @@ void on_dw_res(
             /* database worker die */
         }
         recvline[n] = 0;
+        fprintf(stdout, "dw res: %s\n", recvline);
         sobj->dwr_buf->append(recvline);
     }
     dw_res_parser(scxt, sobj);

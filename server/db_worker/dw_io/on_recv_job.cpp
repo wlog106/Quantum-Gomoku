@@ -1,5 +1,8 @@
 #include <server_objects.h>
 #include <share_wrap.h>
+
+#include "../dw_parser/dw_parser.h"
+
 #include <cerrno>
 #include <cstdio>
 #include <sys/uio.h>
@@ -26,4 +29,5 @@ void on_recv_job(DwContext *dwcxt){
         recvbuf[n] = 0;
         dwcxt->stream_buf->append(recvbuf);
     }
+    dw_parser(dwcxt);
 }

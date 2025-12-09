@@ -1,6 +1,7 @@
 #ifndef SERVER_OBJECTS_H
 #define SERVER_OBJECTS_H
 
+#include "share_wrap.h"
 #include <string>
 #include <queue>
 #include <map>
@@ -67,12 +68,14 @@ struct conn{
     /* connection metadata */
     int state;
     bool db_job_pending;
-    linear_buf_t r_buf;
+    linear_buf_t *r_buf;
     std::queue<job_t*> jobq; // job queue (except db job)
 
     /* constructor */
     conn();
     conn(int fd, int state);
+
+    ~conn();
 };
 
 struct dw_res{

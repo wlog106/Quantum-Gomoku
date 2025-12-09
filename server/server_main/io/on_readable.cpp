@@ -26,7 +26,7 @@ void on_readable(
             //u->state = 1;
         }
         recvline[n] = 0;
-        u->r_buf.append(recvline);
+        u->r_buf->append(recvline);
     }
     parser(scxt, sobj, u);
 }

@@ -46,8 +46,8 @@ int Read_commamd(int fd, string &buf, queue<string> &commands){
     int n;
     char read_buf[MAXLINE];
     if ((n = TEMP_FAILURE_RETRY(read(fd, read_buf, MAXLINE))) == -1){
-        std::cout << "haharead error\n";
-        exit(0);
+        //std::cout << "haharead error\n";
+        return 0;
     }
     read_buf[n] = 0;
     buf += read_buf;

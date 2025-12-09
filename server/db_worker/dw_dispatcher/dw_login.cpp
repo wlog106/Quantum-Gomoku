@@ -57,7 +57,7 @@ void dw_login(DwContext *dwcxt){
     newRes.len = strlen(newRes.line);
     if(dwcxt->resultq->empty()){
         struct epoll_event ev;
-        ev.events = EPOLLET | EPOLLOUT;
+        ev.events = EPOLLIN | EPOLLET | EPOLLOUT;
         ev.data.fd = dwcxt->mainfd;
         Epoll_ctl(
             dwcxt->epfd,

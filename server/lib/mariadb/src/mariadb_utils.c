@@ -30,6 +30,11 @@ db_conn *db_init()
         sql_get_hash, 
         strlen(sql_get_hash)
     );
+    Mysql_stmt_prepare(
+        db_handler->stmt_get_id_by_name,
+        sql_get_id_by_name,
+        strlen(sql_get_id_by_name)
+    );
     db_handler->res_info = (db_response *)malloc(sizeof(db_response));
 
     /* bind get_hash results */

@@ -43,7 +43,7 @@ void processor(
 
             add_dw_to_epoll:
                 struct epoll_event ev;
-                ev.events = EPOLLOUT;
+                ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
                 ev.data.fd = scxt->dw_fd;
                 Epoll_ctl(scxt->epfd, EPOLL_CTL_MOD, scxt->dw_fd, &ev);
         }

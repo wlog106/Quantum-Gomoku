@@ -69,7 +69,7 @@ void dw_res_processor(
         }
         if(cur_dw_res->u->jobq.size() == 1){
             struct epoll_event ev;
-            ev.events = EPOLLET | EPOLLOUT;
+            ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
             ev.data.fd = cur_dw_res->u->fd;
             Epoll_ctl(scxt->epfd, EPOLL_CTL_MOD, cur_dw_res->u->fd, &ev);
         }

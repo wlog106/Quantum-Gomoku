@@ -60,7 +60,9 @@ int Epoll_wait(int epfd, struct epoll_event *events, int maxevents){
 
 void Execv(const char *path, char *const argv[]){
     if(execv(path, argv)==-1){
-        fprintf(stderr, "execv error on path %s\n", path);
+        int errnum = errno;
+        fprintf(stderr, "execv error on path %s, with error number: %d\n",
+                path, errnum);
         exit(1);
     }
 }

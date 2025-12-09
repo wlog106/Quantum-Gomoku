@@ -15,7 +15,7 @@ void parser(
     char *line;
     std::queue<char *> to_be_freed;
     std::queue<std::pair<int, char *>> q;
-    while((line = u->r_buf.getline())!=NULL){
+    while((line = u->r_buf->getline())!=NULL){
         /* should validate line here, it will be implement later
         if(!validator(u, cmd_id, cmd_line)) 
             continue;

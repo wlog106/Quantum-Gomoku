@@ -1,3 +1,4 @@
+#include <csignal>
 #include <sys/types.h>
 #include <share_wrap.h>
 #include <server_objects.h>
@@ -16,10 +17,12 @@ int main(int arg, char **argv){
     char argv_buf[10];
     int rmgr_fd[2];
     int dw_fd[2];
+    char dw_proc_name[11] = "db_worker";
     pid_t rmgr_pid;
     pid_t dw_pid;
-    Socketpair(AF_UNIX, SOCK_STREAM, 0, rmgr_fd);
+    //Socketpair(AF_UNIX, SOCK_STREAM, 0, rmgr_fd);
     Socketpair(AF_UNIX, SOCK_STREAM, 0, dw_fd);
+    /*
     if((rmgr_pid = Fork()) == 0){
         Close(dw_fd[0]);
         Close(dw_fd[1]);
@@ -27,24 +30,25 @@ int main(int arg, char **argv){
         int flags = Fcntl(rmgr_fd[1], F_GETFL, 0);
         Fcntl(rmgr_fd[1], F_SETFL, flags | O_NONBLOCK);
         sprintf(argv_buf, "%d", rmgr_fd[1]);
-        char *rm_argv[] = {argv_buf};
+        char *rm_argv[] = {argv_buf, NULL};
         Execv("./room_mgr", rm_argv);
         assert(1==0);
     }
+        */
     if((dw_pid = Fork()) == 0){
-        Close(rmgr_fd[0]);
-        Close(rmgr_fd[1]);
+        //Close(rmgr_fd[0]);
+        //Close(rmgr_fd[1]);
         Close(dw_fd[0]);
         int flags = Fcntl(dw_fd[1], F_GETFL, 0);
         Fcntl(dw_fd[1], F_SETFL, flags | O_NONBLOCK);
         sprintf(argv_buf, "%d", dw_fd[1]);
-        char *dw_argv[] = {argv_buf};
+        char *dw_argv[] = {dw_proc_name, argv_buf, NULL};
         Execv("./db_worker", dw_argv);
         assert(1==0);
     }
-    Close(rmgr_fd[1]);
+   // Close(rmgr_fd[1]);
     Close(dw_fd[1]);
-
+    std::cout << "dw_pid: " << dw_pid << "\n";
     /* epoll */
     int nfds, epfd;
     struct epoll_event ev, events[MAX_EVENT];
@@ -83,18 +87,25 @@ int main(int arg, char **argv){
 
     flags = Fcntl(listenfd, F_GETFL, 0);
     Fcntl(listenfd, F_SETFL, flags | O_NONBLOCK);
+    flags = Fcntl(dw_fd[0], F_GETFL, 0);
+    Fcntl(dw_fd[0], F_SETFL, flags | O_NONBLOCK);
+    /*
+        DONT FORGET ROOM MANAGER
+    */
 
     epfd = Epoll_create();
 
-    ev.events = EPOLLET;
+    ev.events = EPOLLIN | EPOLLET;
     ev.data.fd = listenfd;
     Epoll_ctl(epfd, EPOLL_CTL_ADD, listenfd, &ev);
-    ev.events = EPOLLET;
+    ev.events = EPOLLIN | EPOLLET;
     ev.data.fd = *dw_fd;
     Epoll_ctl(epfd, EPOLL_CTL_ADD, *dw_fd, &ev);
-    ev.events = EPOLLET;
-    ev.data.fd = *rmgr_fd;
-    Epoll_ctl(epfd, EPOLL_CTL_ADD, *rmgr_fd, &ev);
+    //ev.events = EPOLLET;
+    //ev.data.fd = *rmgr_fd;
+    //Epoll_ctl(epfd, EPOLL_CTL_ADD, *rmgr_fd, &ev);
+
+    Signal(SIGCHLD, sigchild);
 
     /* pack some fds together */
     ServerContext *scxt = new ServerContext(
@@ -106,13 +117,14 @@ int main(int arg, char **argv){
     );
 
     for( ; ; ){
+        std::cout << "(serv_main) epoll in wait for rw events\n";
         nfds = Epoll_wait(epfd, events, MAX_EVENT);
         for(int i=0; i<nfds; i++){
             if(evfd == listenfd){
                 on_listen(scxt, sobj);
                 continue;
             }
-            if(evfd == *dw_fd){
+            if(evfd == *dw_fd && evtype & EPOLLIN){
                 on_dw_res(scxt, sobj);
                 continue;
             }
@@ -120,12 +132,13 @@ int main(int arg, char **argv){
                 /* handle rmmgr result*/
                 continue;
             }
-            if(evtype & EPOLLET){
+            if(evtype & EPOLLIN){
                 scxt->cur_fd = evfd;
                 on_readable(scxt, sobj);
                 continue;
             }
             if(evtype & EPOLLOUT){
+                scxt->cur_fd = evfd;
                 on_writable(scxt, sobj);
                 continue;
             }
