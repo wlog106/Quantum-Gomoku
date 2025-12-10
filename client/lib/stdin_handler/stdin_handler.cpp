@@ -103,6 +103,9 @@ string get_key(){
     else if(ch == 4){
         return "EOF";
     }
+    else if(ch == 32){
+        return "SPACE";
+    }
     else if(ch >= 33 && ch <= 126){
         key += ch;
         return key;

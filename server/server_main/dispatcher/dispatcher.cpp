@@ -6,6 +6,7 @@
 #include <server_utils.h>
 #include <string>
 #include <sys/epoll.h>
+#include <assert.h>
 
 #define MAX_ROOM 20
 
@@ -98,6 +99,7 @@ void dispatcher(
             if(flag){
                 sprintf(cmd, "%d %s\n", 
                         C_pair_success_start_waiting, it->second->get_room_info().data());
+                it->second->on_change(scxt, u);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
                 u->jobq.push_front(newJob);
@@ -111,6 +113,81 @@ void dispatcher(
         }
         else if(cur_job->type == OBSERVE_RANDOMLY){
 
+        }
+        else if(cur_job->type == TOGGLE_READY){
+            auto it = sobj->id_to_room->find(std::string(cur_job->line));
+            if(it==sobj->id_to_room->end())
+                assert(1==0);  /* error with room DNE*/
+            else if(!it->second->change_ready(u))
+                continue;
+
+            if(it->second->can_fork()){
+                /* do fork */
+            }
+            else{
+                job_t *newJob = new job_t;
+                newJob->type = RES_USR;
+                char *cmd = (char*)malloc(MAXLINE*sizeof(char));
+                sprintf(cmd, "%d %s\n", 
+                        C_new_room_info, it->second->get_room_info().data());
+                it->second->on_change(scxt, u);
+                newJob->fill_line(cmd);
+                u->jobq.pop_front();
+                u->jobq.push_front(newJob);
+            }
+        }
+        else if(cur_job->type == CHANGE_POS){
+            int pos;
+            char room_id[MAXLINE];
+            sscanf(cur_job->line, "%s %d", room_id, &pos);
+            pos--;
+            auto it = sobj->id_to_room->find(std::string(room_id));
+            if(it==sobj->id_to_room->end()){
+                assert(1==0);
+                /* error no such room */
+            }
+            else if(!it->second->user_change_position(u, pos))
+                continue;
+                
+            job_t *newJob = new job_t;
+            newJob->type = RES_USR;
+            char *cmd = (char*)malloc(MAXLINE*sizeof(char));
+            sprintf(cmd, "%d %s\n", 
+                    C_new_room_info, it->second->get_room_info().data());
+            it->second->on_change(scxt, u);
+            newJob->fill_line(cmd);
+            u->jobq.pop_front();
+            u->jobq.push_front(newJob);
+        }
+        else if(cur_job->type == LEAVE_WAITING_ROOM){
+            auto it = sobj->id_to_room->find(std::string(cur_job->line));
+            if(it==sobj->id_to_room->end()){
+                assert(1==0);
+                /* error no such room */
+            }
+            else if(!it->second->user_leave(u))
+                continue;
+
+            job_t *newJob = new job_t;
+            newJob->type = RES_USR;
+            char *cmd = (char*)malloc(MAXLINE*sizeof(char));
+            sprintf(cmd, "%d\n", C_leave_waiting_room_success);
+            it->second->on_change(scxt, u);
+            newJob->fill_line(cmd);
+            u->jobq.pop_front();
+            u->jobq.push_front(newJob);
+        }
+        else if(cur_job->type == SENDMSG_WAITING_ROOM){
+            char room_id[MAXLINE];
+            char message[MAXLINE];
+            sscanf(cur_job->line, "%s %s", room_id, message);
+            auto it = sobj->id_to_room->find(std::string(room_id));
+            if(it==sobj->id_to_room->end()){
+                assert(1==0);
+                /* error no such room */
+            }
+            u->jobq.pop_front();
+            it->second->broadcast_msg(scxt, u, message);
         }
     }
 }

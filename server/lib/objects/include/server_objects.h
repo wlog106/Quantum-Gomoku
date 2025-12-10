@@ -130,7 +130,9 @@ struct Room{
     bool user_leave(conn* leaving_user);
     bool user_change_position(conn *u, int pos);
     bool change_ready(conn *u);
+    bool can_fork();
     void on_change(ServerContext *scxt, conn *u);
+    void broadcast_msg(ServerContext *scxt, conn *u, char *msg);
     std::string get_room_info();
 };
 

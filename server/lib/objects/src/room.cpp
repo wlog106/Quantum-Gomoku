@@ -1,7 +1,7 @@
-#include "server_cmd.h"
-#include "server_utils.h"
-#include "share_cmd.h"
-#include "share_wrap.h"
+#include <server_cmd.h>
+#include <server_utils.h>
+#include <share_cmd.h>
+#include <share_wrap.h>
 #include <cstddef>
 #include <server_objects.h>
 
@@ -10,8 +10,9 @@ Room::Room(std::string rm_id):room_id(rm_id){
         users[i] = NULL;
         user_existance[i] = false;
     }
-    user_ready[0] = 0;
-    user_ready[1] = 0;
+    user_ready[0] = false;
+    user_ready[1] = false;
+    is_playing = false;
 }
 
 bool Room::add_user(conn* new_user){
@@ -57,10 +58,11 @@ bool Room::user_leave(conn* leaving_user){
     bool has_leave = false;
     for(int i = 0; i < 5; i++){
         if(user_existance[i] 
-        && strcmp(users[i]->name, leaving_user->name)==0){
+        && users[i] == leaving_user){
             has_leave = true;
             user_existance[i] = false;
-            users[i] = leaving_user;
+            users[i] = NULL;
+            if(i<2) user_ready[i] = false;
             break;
         }
     }
@@ -68,7 +70,7 @@ bool Room::user_leave(conn* leaving_user){
 }
 
 bool Room::user_change_position(conn* u, int pos){
-    if(pos < 1 || pos > 5) return false;
+    if(pos < 0 || pos > 4) return false;
     bool has_change = false;
     for(int i = 0; i < 5; i++){
         if(user_existance[i] == 1
@@ -79,6 +81,7 @@ bool Room::user_change_position(conn* u, int pos){
             users[i] = NULL;
             user_existance[pos] = 1;
             users[pos] = u;
+            if(i<2) user_ready[i] = false;
             break;
         }
     }
@@ -104,6 +107,25 @@ void Room::on_change(ServerContext *scxt, conn *u){
         epoll_rw_mod(scxt, users[i]->fd);
     }
 }
+
+void Room::broadcast_msg(
+    ServerContext *scxt, 
+    conn *u, 
+    char *msg
+){
+    for(int i = 0; i < 5; i++){
+        if(!user_existance[i])
+            continue;
+        job_t *newJob = new job_t;
+        char *cmd = (char*)malloc(MAXLINE*sizeof(char));
+        newJob->type = RES_USR;
+        sprintf(cmd, "%d (%s):┼%s\n",
+                C_new_waiting_room_message, u->name, msg);
+        newJob->fill_line(cmd);
+        users[i]->jobq.push_front(newJob);
+        if(users[i]!=u) epoll_rw_mod(scxt, users[i]->fd);
+    }
+}
     
 bool Room::change_ready(conn *u){
     bool has_change = false;
@@ -116,6 +138,10 @@ bool Room::change_ready(conn *u){
         }
     }
     return has_change;
+}
+
+bool Room::can_fork(){
+    return user_ready[0] && user_ready[1];
 }
 
 std::string Room::get_room_info(){

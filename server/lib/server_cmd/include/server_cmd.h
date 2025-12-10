@@ -17,6 +17,12 @@ typedef enum{
     PAIR_RANDOMLY,
     OBSERVE_RANDOMLY,
 
+    /* waiting room */
+    TOGGLE_READY,
+    CHANGE_POS,
+    LEAVE_WAITING_ROOM,
+    SENDMSG_WAITING_ROOM,
+
     /* on writable */
     RES_USR
 } jobType;

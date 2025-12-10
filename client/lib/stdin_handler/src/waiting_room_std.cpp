@@ -30,10 +30,11 @@ void waiting_room_std(const string &key){
             signal_ui();
             unlock_ui();
         }
-        else if(int(key.size()) == 1){
+        else if(int(key.size()) == 1 || key == "SPACE"){
             lock_ui();
             if(int(waiting_room_input_box.size()) < MAX_MESSAGE_LEN){
-                waiting_room_input_box += key;
+                if(key == "SPACE") waiting_room_input_box += "┼";
+                else waiting_room_input_box += key;
             }
             signal_ui();
             unlock_ui();
