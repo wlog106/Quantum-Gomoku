@@ -22,7 +22,7 @@ void parser(
         */
         int cmd_id;
         char *space = strchr(line, ' ');
-        *space++ = 0;
+        if(space != NULL) *space++ = 0;
         sscanf(line, "%d", &cmd_id);
         to_be_freed.push(line);
         q.push({cmd_id, space});

@@ -58,8 +58,9 @@ int main(int arg, char **argv){
     struct sockaddr_in servaddr;
 
     /* user data */
+    Uid_generator uid_gen;
     std::map<int, conn*> fd_to_conn;
-    std::map<int, Room*> id_to_room;
+    std::map<std::string, Room*> id_to_room;
 
     /* dw job queue */
     std::queue<job_t*> dwq;
@@ -114,7 +115,8 @@ int main(int arg, char **argv){
     );
 
     ServerObjects *sobj = new ServerObjects(
-        &dwq, &dwr_buf, &fd_to_conn, &id_to_room
+        &dwq, &dwr_buf, &uid_gen,
+        &fd_to_conn, &id_to_room
     );
 
     for( ; ; ){

@@ -42,8 +42,6 @@ void select_option_recv(const string &command){
             unlock_ui();
             break;
         //observe randomly
-        case C_start_observing:
-            break;
         case C_no_current_playing_room:
             lock_ui();
             opselect_reply = OSR_no_current_playing_room;

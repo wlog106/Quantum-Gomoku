@@ -106,7 +106,6 @@ typedef enum {
     C_pair_fail,//cid 
 
     //observe randomly
-    C_start_observing, //to be dicided
     C_no_current_playing_room, // cid
 
     //waiting room

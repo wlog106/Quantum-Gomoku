@@ -66,7 +66,7 @@ void processor(
                 break;
 
             case (C_observe_randomly):
-                newJob->type = OBSERVER_RANDOMLY;
+                newJob->type = OBSERVE_RANDOMLY;
                 newJob->line = NULL;
                 newJob->r_ptr = NULL;
                 newJob->len = 0;

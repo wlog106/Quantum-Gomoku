@@ -1,6 +1,7 @@
 #ifndef SERVER_UTILS_H
 #define SERVER_UTILS_H
 
+#include "server_objects.h"
 #include <sys/socket.h>
 #include <map>
 
@@ -10,6 +11,7 @@
 
 typedef void Sigfunc(int);
 struct conn;
+struct ServerContext;
 
 /*----------bind utility-----------*/
 void Bind(
@@ -71,6 +73,11 @@ void sigchild(int signo);
 conn *get_user(
     int fd, 
     std::map<int, conn*> *fd_to_conn
+);
+
+void epoll_rw_mod(
+    ServerContext *scxt,
+    int fd
 );
 
 #endif

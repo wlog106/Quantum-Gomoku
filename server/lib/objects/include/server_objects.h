@@ -3,7 +3,10 @@
 
 #include <share_wrap.h>
 #include <string>
+#include <ctime>
 #include <queue>
+#include <array>
+#include <set>
 #include <map>
 
 struct conn;
@@ -11,6 +14,7 @@ struct db_conn;
 struct Room;
 struct job_t;
 struct linear_buf_t;
+struct Uid_generator;
 
 struct ServerContext{
     int epfd;
@@ -29,15 +33,17 @@ struct ServerContext{
 
 struct ServerObjects{
     std::queue<job_t*> *dwq;
-    std::map<int, conn*> *fd_to_conn;
-    std::map<int, Room*> *id_to_room;
     linear_buf_t *dwr_buf;
+    Uid_generator *uid_gen;
+    std::map<int, conn*> *fd_to_conn;
+    std::map<std::string, Room*> *id_to_room;
     ServerObjects();
     ServerObjects(
         std::queue<job_t*> *dwq,
         linear_buf_t *dwr_buf,
+        Uid_generator *uid_gen,
         std::map<int, conn*> *fd_to_conn,
-        std::map<int, Room*> *id_to_room
+        std::map<std::string, Room*> *id_to_room
     );
 };
 
@@ -59,6 +65,7 @@ struct job_t{
     char *line;
     char *r_ptr;
     int len;
+    void fill_line(char *cmd);
 };
 
 struct conn{
@@ -111,17 +118,29 @@ struct DwContext{
 };
 
 struct Room{
-
     std::string room_id;
-    std::string user_name[5];
+    conn *users[5];
+    bool is_playing;
     bool user_existance[5];
     bool user_ready[2];
     Room(std::string rm_id);
-    bool add_user(string new_user);
-    bool user_leave(string leaving_user);
-    bool user_change_position(string user, int pos);
-    bool change_ready(string user);
-    string get_room_info();
+    bool add_user(conn* new_user);
+    bool add_player(conn* new_user);
+    bool add_observer(conn* new_user);
+    bool user_leave(conn* leaving_user);
+    bool user_change_position(conn *u, int pos);
+    bool change_ready(conn *u);
+    void on_change(ServerContext *scxt, conn *u);
+    std::string get_room_info();
+};
+
+class Uid_generator{
+    std::set<std::string> distributed_uid;
+    string character_set = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+public:
+    Uid_generator();
+    std::string new_uid(int len);
+    bool rm_uid(std::string uid);
 };
 
 #endif

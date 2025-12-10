@@ -15,7 +15,7 @@ typedef enum{
     CREATE_ROOM,
     JOIN_ROOM_BY_ID,
     PAIR_RANDOMLY,
-    OBSERVER_RANDOMLY,
+    OBSERVE_RANDOMLY,
 
     /* on writable */
     RES_USR

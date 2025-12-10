@@ -1,4 +1,5 @@
 #include "../socket_reader.h"
+#include "share_cmd.h"
 
 void playing_recv(const string &command){
     stringstream ss(command);
@@ -15,7 +16,7 @@ void playing_recv(const string &command){
             PP_segement_start();
             unlock_ui();
             break;
-        case C_start_observing:
+        case C_show_observe_result:
             lock_ui();
             playing_page_type = 2;
             PP_observe(ss);
