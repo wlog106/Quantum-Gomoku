@@ -53,6 +53,9 @@ void *socket_reader(void *vptr){
                     case S_select_enter_room_id:
                         select_enter_room_id_recv(command);
                         break;
+                    case S_waiting_room:
+                        waiting_room_recv(command);
+                        break;
                     case S_playing:
                         playing_recv(command);
                         break;
