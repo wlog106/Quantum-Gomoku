@@ -5,6 +5,7 @@ void waiting_room_recv(const string &command){
     int cmd_id;
     ss >> cmd_id;
     string message;
+    size_t pos;
     switch (cmd_id){
         case C_new_room_info:
             read_room_info(ss);
@@ -14,6 +15,10 @@ void waiting_room_recv(const string &command){
             break;
         case C_new_waiting_room_message:
             ss >> message;
+            pos = 0;
+            while ((pos = message.find("┼", pos)) != std::string::npos) {
+                message.replace(pos, 3, " ");
+            }
             lock_ui();
             waiting_room_history_message.push_back(message);
             if(int(waiting_room_history_message.size()) > 5){

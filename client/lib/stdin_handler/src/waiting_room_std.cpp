@@ -2,6 +2,7 @@
 
 void waiting_room_std(const string &key){
     int is_entering;
+    size_t pos;
     lock_ui();
     is_entering = waiting_room_entering;
     unlock_ui();
@@ -11,6 +12,10 @@ void waiting_room_std(const string &key){
             string message = waiting_room_input_box;
             waiting_room_input_box = "";
             waiting_room_entering = ((int(message.size()) != 0) ? 1 : 0);
+            pos = 0;
+            while ((pos = message.find(" ", pos)) != std::string::npos) {
+                message.replace(pos, 1, "┼");
+            }
             signal_ui();
             unlock_ui();
             if(int(message.size()) != 0){
@@ -33,7 +38,7 @@ void waiting_room_std(const string &key){
         else if(int(key.size()) == 1 || key == "SPACE"){
             lock_ui();
             if(int(waiting_room_input_box.size()) < MAX_MESSAGE_LEN){
-                if(key == "SPACE") waiting_room_input_box += "┼";
+                if(key == "SPACE") waiting_room_input_box += " ";
                 else waiting_room_input_box += key;
             }
             signal_ui();
