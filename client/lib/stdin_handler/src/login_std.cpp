@@ -14,6 +14,9 @@ void login_option_std(const string &key){
         signal_ui();
         unlock_ui();
     }
+    else if(key == "ESC"){
+        CLOSE_CLIENT('e');
+    }
     return;
 }
 

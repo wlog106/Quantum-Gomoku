@@ -49,5 +49,8 @@ int main(int argc, char **argv){
     else if(client_end_code == 'd'){
         cout << "Ctrl-D keyboard interrupt" << endl;
     }
+    else if(client_end_code == 'e'){
+        cout << "Game close successfully" << endl;
+    }
     exit(0);
 }

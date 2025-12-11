@@ -3,8 +3,47 @@
 
 void login_option_ui(){
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE;
-    cout << "\x1b[1;38;5;226mWelcome to Quantum Gomoku!\n\x1b[0m" << flush;
-    cout << "\x1b[1mPress 1 to login\nPress 2 to create new account\x1b[0m" << flush;
+    int w = 40, h = 9;
+    for(int i = 0; i < h; i++){
+        for(int j = 0; j < w; j++){
+            if(i == 0 || j == 0 || i == h-1 || j == w-1){
+                if((i+j) & 1){
+                    cout << "\x1b[48;5;255m   \x1b[0m";
+                }
+                else{
+                    cout << "\x1b[48;5;0m   \x1b[0m";
+                }
+            }
+            else{
+                cout << "   ";
+            }
+        }
+        cout << endl;
+    }
+    int title_pos_x = 2, title_pos_y = 4;
+    string title[6] = {
+"  ____                            _                             _____                               _            ",
+" / __ \\                          | |                           / ____|                             | |           ",
+"| |  | |  _   _    __ _   _ __   | |_   _   _   _ __ ___      | |  __    ___    _ __ ___     ___   | | __  _   _ ",
+"| |  | | | | | |  / _` | | '_ \\  | __| | | | | | '_ ` _ \\     | | |_ |  / _ \\  | '_ ` _ \\   / _ \\  | |/ / | | | |",
+"| |__| | | |_| | | (_| | | | | | | |_  | |_| | | | | | | |    | |__| | | (_) | | | | | | | | (_) | |   <  | |_| |",
+" \\___\\_\\  \\__,_|  \\__,_| |_| |_|  \\__|  \\__,_| |_| |_| |_|     \\_____|  \\___/  |_| |_| |_|  \\___/  |_|\\_\\  \\__,_|"};
+
+    for(int i = 0; i < 6; i++){
+        cout << MOVE(title_pos_x + i, title_pos_y) << title[i];
+    }
+
+
+
+
+
+
+
+    //cout << endl << endl << endl;
+    //cout << "\x1b[1;38;5;226mWelcome to Quantum Gomoku!\n\x1b[0m" << flush;
+    cout << MOVE(12, 19) << "\x1b[1;38;5;82mPress 1 to login\n";
+    cout << MOVE(12, 84) << "\x1b[1;38;5;82mPress 2 to create new account\x1b[0m" << flush;
+    cout << MOVE(14, 47) << "\x1b[1;38;5;196mPress Esc to close the game\x1b[0m" << flush;
     return;
 }
 

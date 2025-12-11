@@ -84,6 +84,7 @@ void debug_ui(){
     player_remain_time[1] = 700;
     my_piece_type = 9;
     PP_initialize();
+    playing_page_type = 1;
     PP_segement_start();
     return;
 }
