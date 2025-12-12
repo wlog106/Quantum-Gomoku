@@ -85,14 +85,25 @@ void epoll_r_mod(
     int fd
 );
 
+void epoll_rw_add(
+    int epfd,
+    int fd
+);
+
 void epoll_rw_mod(
+    int epfd,
+    int fd
+);
+
+void epoll_del(
     int epfd,
     int fd
 );
 
 pid_t fork_room(
     ServerObjects *sobj,
-    Room *room
+    Room *room,
+    int epfd
 );
 
 #endif

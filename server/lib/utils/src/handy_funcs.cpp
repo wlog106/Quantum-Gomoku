@@ -36,6 +36,16 @@ void epoll_r_mod(
     Epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &ev);
 }
 
+void epoll_rw_add(
+    int epfd,
+    int fd
+){
+    struct epoll_event ev;
+    ev.data.fd = fd;
+    ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+    Epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev);
+}
+
 void epoll_rw_mod(
     int epfd,
     int fd
@@ -46,9 +56,17 @@ void epoll_rw_mod(
     Epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &ev);
 }
 
+void epoll_del(
+    int epfd,
+    int fd
+){
+    Epoll_ctl(epfd, EPOLL_CTL_DEL, fd, NULL);
+}
+
 pid_t fork_room(
     ServerObjects *sobj,
-    Room *room
+    Room *room,
+    int epfd
 ){
     pid_t child_pid;
     int room_fd[2];
@@ -93,7 +111,7 @@ pid_t fork_room(
         assert(false);
     }
     // close unecessary fds
-    room->close_exist_userfds();
+    room->close_exist_userfds(epfd);
     Close(room_fd[1]);
     room->is_playing = true;
     return child_pid;

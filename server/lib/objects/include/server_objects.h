@@ -138,7 +138,7 @@ struct Room{
     std::string get_exist_usernames();
     std::string get_exist_userfds();
     void turn_off_fd_close_on_exec();
-    void close_exist_userfds();
+    void close_exist_userfds(int epfd);
 };
 
 struct Game{

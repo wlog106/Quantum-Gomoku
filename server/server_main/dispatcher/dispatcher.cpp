@@ -122,7 +122,8 @@ void dispatcher(
 
             if(it->second->can_fork()){
                 printf("open a new playing room, pid: %d\n", 
-                       fork_room(sobj, it->second));
+                       fork_room(sobj, it->second, scxt->epfd));
+                u->jobq.pop_front();
             }
             else{
                 job_t *newJob = new job_t;

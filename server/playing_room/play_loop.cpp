@@ -7,6 +7,7 @@
 #include "pr_io/pr_io.h"
 
 int main(int arg, char **argv){
+    //raise(SIGSTOP);
     int mainfd, nfds;
     unsigned int exist_pos;
     struct epoll_event events[MAX_EVENT];
@@ -25,13 +26,13 @@ int main(int arg, char **argv){
             continue;
         *ssName >> game->users[i]->name;
         *ssfd >> game->users[i]->fd;
-        epoll_r_add(epfd, game->users[i]->fd);
+        game->user_exist[i] = true;
     }
     delete ssName;
     delete ssfd;
 
     game->broadcast_init_msg();
-    
+
     for( ; ; ){
         nfds = Epoll_wait(epfd, events, MAX_EVENT);
         for(int i=0; i<nfds; i++){

@@ -67,12 +67,15 @@ int main(int arg, char **argv){
 
     Listen(listenfd, 1024);
 
+    epfd = Epoll_create();
+
     flags = Fcntl(listenfd, F_GETFL, 0);
     Fcntl(listenfd, F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
     flags = Fcntl(dw_fd[0], F_GETFL, 0);
     Fcntl(dw_fd[0], F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
-
-    epfd = Epoll_create();
+    flags = Fcntl(epfd, F_GETFL, 0);
+    Fcntl(epfd, F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
+    
 
     ev.events = EPOLLIN | EPOLLET;
     ev.data.fd = listenfd;

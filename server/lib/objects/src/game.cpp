@@ -59,7 +59,6 @@ std::string Game::get_full_game_info(){
         info += " ";
     }
     info += board->get_board_info();
-    info += " ";
     return info;
 }
 
@@ -70,18 +69,20 @@ void Game::broadcast_init_msg(){
         job_t *newJob = new job_t;
         newJob->type = RES_USR;
         char *cmd = (char*)malloc(MAXLINE*sizeof(char));
-        sprintf(cmd, "%s %d\n0 6000 6000 %d\n", 
-                get_full_game_info().data(), i+1, cur_player+1);
+        sprintf(cmd, "%d %s %d\n%d 0 6000 6000 %d\n", 
+                C_start_a_playing_room, get_full_game_info().data(), i+1,
+                C_playing_new_segement,  cur_player+1);
+        printf("(child) send init msg: %s\n", cmd);
         newJob->fill_line(cmd);
         users[i]->jobq.push_front(newJob);
-        epoll_rw_mod(epfd, users[i]->fd);
+        epoll_rw_add(epfd, users[i]->fd);
     }
 }
 
 void Game::broadcast_game_result(int result){
     std::pair<int, int> new_elo = {users[0]->cur_elo, users[1]->cur_elo};
     calculate_new_elo(new_elo, result);
-    char msg[40];
+    char msg[200];
     sprintf(msg, "%d %s %d %d %s %d %d %d %d",
             C_game_over,
             users[0]->name, users[0]->cur_elo, new_elo.first,

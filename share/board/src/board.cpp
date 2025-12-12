@@ -16,6 +16,7 @@ std::string Board::get_board_info(){
             info += " ";
         }
     }
+    info.pop_back();
     return info;
 }
 
