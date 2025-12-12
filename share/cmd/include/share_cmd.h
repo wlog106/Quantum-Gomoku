@@ -125,17 +125,20 @@ typedef enum {
     */
     /*
     "segment info" : "new_pieces time moving_position"
-    "new_pieces" : "has_new_piece piece_positon piece_type" //if has_new_piece = 0, don't need to send positon and type
-    "has_new_piece" : [0, 1] //0 mean has no new piece(initialize)
-    "piece_position" : "x y" [0:Board_size)
-    "time" : "player1_time player2_time" //unit: 100ms
-    "moving_position" : [1,2] //who is current playing
+    > new_pieces : "has_new_piece piece_positon piece_type" //if has_new_piece = 0, don't need to send positon and type
+     - has_new_piece : [0, 1] //0 mean has no new piece(initialize)
+     - piece_position : "x y" [0:Board_size)
+    > time : "player1_time player2_time" //unit: 100ms
+    > moving_position : [1,2] //who is current playing
+    */
+    /*
+    "p{i}_result" : "p{i}_name p{i}_original_elo p{i}_new_elo"
     */
     C_start_a_playing_room, //cid "full game info"
     C_playing_new_segement, //cid "segment info"
     C_show_observe_result, // cid "board" // 1 black 2 white
-    C_game_over, //cid "winer_name" "origin_elo" "new_elo"
-    C_playing_users_change //cid "player info"
+    C_game_over, //cid "p1_result" "p2_result" "p1_win" "p2_win" // p1_win = p2_win = 0 when draw
+    C_playing_users_change //cid "player_info"
     
 
 } Command_t;

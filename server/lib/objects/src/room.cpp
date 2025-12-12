@@ -1,9 +1,12 @@
+#include <fcntl.h>
 #include <server_cmd.h>
 #include <server_utils.h>
 #include <share_cmd.h>
 #include <share_wrap.h>
 #include <cstddef>
 #include <server_objects.h>
+
+Room::Room(){}
 
 Room::Room(std::string rm_id):room_id(rm_id){
     for(int i = 0; i < 5; i++){
@@ -88,7 +91,10 @@ bool Room::user_change_position(conn* u, int pos){
     return has_change;
 }
 
-void Room::on_change(ServerContext *scxt, conn *u){
+void Room::on_change(
+    int epfd, 
+    conn *u
+){
     for(int i = 0; i < 5; i++){
         if(!user_existance[i] || users[i] == u)
             continue;
@@ -104,12 +110,12 @@ void Room::on_change(ServerContext *scxt, conn *u){
             (i.e. won't be add into EPOLLOUT). Thus, add
             other users' into EPOLLOUT here manually.
         */
-        epoll_rw_mod(scxt, users[i]->fd);
+        epoll_rw_mod(epfd, users[i]->fd);
     }
 }
 
 void Room::broadcast_msg(
-    ServerContext *scxt, 
+    int epfd,
     conn *u, 
     char *msg
 ){
@@ -123,7 +129,8 @@ void Room::broadcast_msg(
                 C_new_waiting_room_message, u->name, msg);
         newJob->fill_line(cmd);
         users[i]->jobq.push_front(newJob);
-        if(users[i]!=u) epoll_rw_mod(scxt, users[i]->fd);
+        if(users[i]!=u)
+            epoll_rw_mod(epfd, users[i]->fd);
     }
 }
     
@@ -158,4 +165,46 @@ std::string Room::get_room_info(){
     }
     reply.pop_back();
     return reply;
+}
+
+std::string Room::get_exist_usernames(){
+    std::string names;
+    for(int i = 0; i < 5; i++){
+        if(!user_existance[i])
+            continue;
+        names += std::string(users[i]->name);
+        names += " ";
+    }
+    names.pop_back();
+    return names;
+}
+
+std::string Room::get_exist_userfds(){
+    std::string fds;
+    for(int i = 0; i < 5; i++){
+        if(!user_existance[i])
+            continue;
+        fds += std::to_string(users[i]->fd);
+        fds += " ";
+    }
+    return fds;
+}
+
+void Room::turn_off_fd_close_on_exec(){
+    int flags;
+    for(int i = 0; i < 5; i++){
+        if(!user_existance[i])
+            continue;
+        flags = Fcntl(users[i]->fd, F_GETFL, 0);
+        Fcntl(users[i]->fd, F_SETFL, flags & (~FD_CLOEXEC));
+    }
+}
+
+void Room::close_exist_userfds(){
+    for(int i = 0; i < 5; i++){
+        if(!user_existance[i])
+            continue;
+        Close(users[i]->fd);
+        users[i]->fd = -1;
+    }
 }

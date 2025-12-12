@@ -23,6 +23,11 @@ typedef enum{
     LEAVE_WAITING_ROOM,
     SENDMSG_WAITING_ROOM,
 
+    /* playing room */
+    UPDATE_GAME_INFO,
+    RUN_OUT_OF_TIME,
+    F_SET_OBSERVE,
+
     /* on writable */
     RES_USR
 } jobType;

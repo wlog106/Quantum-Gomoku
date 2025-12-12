@@ -75,9 +75,24 @@ conn *get_user(
     std::map<int, conn*> *fd_to_conn
 );
 
-void epoll_rw_mod(
-    ServerContext *scxt,
+void epoll_r_add(
+    int epfd,
     int fd
+);
+
+void epoll_r_mod(
+    int epfd,
+    int fd
+);
+
+void epoll_rw_mod(
+    int epfd,
+    int fd
+);
+
+pid_t fork_room(
+    ServerObjects *sobj,
+    Room *room
 );
 
 #endif

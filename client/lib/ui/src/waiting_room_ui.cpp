@@ -2,17 +2,17 @@
 
 void waiting_room_ui(){
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE;
-    int ready_pos = max(16, max((waiting_user_existance[0] ? int(waiting_username[0].size()) : 7), (waiting_user_existance[1] ? int(waiting_username[1].size()) : 7)));
+    int ready_pos = MAX_ACCOUNT_LEN;
     cout << "\x1b[1m              Waiting Room" << endl;
     cout << "            Room id : " << waiting_room_id << "\x1b[0m" << endl;
     cout << "════════════════════════════════════════" << endl;
     cout << "\x1b[0m\x1b[38;5;255;48;5;0m1.Player Black:\x1b[0m ";
     cout << (waiting_user_existance[0] ? waiting_username[0] : "(empty)");
-    if(waiting_user_existance[0]) cout << MOVE(4, 16 + ready_pos) << (waiting_is_ready[0] ? "  (ready)" : "(unready)");
+    if(waiting_user_existance[0]) cout << MOVE(4, 18 + ready_pos) << (waiting_is_ready[0] ? "  (ready)" : "(unready)");
     cout << endl;
     cout << "\x1b[0m\x1b[38;5;0;48;5;255m2.Player White:\x1b[0m ";
     cout << (waiting_user_existance[1] ? waiting_username[1] : "(empty)");
-    if(waiting_user_existance[1]) cout << MOVE(5, 16 + ready_pos) << (waiting_is_ready[1] ? "  (ready)" : "(unready)");
+    if(waiting_user_existance[1]) cout << MOVE(5, 18 + ready_pos) << (waiting_is_ready[1] ? "  (ready)" : "(unready)");
     cout << endl;
     cout << "\x1b[0m\x1b[38;5;141;48;5;228m3.Observer 1  :\x1b[0m ";
     cout << (waiting_user_existance[2] ? waiting_username[2] : "(empty)") << endl;

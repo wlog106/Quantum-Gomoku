@@ -8,6 +8,17 @@ Board::Board(int board_size):size(board_size){
     board_data.resize(size, std::vector(size, 0));
 }
 
+std::string Board::get_board_info(){
+    std::string info;
+    for(auto &row : board_data){
+        for(int &col : row){
+            info += std::to_string(col);
+            info += " ";
+        }
+    }
+    return info;
+}
+
 int Board::get_observe_result(std::vector<std::vector<int>> &observed_board){
     observed_board.resize(size, std::vector<int>(size, 0));
     for(int i = 0; i < size; i++){

@@ -1,6 +1,7 @@
 #ifndef SERVER_OBJECTS_H
 #define SERVER_OBJECTS_H
 
+#include <share_board.h>
 #include <share_wrap.h>
 #include <string>
 #include <ctime>
@@ -21,13 +22,11 @@ struct ServerContext{
     int cur_fd;
     int listenfd;
     int dw_fd;
-    int rmgr_fd;
     ServerContext();
     ServerContext(
         int epfd, 
         int listenfd,
-        int dw_fd,
-        int rmgr_fd
+        int dw_fd
     );
 };
 
@@ -74,11 +73,12 @@ struct conn{
     int fd;
     char name[65];
     char hash[65];
+    int cur_elo;
 
     /* connection metadata */
     int state;
     linear_buf_t *r_buf;
-    std::deque<job_t*> jobq; // job queue (except db job)
+    std::deque<job_t*> jobq;
 
     /* constructor */
     conn();
@@ -123,6 +123,7 @@ struct Room{
     bool is_playing;
     bool user_existance[5];
     bool user_ready[2];
+    Room();
     Room(std::string rm_id);
     bool add_user(conn* new_user);
     bool add_player(conn* new_user);
@@ -131,14 +132,49 @@ struct Room{
     bool user_change_position(conn *u, int pos);
     bool change_ready(conn *u);
     bool can_fork();
-    void on_change(ServerContext *scxt, conn *u);
-    void broadcast_msg(ServerContext *scxt, conn *u, char *msg);
+    void on_change(int epfd, conn *u);
+    void broadcast_msg(int epfd, conn *u, char *msg);
     std::string get_room_info();
+    std::string get_exist_usernames();
+    std::string get_exist_userfds();
+    void turn_off_fd_close_on_exec();
+    void close_exist_userfds();
+};
+
+struct Game{
+    int epfd;
+    char room_id[10];
+    bool cur_player;
+    bool game_terminate;
+    bool observed_flag;
+    long long p1_time;
+    long long p2_time;
+    long long last_seg_start;
+    std::array<bool, 5> user_exist;
+    std::array<conn*, 5> users;
+    Board *board;
+    Game(int epfd, void (*foo)(Game*));
+    ~Game();
+    void (*on_show_observe_result)(Game*);
+    conn *get_user(int fd);
+    int get_pos(conn *u);
+    std::string get_full_game_info();
+    void broadcast_init_msg();
+    void broadcast_game_result(int result);
+    void broadcast_msg(char *msg);
+    void reset_timer();
+    long long get_time();
+    void start_next_seg(int pos_x, int pos_y, int type);
+    void do_observe(int pos_x, int pos_y, int type);
+    void calculate_new_elo(
+        std::pair<int, int> &p, 
+        int result
+    );
 };
 
 class Uid_generator{
     std::set<std::string> distributed_uid;
-    string character_set = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    std::string character_set = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 public:
     Uid_generator();
     std::string new_uid(int len);
