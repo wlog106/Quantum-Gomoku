@@ -1,4 +1,5 @@
 #include <csignal>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <share_wrap.h>
 #include <server_objects.h>
@@ -10,34 +11,14 @@
 #include <assert.h>
 
 int main(int arg, char **argv){
-    /*
-        prefork room manager & db worker
-        in order to avoid fd leakage
-    */
+
+    //prefork db worker to avoid fd leakage
     char argv_buf[10];
-    int rmgr_fd[2];
     int dw_fd[2];
     char dw_proc_name[11] = "db_worker";
-    pid_t rmgr_pid;
     pid_t dw_pid;
-    //Socketpair(AF_UNIX, SOCK_STREAM, 0, rmgr_fd);
     Socketpair(AF_UNIX, SOCK_STREAM, 0, dw_fd);
-    /*
-    if((rmgr_pid = Fork()) == 0){
-        Close(dw_fd[0]);
-        Close(dw_fd[1]);
-        Close(rmgr_fd[0]);
-        int flags = Fcntl(rmgr_fd[1], F_GETFL, 0);
-        Fcntl(rmgr_fd[1], F_SETFL, flags | O_NONBLOCK);
-        sprintf(argv_buf, "%d", rmgr_fd[1]);
-        char *rm_argv[] = {argv_buf, NULL};
-        Execv("./room_mgr", rm_argv);
-        assert(1==0);
-    }
-        */
     if((dw_pid = Fork()) == 0){
-        //Close(rmgr_fd[0]);
-        //Close(rmgr_fd[1]);
         Close(dw_fd[0]);
         int flags = Fcntl(dw_fd[1], F_GETFL, 0);
         Fcntl(dw_fd[1], F_SETFL, flags | O_NONBLOCK);
@@ -46,7 +27,6 @@ int main(int arg, char **argv){
         Execv("./db_worker", dw_argv);
         assert(1==0);
     }
-   // Close(rmgr_fd[1]);
     Close(dw_fd[1]);
     std::cout << "dw_pid: " << dw_pid << "\n";
     /* epoll */
@@ -88,12 +68,9 @@ int main(int arg, char **argv){
     Listen(listenfd, 1024);
 
     flags = Fcntl(listenfd, F_GETFL, 0);
-    Fcntl(listenfd, F_SETFL, flags | O_NONBLOCK);
+    Fcntl(listenfd, F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
     flags = Fcntl(dw_fd[0], F_GETFL, 0);
-    Fcntl(dw_fd[0], F_SETFL, flags | O_NONBLOCK);
-    /*
-        DONT FORGET ROOM MANAGER
-    */
+    Fcntl(dw_fd[0], F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
 
     epfd = Epoll_create();
 
@@ -103,15 +80,12 @@ int main(int arg, char **argv){
     ev.events = EPOLLIN | EPOLLET;
     ev.data.fd = *dw_fd;
     Epoll_ctl(epfd, EPOLL_CTL_ADD, *dw_fd, &ev);
-    //ev.events = EPOLLET;
-    //ev.data.fd = *rmgr_fd;
-    //Epoll_ctl(epfd, EPOLL_CTL_ADD, *rmgr_fd, &ev);
 
     Signal(SIGCHLD, sigchild);
 
     /* pack some fds together */
     ServerContext *scxt = new ServerContext(
-        epfd, listenfd, *dw_fd, *rmgr_fd
+        epfd, listenfd, *dw_fd
     );
 
     ServerObjects *sobj = new ServerObjects(
@@ -129,10 +103,6 @@ int main(int arg, char **argv){
             }
             if(evfd == *dw_fd && evtype & EPOLLIN){
                 on_dw_res(scxt, sobj);
-                continue;
-            }
-            if(evfd == *rmgr_fd){
-                /* handle rmmgr result*/
                 continue;
             }
             if(evtype & EPOLLIN){

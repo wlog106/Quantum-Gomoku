@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <share_wrap.h>
 #include <server_objects.h>
 #include <server_utils.h>
@@ -27,7 +28,8 @@ void on_listen(
             }
         }
         flags = Fcntl(newfd, F_GETFL, 0);
-        Fcntl(newfd, F_SETFL, flags | O_NONBLOCK);
+        /* set non_block and close when execute */
+        Fcntl(newfd, F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
         ev.events = EPOLLIN | EPOLLET;
         ev.data.fd = newfd;
         Epoll_ctl(scxt->epfd, EPOLL_CTL_ADD, newfd, &ev);

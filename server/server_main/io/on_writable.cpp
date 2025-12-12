@@ -43,9 +43,6 @@ void on_writable(
         if(sobj->dwq->empty()) 
             goto del_cur_fd_from_epollout;
     }
-    else if(scxt->cur_fd == scxt->rmgr_fd){
-
-    }
     else{
         conn *u;
         u = get_user(scxt->cur_fd, sobj->fd_to_conn);

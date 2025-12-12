@@ -1,4 +1,3 @@
-#include "share_wrap.h"
 #include <cstdio>
 #include <share_cmd.h>
 #include <server_cmd.h>
@@ -19,13 +18,13 @@ void dispatcher(
     while(!u->jobq.empty()){
         cur_job = u->jobq.front();
         if(cur_job->type == RES_USR){
-            epoll_rw_mod(scxt, u->fd);
+            epoll_rw_mod(scxt->epfd, u->fd);
             break;
         }
         else if(cur_job->type == DW_SIGNUP || cur_job->type == DW_LOGIN){
             /* db_worker */
             if(sobj->dwq->empty()) 
-                epoll_rw_mod(scxt, scxt->dw_fd);
+                epoll_rw_mod(scxt->epfd, scxt->dw_fd);
             sobj->dwq->push(cur_job);
             u->jobq.pop_front();
             break;
@@ -76,7 +75,7 @@ void dispatcher(
                 else{
                     sprintf(cmd, "%d %s\n", 
                         C_join_by_id_success_waiting, it->second->get_room_info().data());
-                    it->second->on_change(scxt, u);
+                    it->second->on_change(scxt->epfd, u);
                     newJob->fill_line(cmd);
                     u->jobq.pop_front();
                     u->jobq.push_front(newJob);
@@ -99,7 +98,7 @@ void dispatcher(
             if(flag){
                 sprintf(cmd, "%d %s\n", 
                         C_pair_success_start_waiting, it->second->get_room_info().data());
-                it->second->on_change(scxt, u);
+                it->second->on_change(scxt->epfd, u);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
                 u->jobq.push_front(newJob);
@@ -122,7 +121,8 @@ void dispatcher(
                 continue;
 
             if(it->second->can_fork()){
-                /* do fork */
+                printf("open a new playing room, pid: %d\n", 
+                       fork_room(sobj, it->second));
             }
             else{
                 job_t *newJob = new job_t;
@@ -130,7 +130,7 @@ void dispatcher(
                 char *cmd = (char*)malloc(MAXLINE*sizeof(char));
                 sprintf(cmd, "%d %s\n", 
                         C_new_room_info, it->second->get_room_info().data());
-                it->second->on_change(scxt, u);
+                it->second->on_change(scxt->epfd, u);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
                 u->jobq.push_front(newJob);
@@ -154,7 +154,7 @@ void dispatcher(
             char *cmd = (char*)malloc(MAXLINE*sizeof(char));
             sprintf(cmd, "%d %s\n", 
                     C_new_room_info, it->second->get_room_info().data());
-            it->second->on_change(scxt, u);
+            it->second->on_change(scxt->epfd, u);
             newJob->fill_line(cmd);
             u->jobq.pop_front();
             u->jobq.push_front(newJob);
@@ -172,7 +172,7 @@ void dispatcher(
             newJob->type = RES_USR;
             char *cmd = (char*)malloc(MAXLINE*sizeof(char));
             sprintf(cmd, "%d\n", C_leave_waiting_room_success);
-            it->second->on_change(scxt, u);
+            it->second->on_change(scxt->epfd, u);
             newJob->fill_line(cmd);
             u->jobq.pop_front();
             u->jobq.push_front(newJob);
@@ -187,7 +187,7 @@ void dispatcher(
                 /* error no such room */
             }
             u->jobq.pop_front();
-            it->second->broadcast_msg(scxt, u, message);
+            it->second->broadcast_msg(scxt->epfd, u, message);
         }
     }
 }
