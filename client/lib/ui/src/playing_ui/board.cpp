@@ -121,10 +121,10 @@ void draw_real_piece(int x, int y, int piece_type){ // 1 black 2 white
             //cout << "\x1b[0m┼";
             break;
         case 1:
-            cout << "\x1b[38;5;0;48;5;255;1m   ";
+            cout << "\x1b[38;5;0;48;5;0;1m   ";
             break;
         case 2:
-            cout << "\x1b[38;5;255;48;5;0;1m   ";
+            cout << "\x1b[38;5;255;48;5;255;1m   ";
             break;
         default:
             break;
