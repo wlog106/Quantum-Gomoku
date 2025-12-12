@@ -66,7 +66,10 @@ void playing_std(const string &key){
                     my_piece_type = 7;
                 }
                 success = PP_close_timer();
-                if(success) moving_position = 0;
+                if(success) {
+                    moving_position = 0;
+                    PP_erase_cursor();
+                }
                 remain_time[0] = player_remain_time[0];
                 remain_time[1] = player_remain_time[1];
             }

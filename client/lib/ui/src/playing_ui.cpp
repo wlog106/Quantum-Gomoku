@@ -31,9 +31,6 @@ void PP_segement_start(){
         cursor_pos_y = (Board_size - 1) / 2;
         draw_cursor(cursor_pos_x, cursor_pos_y);
     }
-    else{
-        erase_cursor(cursor_pos_x, cursor_pos_y);
-    }
     PP_close_timer();
     set_timer();
 }
@@ -58,6 +55,11 @@ void PP_move_cursor(int direction){
             break;
     }
     draw_cursor(cursor_pos_x, cursor_pos_y);
+}
+
+void PP_erase_cursor(){
+    erase_cursor(cursor_pos_x, cursor_pos_y);
+    return;
 }
 
 void PP_no_time(){
