@@ -12,8 +12,8 @@
 
 
 //TODO : check ther observe pos and game over pos
-#define Observe_chance_pos_x 10
-#define Observe_chance_pos_y 100
+#define Observe_chance_pos_x 40
+#define Observe_chance_pos_y 5
 #define Game_result_pos_x 40
 #define Game_result_pos_y 10
 

@@ -16,6 +16,8 @@
 Game::Game(int epfd, void (*foo)(Game*)){
     this->epfd = epfd;
     board = new Board(13);
+    p1_time = 6000;
+    p2_time = 6000;
     on_show_observe_result = foo;
     cur_player = 0;
     game_terminate = 0;
@@ -103,7 +105,6 @@ void Game::broadcast_msg(char *msg){
         char *cmd = (char*)malloc(MAXLINE*sizeof(char));
         sprintf(cmd, "%s", msg);
         newJob->fill_line(cmd);
-        users[i]->jobq.pop_front();
         users[i]->jobq.push_front(newJob);
         epoll_rw_mod(epfd, users[i]->fd);
     }
@@ -128,7 +129,7 @@ void Game::start_next_seg(
 ){
     char seg_info[100];
     cur_player ^= 1;
-    sprintf(seg_info, "%d 1 %d %d %d %lld %lld %d",
+    sprintf(seg_info, "%d 1 %d %d %d %lld %lld %d\n",
             C_playing_new_segement, pos_x, pos_y, type, p1_time, p2_time, cur_player+1);
     broadcast_msg(seg_info);
     reset_timer();

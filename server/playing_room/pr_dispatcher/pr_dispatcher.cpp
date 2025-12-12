@@ -17,11 +17,10 @@ void pr_dispatcher(
         }
         else if(curJob->type == UPDATE_GAME_INFO){
             int pos_x, pos_y, type;
-            long long p1_time, p2_time;
             sscanf(curJob->line, "%d %d %d %lld %lld",
-                   &pos_x, &pos_y, &type, &p1_time, &p2_time);
+                   &pos_x, &pos_y, &type, &g->p1_time, &g->p2_time);
             g->board->board_data[pos_x][pos_y] = type;
-            
+            u->jobq.pop_front();
             if(g->observed_flag) 
                 g->do_observe(pos_x, pos_y, type);
             else
