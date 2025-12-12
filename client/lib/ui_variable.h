@@ -96,3 +96,4 @@ void PP_observe(stringstream &ss);
 void PP_show_playing_result(stringstream &ss);
 void PP_refresh_observe_chance_info();
 void PP_user_change(stringstream &ss);
+void PP_erase_cursor();

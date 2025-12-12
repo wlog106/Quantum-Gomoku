@@ -93,6 +93,7 @@ void *time_countdown(void *vptr){
         x = cursor_pos_x;
         y = cursor_pos_y;
         moving_position = 0;
+        PP_erase_cursor();
         if(playing_board.board_data[x][y] == 0){
             type = my_piece_type;
             if(my_piece_type == 1){
