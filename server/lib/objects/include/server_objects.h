@@ -8,6 +8,7 @@
 #include <array>
 #include <set>
 #include <map>
+#include <sys/time.h>
 
 struct conn;
 struct db_conn;
@@ -87,9 +88,10 @@ struct conn{
     ~conn();
 
     /* for observe result */
-    long long observed_sent;
-    long long get_time();
-    void set_time();
+    int tfd;
+    struct itimerspec start, stop;
+    void start_timer();
+    void stop_timer();
 };
 
 struct dw_res{
@@ -162,6 +164,7 @@ struct Game{
     Game(int epfd);
     ~Game();
     conn *get_user(int fd);
+    conn *get_exp_user(int tfd);
     int get_pos(conn *u);
     int get_pos(int fd);
     std::string board_to_string(

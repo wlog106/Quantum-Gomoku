@@ -74,10 +74,7 @@ void on_writable(
     }
 
 del_cur_fd_from_epollout:
-    struct epoll_event ev;
-    ev.events = EPOLLIN | EPOLLET;
-    ev.data.fd = scxt->cur_fd;
-    Epoll_ctl(scxt->epfd, EPOLL_CTL_MOD, scxt->cur_fd, &ev);
+    epoll_r_mod(scxt->epfd, scxt->cur_fd);
 
 wouldblock_try_later:
     return;

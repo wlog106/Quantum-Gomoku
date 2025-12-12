@@ -19,10 +19,6 @@ void on_send(
         && cur_job->type != SEND_OBSERVE_RESULT){
             break;
         }
-        /* time gap between show observe result and new seg/game over */
-        if(cur_job->type == RES_USR && u->get_time() < 50)
-            return;
-
         n = write(u->fd, cur_job->r_ptr, cur_job->len);
         if(n == -1){
             if(errno == EINTR)
@@ -35,12 +31,15 @@ void on_send(
             cur_job->len -= n;
         }
         else if(n == cur_job->len){
-            if(cur_job->type == SEND_OBSERVE_RESULT)
-                u->set_time();
+            int flag = (cur_job->type == SEND_OBSERVE_RESULT);
             free(cur_job->line);
             delete cur_job;
             u->jobq.pop_front();
             pr_dispatcher(g, u);
+            if(flag){
+                u->start_timer();
+                break;
+            }
         }
     }
     epoll_r_mod(g->epfd, u->fd);

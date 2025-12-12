@@ -7,7 +7,7 @@
 #include "pr_io/pr_io.h"
 
 int main(int arg, char **argv){
-    //raise(SIGSTOP);
+    raise(SIGSTOP);
     int mainfd, nfds;
     unsigned int exist_pos;
     struct epoll_event events[MAX_EVENT];
@@ -36,13 +36,14 @@ int main(int arg, char **argv){
     for( ; ; ){
         nfds = Epoll_wait(epfd, events, MAX_EVENT);
         for(int i=0; i<nfds; i++){
+            if(timer_exp(game, events[i].data.fd))
+                continue;
             if(events[i].events & EPOLLIN){
                 on_recv(game, events[i].data.fd);
             }
             else if(events[i].events & EPOLLOUT){
                 on_send(game, events[i].data.fd);
             }
-            
         }
     }
 }

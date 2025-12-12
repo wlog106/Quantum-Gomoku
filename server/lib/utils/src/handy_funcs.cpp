@@ -24,7 +24,7 @@ void epoll_r_add(
 ){
     struct epoll_event ev;
     ev.data.fd = fd;
-    ev.events = EPOLLIN | EPOLLET;
+    ev.events = EPOLLIN;
     Epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev);
 }
 
@@ -34,7 +34,7 @@ void epoll_r_mod(
 ){
     struct epoll_event ev;
     ev.data.fd = fd;
-    ev.events = EPOLLIN | EPOLLET;
+    ev.events = EPOLLIN;
     Epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &ev);
 }
 
@@ -44,7 +44,7 @@ void epoll_rw_add(
 ){
     struct epoll_event ev;
     ev.data.fd = fd;
-    ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+    ev.events = EPOLLIN | EPOLLOUT;
     Epoll_ctl(epfd, EPOLL_CTL_ADD, fd, &ev);
 }
 
@@ -54,7 +54,7 @@ void epoll_rw_mod(
 ){
     struct epoll_event ev;
     ev.data.fd = fd;
-    ev.events = EPOLLIN | EPOLLOUT | EPOLLET;
+    ev.events = EPOLLIN | EPOLLOUT;
     Epoll_ctl(epfd, EPOLL_CTL_MOD, fd, &ev);
 }
 
@@ -71,7 +71,9 @@ void push_res_job(
 ){
     auto it = jobq.begin();
     while(it!=jobq.end()){
-        if((*it)->type != RES_USR) break;
+        if((*it)->type != RES_USR 
+        && (*it)->type != SEND_OBSERVE_RESULT)
+            break;
         it++;
     }
     jobq.insert(it, newJob);

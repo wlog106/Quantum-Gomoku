@@ -14,4 +14,9 @@ void on_send(
     int fd
 );
 
+bool timer_exp(
+    Game *g, 
+    int tfd
+);
+
 #endif

@@ -26,9 +26,7 @@ int main(int arg, char** argv){
 
     epfd = Epoll_create();
 
-    ev.events = EPOLLIN | EPOLLET;
-    ev.data.fd = mainfd;
-    Epoll_ctl(epfd, EPOLL_CTL_ADD, mainfd, &ev);
+    epoll_r_add(epfd, mainfd);
 
     DwContext *dwcxt = new DwContext(
         mainfd, 

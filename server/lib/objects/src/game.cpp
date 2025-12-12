@@ -6,6 +6,7 @@
 #include <share_cmd.h>
 
 #include <cstdlib>
+#include <sys/timerfd.h>
 #include <cstdio>
 #include <cmath>
 #include <ctime>
@@ -25,6 +26,7 @@ Game::Game(int epfd){
     for(int i=0; i<5; i++){
         users[i] = new conn;
         user_exist[i] = false;
+        epoll_r_add(epfd, users[i]->tfd);
     }
 }
 
@@ -142,6 +144,13 @@ void Game::broadcast_msg(char *msg, int type){
         push_res_job(users[i]->jobq, newJob);
         epoll_rw_mod(epfd, users[i]->fd);
     }
+}
+
+conn *Game::get_exp_user(int fd){
+    for(int i=0; i<5; i++)
+        if(users[i]->tfd==fd) 
+            return users[i];
+    return NULL;
 }
 
 void Game::reset_timer(){

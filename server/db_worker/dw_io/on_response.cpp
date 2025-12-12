@@ -31,9 +31,6 @@ void on_response(DwContext *dwcxt){
         }
     }
     if(dwcxt->resultq->empty()){
-        struct epoll_event ev;
-        ev.events = EPOLLIN | EPOLLET;
-        ev.data.fd = dwcxt->mainfd;
-        Epoll_ctl(dwcxt->epfd, EPOLL_CTL_MOD, dwcxt->mainfd, &ev);
+        epoll_r_mod(dwcxt->epfd, dwcxt->mainfd);
     }
 }

@@ -76,13 +76,8 @@ int main(int arg, char **argv){
     flags = Fcntl(epfd, F_GETFL, 0);
     Fcntl(epfd, F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
     
-
-    ev.events = EPOLLIN | EPOLLET;
-    ev.data.fd = listenfd;
-    Epoll_ctl(epfd, EPOLL_CTL_ADD, listenfd, &ev);
-    ev.events = EPOLLIN | EPOLLET;
-    ev.data.fd = *dw_fd;
-    Epoll_ctl(epfd, EPOLL_CTL_ADD, *dw_fd, &ev);
+    epoll_r_add(epfd, listenfd);
+    epoll_r_add(epfd, *dw_fd);
 
     Signal(SIGCHLD, sigchild);
 
