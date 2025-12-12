@@ -85,6 +85,11 @@ struct conn{
     conn(int fd, int state);
 
     ~conn();
+
+    /* for observe result */
+    long long observed_sent;
+    long long get_time();
+    void set_time();
 };
 
 struct dw_res{
@@ -168,7 +173,7 @@ struct Game{
     void broadcast_observe_result(
         std::vector<std::vector<int>> &v
     );
-    void broadcast_msg(char *msg);
+    void broadcast_msg(char *msg, int type);
     void reset_timer();
     long long get_time();
     void start_next_seg(int pos_x, int pos_y, int type);

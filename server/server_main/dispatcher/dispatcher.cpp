@@ -194,5 +194,6 @@ void dispatcher(
             u->jobq.pop_front();
             it->second->broadcast_msg(scxt->epfd, u, message);
         }
+        else break;
     }
 }

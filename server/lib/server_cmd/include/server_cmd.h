@@ -29,6 +29,7 @@ typedef enum{
     F_SET_OBSERVE,
 
     /* on writable */
+    SEND_OBSERVE_RESULT,
     RES_USR
 } jobType;
 

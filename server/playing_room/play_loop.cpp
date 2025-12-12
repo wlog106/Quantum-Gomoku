@@ -7,7 +7,7 @@
 #include "pr_io/pr_io.h"
 
 int main(int arg, char **argv){
-    raise(SIGSTOP);
+    //raise(SIGSTOP);
     int mainfd, nfds;
     unsigned int exist_pos;
     struct epoll_event events[MAX_EVENT];

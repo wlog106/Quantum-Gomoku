@@ -114,7 +114,8 @@ void Game::broadcast_observe_result(
     sprintf(msg, "%d %s\n",
             C_show_observe_result,
             board_to_string(v).data());
-    broadcast_msg(msg);
+    std::cout << "broadcast observe result: " << std::string(msg) << "\n";
+    broadcast_msg(msg, SEND_OBSERVE_RESULT);
 }
 
 void Game::broadcast_game_result(int result){
@@ -126,15 +127,15 @@ void Game::broadcast_game_result(int result){
             users[0]->name, users[0]->cur_elo, new_elo.first,
             users[1]->name, users[1]->cur_elo, new_elo.second,
             (result == 1), (result == 2));
-    broadcast_msg(msg);
+    broadcast_msg(msg, RES_USR);
 }
 
-void Game::broadcast_msg(char *msg){
+void Game::broadcast_msg(char *msg, int type){
     for(int i=0; i<5; i++){
         if(!user_exist[i])
             continue;
         job_t *newJob = new job_t;
-        newJob->type = RES_USR;
+        newJob->type = type;
         char *cmd = (char*)malloc(MAXLINE*sizeof(char));
         sprintf(cmd, "%s", msg);
         newJob->fill_line(cmd);
@@ -164,7 +165,7 @@ void Game::start_next_seg(
     cur_player ^= 1;
     sprintf(seg_info, "%d 1 %d %d %d %lld %lld %d\n",
             C_playing_new_segement, pos_x, pos_y, type, p1_time, p2_time, cur_player+1);
-    broadcast_msg(seg_info);
+    broadcast_msg(seg_info, RES_USR);
     reset_timer();
 }
 
@@ -177,7 +178,6 @@ void Game::do_observe(
     int result = board->get_observe_result(v);
     broadcast_observe_result(v);
     observed_flag = false;
-    sleep(5);
     if(result == 0){
         start_next_seg(pos_x, pos_y, type);
         return;
