@@ -60,7 +60,6 @@ std::string Game::get_full_game_info(){
         info += std::string(users[i]->name);
         info += " ";
     }
-    info.pop_back();
     info += board->get_board_info();
     return info;
 }
