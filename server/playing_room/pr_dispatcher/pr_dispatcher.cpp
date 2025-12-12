@@ -2,6 +2,7 @@
 #include <server_utils.h>
 #include <server_objects.h>
 #include <server_cmd.h>
+#include <share_board.h>
 
 void pr_dispatcher(
     Game *g,

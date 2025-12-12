@@ -14,4 +14,6 @@ void on_send(
     int fd
 );
 
+void on_show_observe_result(Game *g);
+
 #endif

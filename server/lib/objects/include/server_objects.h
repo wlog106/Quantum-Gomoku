@@ -1,7 +1,6 @@
 #ifndef SERVER_OBJECTS_H
 #define SERVER_OBJECTS_H
 
-#include <share_board.h>
 #include <share_wrap.h>
 #include <string>
 #include <ctime>
@@ -13,6 +12,7 @@
 struct conn;
 struct db_conn;
 struct Room;
+struct Board;
 struct job_t;
 struct linear_buf_t;
 struct Uid_generator;

@@ -1,14 +1,16 @@
-#include <cstdio>
-#include <cmath>
-#include <share_cmd.h>
-#include <cstdlib>
 #include <server_cmd.h>
 #include <server_utils.h>
-#include <share_wrap.h>
-#include <ctime>
 #include <server_objects.h>
 #include <share_board.h>
+#include <share_wrap.h>
+#include <share_cmd.h>
+
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
 #include <assert.h>
+
 
 
 Game::Game(int epfd, void (*foo)(Game*)){
