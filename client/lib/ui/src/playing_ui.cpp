@@ -4,7 +4,7 @@
 
 void PP_initialize(){
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[1m" << flush;
-    cout << "                   Quantun Gomoku Playing Room\n";
+    cout << "\n                   Quantun Gomoku Playing Room\n";
     cout << "                         Room ID: " << playing_room_id << "\x1b[0m" << flush;
     clear_board_ui();
     for(int i = 0; i < Board_size; i++){
@@ -72,7 +72,7 @@ void PP_drop_piece(int x, int y, int type){
 
 void PP_observe(stringstream &ss){
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[1m" << flush;
-    cout << "                   Quantun Gomoku Playing Room\n";
+    cout << "\n                   Quantun Gomoku Playing Room\n";
     cout << "                         Room ID: " << playing_room_id << "\x1b[0m" << flush;
     clear_board_ui();
     int piece_type;

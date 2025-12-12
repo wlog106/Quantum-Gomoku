@@ -12,7 +12,7 @@ int main(int arg, char **argv){
     unsigned int exist_pos;
     struct epoll_event events[MAX_EVENT];
     int epfd = Epoll_create();
-    Game *game = new Game(epfd, on_show_observe_result);
+    Game *game = new Game(epfd);
 
     sscanf(argv[1], "%d %s %u",
            &mainfd, game->room_id, &exist_pos);

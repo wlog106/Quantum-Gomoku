@@ -37,7 +37,7 @@ void dispatcher(
                 sprintf(cmd, "%d\n", C_too_much_room);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                u->jobq.push_front(newJob);
+                push_res_job(u->jobq, newJob);;
             }
             else{
                 std::string newRoomid = sobj->uid_gen->new_uid(ROOM_ID_LEN);
@@ -48,7 +48,7 @@ void dispatcher(
                 sobj->id_to_room->insert({newRoomid, newRoom});
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                u->jobq.push_front(newJob);
+                push_res_job(u->jobq, newJob);;
             }
         }
         else if(cur_job->type == JOIN_ROOM_BY_ID){
@@ -62,7 +62,7 @@ void dispatcher(
                 sprintf(cmd, "%d 1\n", C_join_by_id_fail);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                u->jobq.push_front(newJob);
+                push_res_job(u->jobq, newJob);;
             }
             else{
                 if(!it->second->add_user(u)){
@@ -70,7 +70,7 @@ void dispatcher(
                     sprintf(cmd, "%d 2\n", C_join_by_id_fail);
                     newJob->fill_line(cmd);
                     u->jobq.pop_front();
-                    u->jobq.push_front(newJob);
+                    push_res_job(u->jobq, newJob);;
                 }
                 else{
                     sprintf(cmd, "%d %s\n", 
@@ -78,7 +78,7 @@ void dispatcher(
                     it->second->on_change(scxt->epfd, u);
                     newJob->fill_line(cmd);
                     u->jobq.pop_front();
-                    u->jobq.push_front(newJob);
+                    push_res_job(u->jobq, newJob);;
                 }
             } 
         }
@@ -101,13 +101,13 @@ void dispatcher(
                 it->second->on_change(scxt->epfd, u);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                u->jobq.push_front(newJob);
+                push_res_job(u->jobq, newJob);;
             }
             else{
                 sprintf(cmd, "%d\n", C_pair_fail);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                u->jobq.push_front(newJob);
+                push_res_job(u->jobq, newJob);;
             }
         }
         else if(cur_job->type == OBSERVE_RANDOMLY){
@@ -134,7 +134,7 @@ void dispatcher(
                 it->second->on_change(scxt->epfd, u);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                u->jobq.push_front(newJob);
+                push_res_job(u->jobq, newJob);;
             }
         }
         else if(cur_job->type == CHANGE_POS){
@@ -158,7 +158,7 @@ void dispatcher(
             it->second->on_change(scxt->epfd, u);
             newJob->fill_line(cmd);
             u->jobq.pop_front();
-            u->jobq.push_front(newJob);
+            push_res_job(u->jobq, newJob);;
         }
         else if(cur_job->type == LEAVE_WAITING_ROOM){
             auto it = sobj->id_to_room->find(std::string(cur_job->line));
@@ -174,9 +174,13 @@ void dispatcher(
             char *cmd = (char*)malloc(MAXLINE*sizeof(char));
             sprintf(cmd, "%d\n", C_leave_waiting_room_success);
             it->second->on_change(scxt->epfd, u);
+            if(it->second->is_empty()){
+                free(it->second);
+                sobj->id_to_room->erase(it);
+            }
             newJob->fill_line(cmd);
             u->jobq.pop_front();
-            u->jobq.push_front(newJob);
+            push_res_job(u->jobq, newJob);;
         }
         else if(cur_job->type == SENDMSG_WAITING_ROOM){
             char room_id[MAXLINE];

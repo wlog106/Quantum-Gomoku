@@ -2,6 +2,7 @@
 #define SERVER_UTILS_H
 
 #include "server_objects.h"
+#include <deque>
 #include <sys/socket.h>
 #include <map>
 
@@ -98,6 +99,11 @@ void epoll_rw_mod(
 void epoll_del(
     int epfd,
     int fd
+);
+
+void push_res_job(
+    std::deque<job_t*> &jobq,
+    job_t *newJob
 );
 
 pid_t fork_room(

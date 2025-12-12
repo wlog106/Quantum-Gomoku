@@ -8,18 +8,6 @@ Board::Board(int board_size):size(board_size){
     board_data.resize(size, std::vector(size, 0));
 }
 
-std::string Board::get_board_info(){
-    std::string info;
-    for(auto &row : board_data){
-        for(int &col : row){
-            info += std::to_string(col);
-            info += " ";
-        }
-    }
-    info.pop_back();
-    return info;
-}
-
 int Board::get_observe_result(std::vector<std::vector<int>> &observed_board){
     observed_board.resize(size, std::vector<int>(size, 0));
     for(int i = 0; i < size; i++){
@@ -45,9 +33,11 @@ int Board::get_observe_result(std::vector<std::vector<int>> &observed_board){
         bool full_flag;
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
+                /* four directions */
                 for(int k = 0; k < 4; k++){
                     full_flag = 1;
                     int x = i, y = j;
+                    /* check if observed_board existed consective 5 pieces */
                     for(int l = 0; l < 5; l++){
                         if(!vaild(x, y) || observed_board[x][y] != type){
                             full_flag = 0;

@@ -132,6 +132,7 @@ struct Room{
     bool user_change_position(conn *u, int pos);
     bool change_ready(conn *u);
     bool can_fork();
+    bool is_empty();
     void on_change(int epfd, conn *u);
     void broadcast_msg(int epfd, conn *u, char *msg);
     std::string get_room_info();
@@ -150,17 +151,23 @@ struct Game{
     long long p1_time;
     long long p2_time;
     long long last_seg_start;
-    std::array<bool, 5> user_exist;
-    std::array<conn*, 5> users;
+    bool user_exist[5];
+    conn *users[5];
     Board *board;
-    Game(int epfd, void (*foo)(Game*));
+    Game(int epfd);
     ~Game();
-    void (*on_show_observe_result)(Game*);
     conn *get_user(int fd);
     int get_pos(conn *u);
+    int get_pos(int fd);
+    std::string board_to_string(
+        std::vector<std::vector<int>> &v
+    );
     std::string get_full_game_info();
     void broadcast_init_msg();
     void broadcast_game_result(int result);
+    void broadcast_observe_result(
+        std::vector<std::vector<int>> &v
+    );
     void broadcast_msg(char *msg);
     void reset_timer();
     long long get_time();

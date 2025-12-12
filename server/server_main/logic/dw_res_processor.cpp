@@ -27,7 +27,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push_front(newJob);
+                    push_res_job(cur_dw_res->u->jobq, newJob);
                     cur_dw_res->u->state = LOGGEDIN_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_DUPNAME){
@@ -36,7 +36,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push_front(newJob);
+                    push_res_job(cur_dw_res->u->jobq, newJob);
                     //cur_dw_res->u->state = UNKNOWN_USR;
                 }
                 break;
@@ -47,7 +47,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push_front(newJob);
+                    push_res_job(cur_dw_res->u->jobq, newJob);
                     cur_dw_res->u->state = LOGGEDIN_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_USERDNE){
@@ -56,7 +56,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push_front(newJob);
+                    push_res_job(cur_dw_res->u->jobq, newJob);
                     //cur_dw_res->u->state = UNKNOWN_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_PWDFAIL){
@@ -65,7 +65,7 @@ void dw_res_processor(
                     newJob->line = cmd;
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
-                    cur_dw_res->u->jobq.push_front(newJob);
+                    push_res_job(cur_dw_res->u->jobq, newJob);
                     //cur_dw_res->u->state = UNKNOWN_USR;
                 }
                 break;

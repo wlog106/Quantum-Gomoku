@@ -1,4 +1,6 @@
+#include "server_cmd.h"
 #include <cstdio>
+#include <deque>
 #include <fcntl.h>
 #include <server_objects.h>
 #include <server_utils.h>
@@ -61,6 +63,18 @@ void epoll_del(
     int fd
 ){
     Epoll_ctl(epfd, EPOLL_CTL_DEL, fd, NULL);
+}
+
+void push_res_job(
+    std::deque<job_t*> &jobq,
+    job_t *newJob
+){
+    auto it = jobq.begin();
+    while(it!=jobq.end()){
+        if((*it)->type != RES_USR) break;
+        it++;
+    }
+    jobq.insert(it, newJob);
 }
 
 pid_t fork_room(

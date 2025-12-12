@@ -103,7 +103,7 @@ void Room::on_change(
         sprintf(cmd, "%d %s\n",
                 C_new_room_info, this->get_room_info().data());
         newJob->fill_line(cmd);
-        users[i]->jobq.push_front(newJob);
+        push_res_job(users[i]->jobq, newJob);
         /*
             The other users' dispatcher may not be called
             (i.e. won't be add into EPOLLOUT). Thus, add
@@ -127,7 +127,7 @@ void Room::broadcast_msg(
         sprintf(cmd, "%d (%s):┼%s\n",
                 C_new_waiting_room_message, u->name, msg);
         newJob->fill_line(cmd);
-        users[i]->jobq.push_front(newJob);
+        push_res_job(users[i]->jobq, newJob);
         if(users[i]!=u)
             epoll_rw_mod(epfd, users[i]->fd);
     }
@@ -148,6 +148,13 @@ bool Room::change_ready(conn *u){
 
 bool Room::can_fork(){
     return user_ready[0] && user_ready[1];
+}
+
+bool Room::is_empty(){
+    bool flag = 0;
+    for(int i=0; i<5; i++)
+        flag |= user_existance[i];
+    return ~flag;
 }
 
 std::string Room::get_room_info(){

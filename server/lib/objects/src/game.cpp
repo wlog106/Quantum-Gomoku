@@ -10,15 +10,16 @@
 #include <cmath>
 #include <ctime>
 #include <assert.h>
+#include <string>
+#include <vector>
 
 
 
-Game::Game(int epfd, void (*foo)(Game*)){
+Game::Game(int epfd){
     this->epfd = epfd;
     board = new Board(13);
     p1_time = 6000;
     p2_time = 6000;
-    on_show_observe_result = foo;
     cur_player = 0;
     game_terminate = 0;
     for(int i=0; i<5; i++){
@@ -50,6 +51,14 @@ int Game::get_pos(conn *u){
     else assert(1==0);
 }
 
+int Game::get_pos(int fd){
+    int i = 0;
+    while(i<5 && users[i]->fd != fd)
+        i++;
+    if(i != 5) return i+1;
+    else assert(1==0);
+}
+
 std::string Game::get_full_game_info(){
     std::string info;
     for(int i=0; i<5; i++){
@@ -62,8 +71,22 @@ std::string Game::get_full_game_info(){
         info += std::string(users[i]->name);
         info += " ";
     }
-    info += board->get_board_info();
+    info += board_to_string(board->board_data);
     return info;
+}
+
+std::string Game::board_to_string(
+    std::vector<std::vector<int>> &v
+){
+    std::string str;
+    for(auto &row : v){
+        for(int &piece : row){
+            str += std::to_string(piece);
+            str += " ";
+        }
+    }
+    str.pop_back();
+    return str;
 }
 
 void Game::broadcast_init_msg(){
@@ -79,9 +102,19 @@ void Game::broadcast_init_msg(){
                 C_playing_new_segement,  cur_player+1);
         printf("(child) send init msg: %s", cmd);
         newJob->fill_line(cmd);
-        users[i]->jobq.push_front(newJob);
+        push_res_job(users[i]->jobq, newJob);
         epoll_rw_add(epfd, users[i]->fd);
     }
+}
+
+void Game::broadcast_observe_result(
+    std::vector<std::vector<int>> &v
+){
+    char msg[MAXLINE];
+    sprintf(msg, "%d %s\n",
+            C_show_observe_result,
+            board_to_string(v).data());
+    broadcast_msg(msg);
 }
 
 void Game::broadcast_game_result(int result){
@@ -105,7 +138,7 @@ void Game::broadcast_msg(char *msg){
         char *cmd = (char*)malloc(MAXLINE*sizeof(char));
         sprintf(cmd, "%s", msg);
         newJob->fill_line(cmd);
-        users[i]->jobq.push_front(newJob);
+        push_res_job(users[i]->jobq, newJob);
         epoll_rw_mod(epfd, users[i]->fd);
     }
 }
@@ -140,10 +173,11 @@ void Game::do_observe(
     int pos_y, 
     int type
 ){
-    std::vector<std::vector<int>> b;
-    int result = this->board->get_observe_result(b);
-    on_show_observe_result(this);
+    std::vector<std::vector<int>> v;
+    int result = board->get_observe_result(v);
+    broadcast_observe_result(v);
     observed_flag = false;
+    sleep(5);
     if(result == 0){
         start_next_seg(pos_x, pos_y, type);
         return;
