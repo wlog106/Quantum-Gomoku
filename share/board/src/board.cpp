@@ -43,6 +43,8 @@ int Board::get_observe_result(std::vector<std::vector<int>> &observed_board){
                             full_flag = 0;
                             break;
                         }
+                        x += dir[k][0];
+                        y += dir[k][1];
                     }
                     if(full_flag){
                         if(type == 1)black_flag = 1;
