@@ -55,9 +55,12 @@ std::string Game::get_full_game_info(){
         info += " ";
     }
     for(int i=0; i<5; i++){
+        if(!user_exist[i])
+            continue;
         info += std::string(users[i]->name);
         info += " ";
     }
+    info.pop_back();
     info += board->get_board_info();
     return info;
 }
@@ -72,7 +75,7 @@ void Game::broadcast_init_msg(){
         sprintf(cmd, "%d %s %d\n%d 0 6000 6000 %d\n", 
                 C_start_a_playing_room, get_full_game_info().data(), i+1,
                 C_playing_new_segement,  cur_player+1);
-        printf("(child) send init msg: %s\n", cmd);
+        printf("(child) send init msg: %s", cmd);
         newJob->fill_line(cmd);
         users[i]->jobq.push_front(newJob);
         epoll_rw_add(epfd, users[i]->fd);
