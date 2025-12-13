@@ -68,6 +68,7 @@ typedef enum {
     C_playing_move_finish, //cid piece_pos_x piece_pos_y piece_type player1_time player2_time
     C_want_to_observe, //cid
     C_run_out_of_time, //cid
+    C_leave_playing_room, //cid
 
     //------------------------------------------------//
     /*above is client->server, below is server->client*/

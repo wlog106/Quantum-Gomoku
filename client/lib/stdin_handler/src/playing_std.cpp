@@ -111,4 +111,23 @@ void playing_std(const string &key){
             unlock_writer();
         }
     }
+    else if(key == "L" || key == "l"){
+        if(game_over){
+            set_state(S_select_option);
+            signal_ui();
+            unlock_ui();
+            return;
+        }
+        if(playing_page_type == 1 && playing_position != 1 && playing_position != 2){
+            lock_writer();
+            command_to_be_sent.push(
+                    std::to_string(C_leave_playing_room) + "\n"
+                );
+            signal_writer();
+            unlock_writer();
+            set_state(S_select_option);
+            signal_ui();
+            unlock_ui();
+        }
+    }
 }
