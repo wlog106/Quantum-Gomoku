@@ -88,9 +88,35 @@ void PP_observe(stringstream &ss){
 }
 
 void PP_show_playing_result(stringstream &ss){
-    string winner;
-    int origin_elo, new_elo;
-    ss >> winner >> origin_elo >> new_elo;
+    string player[2];
+    int origin_elo[2], new_elo[2], wining[2];
+    ss >> player[0] >> origin_elo[0] >> new_elo[0];
+    ss >> player[1] >> origin_elo[1] >> new_elo[1];
+    ss >> wining[0] >> wining[1];
     cout << MOVE(Game_result_pos_x, Game_result_pos_y);
-    //TODO: show result at the bottom
+    if(playing_position == 1 || playing_position == 2){
+        if(wining[playing_position-1]){
+            cout << "\x1b[38;5;46mYou are winner!\x1b[0m";
+        }
+        else if(wining[2-playing_position]){
+            cout << "\x1b[38;5;196mYou are loser!\x1b[0m";
+        }
+        else{
+            cout << "\x1b[38;5;226mGame is draw!\x1b[0m";
+        }
+        cout << MOVE(Game_result_pos_x+1, Game_result_pos_y-5);
+        cout << "Elo changed: " << origin_elo[playing_position-1] << "->" << new_elo[playing_position-1];
+    }
+    else{
+        string winner_name;
+        if(wining[0]){
+            cout << "\x1b[38;5;46mThe winner is \x1b[0m" << player[0];
+        }
+        else if(wining[1]){
+            cout << "\x1b[38;5;46mThe winner is \x1b[0m" << player[1];
+        }
+        else{
+            cout << "\x1b[38;5;46mThis game is draw!\x1b[0m";
+        }
+    }
 }
