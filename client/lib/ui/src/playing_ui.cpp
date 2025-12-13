@@ -73,6 +73,7 @@ void PP_drop_piece(int x, int y, int type){
 }
 
 void PP_observe(stringstream &ss){
+    PP_close_timer();
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[1m" << flush;
     cout << "\n                   Quantun Gomoku Playing Room\n";
     cout << "                         Room ID: " << playing_room_id << "\x1b[0m" << flush;
