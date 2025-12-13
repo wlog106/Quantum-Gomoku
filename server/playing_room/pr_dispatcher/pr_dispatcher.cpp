@@ -34,6 +34,9 @@ void pr_dispatcher(
             g->broadcast_game_result((g->cur_player^1)+1);
             u->jobq.pop_front();
         }
+        else if(curJob->type == LEAVE_GAME){
+            
+        }
         else break;
     }
 }

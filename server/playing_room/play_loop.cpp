@@ -16,7 +16,8 @@ int main(int arg, char **argv){
 
     sscanf(argv[1], "%d %s %u",
            &mainfd, game->room_id, &exist_pos);
-
+    
+    game->mainfd = mainfd;
     epoll_r_add(epfd, mainfd);
 
     std::stringstream *ssName = new std::stringstream;

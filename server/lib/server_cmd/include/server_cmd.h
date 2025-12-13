@@ -27,6 +27,7 @@ typedef enum{
     UPDATE_GAME_INFO,
     RUN_OUT_OF_TIME,
     F_SET_OBSERVE,
+    LEAVE_GAME,
 
     /* on writable */
     SEND_OBSERVE_RESULT,

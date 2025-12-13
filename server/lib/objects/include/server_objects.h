@@ -152,6 +152,7 @@ struct Room{
 
 struct Game{
     int epfd;
+    int mainfd;
     char room_id[10];
     bool cur_player;
     bool game_terminate;
@@ -180,13 +181,23 @@ struct Game{
     );
     void broadcast_msg(char *msg, int type);
     void reset_timer();
-    long long get_time();
+    void align_timer();
     void start_next_seg(int pos_x, int pos_y, int type);
     void do_observe(int pos_x, int pos_y, int type);
     void calculate_new_elo(
         std::pair<int, int> &p, 
         int result
     );
+    void delete_user(
+        Game *g,
+        conn *u
+    );
+
+    void pass_ufd_to_main(
+        Game *g,
+        conn *u
+    );
+    
 };
 
 class Uid_generator{

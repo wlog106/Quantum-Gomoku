@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdlib>
 #include <share_cmd.h>
 #include <server_cmd.h>
 #include <server_objects.h>
@@ -31,6 +32,13 @@ void pr_processor(
 
             case (C_run_out_of_time):
                 newJob->type = RUN_OUT_OF_TIME;
+                free(cmd);
+                newJob->fill_line(NULL);
+                u->jobq.push_back(newJob);
+                break;
+
+            case (C_leave_playing_room):
+                newJob->type = LEAVE_GAME;
                 free(cmd);
                 newJob->fill_line(NULL);
                 u->jobq.push_back(newJob);

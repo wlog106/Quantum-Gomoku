@@ -46,6 +46,7 @@ void on_observer_join(Game *g, int fd){
     job_t *newJob = new job_t;
     newJob->type = RES_USR;
     char *cmd = (char*)malloc(MAXLINE*sizeof(char));
+    g->align_timer();
     sprintf(cmd, "%d %s %s %d\n%d 0 %lld %lld %d\n",
             C_start_a_playing_room, g->room_id,
             g->get_full_game_info().data(), g->get_pos(newConn),

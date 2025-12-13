@@ -1,3 +1,4 @@
+#include <cstring>
 #include <server_cmd.h>
 #include <server_utils.h>
 #include <server_objects.h>
@@ -6,6 +7,7 @@
 #include <share_cmd.h>
 
 #include <cstdlib>
+#include <sys/socket.h>
 #include <sys/timerfd.h>
 #include <cstdio>
 #include <cmath>
@@ -112,6 +114,7 @@ void Game::broadcast_init_msg(){
                 C_start_a_playing_room, this->room_id,
                 get_full_game_info().data(), i+1,
                 C_playing_new_segement,  cur_player+1);
+        reset_timer();
         printf("(child) send init msg: %s", cmd);
         newJob->fill_line(cmd);
         push_res_job(users[i]->jobq, newJob);
@@ -166,13 +169,23 @@ conn *Game::get_exp_user(int fd){
 void Game::reset_timer(){
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    last_seg_start = ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+    last_seg_start = ts.tv_sec * 10 + ts.tv_nsec / 100000000;
+    std::cout << "reset to" << last_seg_start << "\n";
 }
 
-long long Game::get_time(){
+void Game::align_timer(){
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (ts.tv_sec * 1000 + ts.tv_nsec / 1000000) - last_seg_start;
+    long long pass_time = (ts.tv_sec * 10 + ts.tv_nsec / 100000000) - last_seg_start;
+    std::cout << last_seg_start << " " << pass_time << " " << p1_time << "\n";
+    if(cur_player == 0){
+        p1_time -= pass_time;
+        if(p1_time < 0) p1_time = 0;
+    }
+    else{
+        p2_time -= pass_time;
+        if(p2_time < 0) p2_time = 0;
+    }
 }
 
 void Game::start_next_seg(
@@ -219,4 +232,60 @@ void Game::calculate_new_elo(
     k_b = (p.first >= p.second) ? 32 : 16;
     p.first = p.first + k_a*(s_a-e_a);
     p.second = p.second + k_b*(s_b-e_b);
+}
+
+void Game::delete_user(
+    Game *g,
+    conn *u
+){
+    int i = get_pos(u);
+    user_exist[i] = false;
+    epoll_del(g->epfd, u->fd);
+    Close(u->fd);
+    delete u;
+    users[i] = new conn;
+}
+
+void Game::pass_ufd_to_main(
+    Game *g,
+    conn *u
+){
+    struct msghdr msg = {0};
+    struct cmsghdr *cmsg;
+    int fd_to_pass[1] = {u->fd};
+    char iobuf[65];
+    strncpy(iobuf, u->name, 65);
+    struct iovec iov = {
+        iobuf,
+        sizeof(iobuf)
+    };
+
+    union {
+        char buf[CMSG_SPACE(sizeof(fd_to_pass))];
+        struct cmsghdr align;
+    } uunn;
+
+    msg.msg_iov = &iov;
+    msg.msg_iovlen = 1;
+    msg.msg_control = uunn.buf;
+    msg.msg_controllen = sizeof(uunn.buf);
+    
+    cmsg = CMSG_FIRSTHDR(&msg);
+    cmsg->cmsg_level = SOL_SOCKET;
+    cmsg->cmsg_type = SCM_RIGHTS;
+    cmsg->cmsg_len = CMSG_LEN(sizeof(fd_to_pass));
+    memcpy(CMSG_DATA(cmsg), fd_to_pass, sizeof(fd_to_pass));
+
+    /* only check EINTR signal */
+    int n = TEMP_FAILURE_RETRY(sendmsg(mainfd, &msg, 0));
+    if(n == -1) {
+        printf("(pr) error on passing fd: %d, errno: %d\nno change has been made...\n", 
+                *fd_to_pass, errno);
+        return;
+    }
+    else{
+        printf("(pr) send fd: %d to main loop successfully!\n", *fd_to_pass);
+    }
+
+    delete_user(g, u);
 }
