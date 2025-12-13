@@ -111,7 +111,24 @@ void dispatcher(
             }
         }
         else if(cur_job->type == OBSERVE_RANDOMLY){
-
+            auto it = sobj->id_to_room->begin();
+            while(it!=sobj->id_to_room->end()
+                && sobj->id_to_room->size()!=0)
+            {
+                if(it->second->is_playing 
+                && it->second->add_observer(u)){
+                    pass_ufd_to_room(scxt, sobj, it->second, u);
+                    return;
+                }
+                it++;
+            }
+            job_t *newJob = new job_t;
+            newJob->type = RES_USR;
+            char *cmd = (char*)malloc(MAXLINE*sizeof(char));
+            sprintf(cmd, "%d\n", C_no_current_playing_room);
+            newJob->fill_line(cmd);
+            u->jobq.pop_front();
+            push_res_job(u->jobq, newJob);
         }
         else if(cur_job->type == TOGGLE_READY){
             auto it = sobj->id_to_room->find(std::string(cur_job->line));
@@ -134,7 +151,7 @@ void dispatcher(
                 it->second->on_change(scxt->epfd, u);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                push_res_job(u->jobq, newJob);;
+                push_res_job(u->jobq, newJob);
             }
         }
         else if(cur_job->type == CHANGE_POS){

@@ -12,10 +12,10 @@
 
 
 //TODO : check ther observe pos and game over pos
-#define Observe_chance_pos_x 40
+#define Observe_chance_pos_x 37
 #define Observe_chance_pos_y 5
-#define Game_result_pos_x 40
-#define Game_result_pos_y 10
+#define Game_result_pos_x 37
+#define Game_result_pos_y 5
 
 //board
 void clear_board_ui();

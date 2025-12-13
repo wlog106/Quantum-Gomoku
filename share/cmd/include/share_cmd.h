@@ -38,7 +38,6 @@ typedef enum {
     */
     C_observe_randomly,//cid
     /*reply
-        C_start_observing
         C_no_current_playing_room
         C_start_a_playing_room
     */

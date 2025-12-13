@@ -7,7 +7,7 @@
 #include "pr_io/pr_io.h"
 
 int main(int arg, char **argv){
-    raise(SIGSTOP);
+    //raise(SIGSTOP);
     int mainfd, nfds;
     unsigned int exist_pos;
     struct epoll_event events[MAX_EVENT];
@@ -16,6 +16,8 @@ int main(int arg, char **argv){
 
     sscanf(argv[1], "%d %s %u",
            &mainfd, game->room_id, &exist_pos);
+
+    epoll_r_add(epfd, mainfd);
 
     std::stringstream *ssName = new std::stringstream;
     std::stringstream *ssfd = new std::stringstream;
@@ -36,13 +38,17 @@ int main(int arg, char **argv){
     for( ; ; ){
         nfds = Epoll_wait(epfd, events, MAX_EVENT);
         for(int i=0; i<nfds; i++){
-            if(timer_exp(game, events[i].data.fd))
+            if(timer_exp(game, evfd))
                 continue;
             if(events[i].events & EPOLLIN){
-                on_recv(game, events[i].data.fd);
+                if(evfd == mainfd) 
+                    on_observer_join(game, evfd);
+                else 
+                    on_recv(game, evfd);
             }
             else if(events[i].events & EPOLLOUT){
-                on_send(game, events[i].data.fd);
+                on_send(game, evfd);
+                std::cout << fcntl(evfd,1) << "\n";
             }
         }
     }

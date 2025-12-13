@@ -5,6 +5,7 @@ Uid_generator::Uid_generator(){
 }
 
 std::string Uid_generator::new_uid(int len){
+    return "111111";
     std::string uid;
     do{
         for(int i=0; i<len; i++){

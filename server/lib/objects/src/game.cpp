@@ -38,11 +38,11 @@ Game::~Game(){
 }
 
 conn* Game::get_user(int fd){
-    int i = 0;
-    while(i<5 && users[i]->fd != fd)
-        i++;
-    if(i != 5) return users[i];
-    else assert(1==0);
+    for(int i=0; i<5; i++){
+        if(users[i]!=NULL && users[i]->fd==fd)
+            return users[i];
+    }
+    return NULL;
 }
 
 int Game::get_pos(conn *u){
@@ -59,6 +59,16 @@ int Game::get_pos(int fd){
         i++;
     if(i != 5) return i+1;
     else assert(1==0);
+}
+
+conn *Game::get_empty_observe_pos(){
+    for(int i=2; i<5; i++){
+        if(user_exist[i])
+            continue;
+        user_exist[i] = 1;
+        return users[i];
+    }
+    return NULL;
 }
 
 std::string Game::get_full_game_info(){

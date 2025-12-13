@@ -61,7 +61,6 @@ void processor(
                 break;
 
             case (C_observe_randomly):
-                assert(1==0);
                 newJob->type = OBSERVE_RANDOMLY;
                 free(cmd);
                 newJob->fill_line(NULL);

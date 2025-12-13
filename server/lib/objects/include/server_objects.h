@@ -75,9 +75,9 @@ struct conn{
     char name[65];
     char hash[65];
     int cur_elo;
-
-    /* connection metadata */
     int state;
+
+    /* connection buffer */
     linear_buf_t *r_buf;
     std::deque<job_t*> jobq;
 
@@ -128,6 +128,7 @@ struct Room{
     std::string room_id;
     conn *users[5];
     bool is_playing;
+    int room_fd;
     bool user_existance[5];
     bool user_ready[2];
     Room();
@@ -167,6 +168,7 @@ struct Game{
     conn *get_exp_user(int tfd);
     int get_pos(conn *u);
     int get_pos(int fd);
+    conn *get_empty_observe_pos();
     std::string board_to_string(
         std::vector<std::vector<int>> &v
     );

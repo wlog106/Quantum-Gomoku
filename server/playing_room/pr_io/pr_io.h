@@ -4,6 +4,11 @@
 struct Game;
 struct conn;
 
+void on_observer_join(
+    Game *g, 
+    int fd
+);
+
 void on_recv(
     Game *g, 
     int fd

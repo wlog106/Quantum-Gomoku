@@ -7,7 +7,7 @@ conn::conn(){
     this->r_buf = new linear_buf_t(MAXLINE);
     start = {
         {0, 0},
-        {5, 0}
+        {2, 0}
     };
     stop = {0};
     tfd = timerfd_create(
@@ -22,7 +22,7 @@ conn::conn(int fd, int state){
     this->r_buf = new linear_buf_t(MAXLINE);
     start = {
         {0, 0},
-        {5, 0}
+        {2, 0}
     };
     stop = {0};
     tfd = timerfd_create(

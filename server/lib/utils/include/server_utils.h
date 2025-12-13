@@ -106,6 +106,13 @@ void push_res_job(
     job_t *newJob
 );
 
+void pass_ufd_to_room(
+    ServerContext *scxt,
+    ServerObjects *sobj,
+    Room *room, 
+    conn *u
+);
+
 pid_t fork_room(
     ServerObjects *sobj,
     Room *room,

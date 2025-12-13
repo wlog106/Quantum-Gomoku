@@ -154,7 +154,7 @@ bool Room::is_empty(){
     bool flag = 0;
     for(int i=0; i<5; i++)
         flag |= user_existance[i];
-    return ~flag;
+    return !flag;
 }
 
 std::string Room::get_room_info(){

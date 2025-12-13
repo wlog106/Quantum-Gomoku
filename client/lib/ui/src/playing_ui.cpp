@@ -1,4 +1,5 @@
 #include "../ui.h"
+#include <ostream>
 #include "playing_ui/playing_ui.h"
 
 
@@ -105,7 +106,7 @@ void PP_show_playing_result(stringstream &ss){
         else{
             cout << "\x1b[38;5;226mGame is draw!\x1b[0m";
         }
-        cout << MOVE(Game_result_pos_x+1, Game_result_pos_y-5);
+        cout << MOVE(Game_result_pos_x+1, Game_result_pos_y);
         cout << "Elo changed: " << origin_elo[playing_position-1] << "->" << new_elo[playing_position-1];
     }
     else{
@@ -120,4 +121,5 @@ void PP_show_playing_result(stringstream &ss){
             cout << "\x1b[38;5;46mThis game is draw!\x1b[0m";
         }
     }
+    cout << flush;
 }
