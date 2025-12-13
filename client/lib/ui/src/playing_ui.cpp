@@ -15,6 +15,9 @@ void PP_initialize(){
     show_all_user();
     cout << MOVE(Timer_pos_x, Timer_pos_y - 11) << "Time left:" << flush;
     cout << MOVE(Timer_pos_x+1, Timer_pos_y - 11) << "Time left:" << flush;
+    if(playing_position != 1 && playing_position != 2){
+        cout << MOVE(Timer_pos_x+3, Timer_pos_y - 11) << "Press L to leave the room." << flush;
+    }
 }
 
 void PP_refresh_observe_chance_info(){
@@ -120,4 +123,6 @@ void PP_show_playing_result(stringstream &ss){
             cout << "\x1b[38;5;46mThis game is draw!\x1b[0m";
         }
     }
+    cout << flush;
+    cout << MOVE(Game_result_pos_x+2, Game_result_pos_y) << "Press Enter to leave" << flush;
 }
