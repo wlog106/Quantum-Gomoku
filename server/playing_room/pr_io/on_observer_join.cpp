@@ -1,5 +1,5 @@
-#include "share_cmd.h"
-#include "share_wrap.h"
+#include <share_cmd.h>
+#include <share_wrap.h>
 #include <server_utils.h>
 #include <server_cmd.h>
 #include <cstring>
@@ -43,6 +43,11 @@ void on_observer_join(Game *g, int fd){
     else{
         printf("error on receiving new observer fd\n");
     }
+    epoll_rw_add(g->epfd, newConn->fd);
+    char tmp[40];
+    sprintf(tmp, "%d %s\n", C_playing_users_change, g->get_player_info().data());
+    g->broadcast_msg(tmp, RES_USR);
+
     job_t *newJob = new job_t;
     newJob->type = RES_USR;
     char *cmd = (char*)malloc(MAXLINE*sizeof(char));
@@ -53,5 +58,4 @@ void on_observer_join(Game *g, int fd){
             C_playing_new_segement, g->p1_time, g->p2_time, g->cur_player+1);
     newJob->fill_line(cmd);
     push_res_job(newConn->jobq, newJob);
-    epoll_rw_add(g->epfd, newConn->fd);
 }

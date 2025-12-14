@@ -94,7 +94,6 @@ int main(int arg, char **argv){
     );
 
     for( ; ; ){
-        std::cout << "(serv_main) epoll in wait for rw events\n";
         nfds = Epoll_wait(epfd, events, MAX_EVENT);
         for(int i=0; i<nfds; i++){
             if(evfd == listenfd){
