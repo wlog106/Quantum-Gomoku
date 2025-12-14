@@ -42,7 +42,9 @@ void Epoll_ctl(
     struct epoll_event *ev
 ){
     if(epoll_ctl(epfd, op, fd, ev) < 0){
+        int eno = errno;
         fprintf(stderr, "Error: epoll_ctl\n");
+        fprintf(stderr, "errno: %d\n", eno);
         exit(1);
     }
 }

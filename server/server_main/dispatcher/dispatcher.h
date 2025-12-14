@@ -11,4 +11,11 @@ void dispatcher(
     conn *u
 );
 
+void room_msg_dispatcher(
+    ServerContext *scxt,
+    ServerObjects *sobj,
+    char *room_msg,
+    int fd
+);
+
 #endif

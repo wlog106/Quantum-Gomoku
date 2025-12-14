@@ -12,6 +12,11 @@ void on_dw_res(
     ServerObjects *sobj
 );
 
+void on_room_msg(
+    ServerContext *scxt,
+    ServerObjects *sobj
+);
+
 void on_listen(
     ServerContext *scxt,
     ServerObjects *sobj

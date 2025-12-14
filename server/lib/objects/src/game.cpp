@@ -89,6 +89,22 @@ std::string Game::get_full_game_info(){
     return info;
 }
 
+std::string Game::get_player_info(){
+    std::string info;
+    for(int i=0; i<5; i++){
+        info += std::to_string(user_exist[i]);
+        info += " ";
+    }
+    for(int i=0; i<5; i++){
+        if(!user_exist[i])
+            continue;
+        info += std::string(users[i]->name);
+        info += " ";
+    }
+    info.pop_back();
+    return info;
+}
+
 std::string Game::board_to_string(
     std::vector<std::vector<int>> &v
 ){
@@ -115,7 +131,6 @@ void Game::broadcast_init_msg(){
                 get_full_game_info().data(), i+1,
                 C_playing_new_segement,  cur_player+1);
         reset_timer();
-        printf("(child) send init msg: %s", cmd);
         newJob->fill_line(cmd);
         push_res_job(users[i]->jobq, newJob);
         epoll_rw_add(epfd, users[i]->fd);
@@ -129,7 +144,6 @@ void Game::broadcast_observe_result(
     sprintf(msg, "%d %s\n",
             C_show_observe_result,
             board_to_string(v).data());
-    std::cout << "broadcast observe result: " << std::string(msg) << "\n";
     broadcast_msg(msg, SEND_OBSERVE_RESULT);
 }
 
@@ -170,7 +184,6 @@ void Game::reset_timer(){
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     last_seg_start = ts.tv_sec * 10 + ts.tv_nsec / 100000000;
-    std::cout << "reset to" << last_seg_start << "\n";
 }
 
 void Game::align_timer(){
@@ -235,26 +248,29 @@ void Game::calculate_new_elo(
 }
 
 void Game::delete_user(
-    Game *g,
     conn *u
 ){
-    int i = get_pos(u);
+    int i = get_pos(u)-1;
     user_exist[i] = false;
-    epoll_del(g->epfd, u->fd);
+    epoll_del(epfd, u->fd);
+    epoll_del(epfd, u->tfd);
     Close(u->fd);
     delete u;
     users[i] = new conn;
+    epoll_r_add(epfd, users[i]->tfd);
 }
 
 void Game::pass_ufd_to_main(
-    Game *g,
     conn *u
 ){
     struct msghdr msg = {0};
     struct cmsghdr *cmsg;
     int fd_to_pass[1] = {u->fd};
-    char iobuf[65];
-    strncpy(iobuf, u->name, 65);
+    char iobuf[70];
+    // indicate "single observer leave" type 
+    // (c.f. "1 " prefix imply "game terminate" type)
+    sprintf(iobuf, "0 %s %s", room_id, u->name);
+    printf("(room) iobuf: %s\n", iobuf);
     struct iovec iov = {
         iobuf,
         sizeof(iobuf)
@@ -284,8 +300,9 @@ void Game::pass_ufd_to_main(
         return;
     }
     else{
-        printf("(pr) send fd: %d to main loop successfully!\n", *fd_to_pass);
+        printf("(pr) send user: %s fd: %d to main loop successfully!\n", 
+               u->name, *fd_to_pass);
     }
 
-    delete_user(g, u);
+    delete_user(u);
 }

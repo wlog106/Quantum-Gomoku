@@ -152,7 +152,6 @@ pid_t fork_room(
     for(int i=0; i<5; i++){
         if(!room->user_existance[i])
             continue;
-        sobj->fd_to_conn->erase(room->users[i]->fd);
         exist_pos |= (1 << i);
     }
     if((child_pid = Fork()) == 0){
@@ -182,11 +181,24 @@ pid_t fork_room(
         assert(false);
     }
     // remove unecessary fds on parent side
-    room->close_exist_userfds(epfd);
+    room->erase_exist_userinfo(sobj, epfd);
     Close(room_fd[1]);
     int flags = Fcntl(room_fd[0], F_GETFL, 0);
-    Fcntl(room_fd[0], F_SETFL, flags | O_NONBLOCK );
+    Fcntl(room_fd[0], F_SETFL, flags | O_NONBLOCK | FD_CLOEXEC);
     room->is_playing = true;
     room->room_fd = *room_fd;
+    sobj->playing_room_fds->insert(*room_fd);
+    epoll_r_add(epfd, *room_fd);
     return child_pid;
+}
+
+bool is_playing_room(
+    ServerObjects *scxt,
+    int fd
+){
+    return (
+        scxt->playing_room_fds->size() != 0 &&
+        scxt->playing_room_fds->find(fd)
+        != scxt->playing_room_fds->end()
+    );
 }

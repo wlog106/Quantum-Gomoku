@@ -206,10 +206,14 @@ void Room::turn_off_fd_close_on_exec(){
     }
 }
 
-void Room::close_exist_userfds(int epfd){
+void Room::erase_exist_userinfo(
+    ServerObjects *sobj,
+    int epfd
+){
     for(int i = 0; i < 5; i++){
         if(!user_existance[i])
             continue;
+        sobj->fd_to_conn->erase(users[i]->fd);
         epoll_del(epfd, users[i]->fd);
         Close(users[i]->fd);
         users[i]->fd = -1;

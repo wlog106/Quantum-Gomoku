@@ -36,6 +36,7 @@ struct ServerObjects{
     linear_buf_t *dwr_buf;
     Uid_generator *uid_gen;
     std::map<int, conn*> *fd_to_conn;
+    std::set<int> *playing_room_fds;
     std::map<std::string, Room*> *id_to_room;
     ServerObjects();
     ServerObjects(
@@ -43,6 +44,7 @@ struct ServerObjects{
         linear_buf_t *dwr_buf,
         Uid_generator *uid_gen,
         std::map<int, conn*> *fd_to_conn,
+        std::set<int> *playing_room_fds,
         std::map<std::string, Room*> *id_to_room
     );
 };
@@ -147,7 +149,10 @@ struct Room{
     std::string get_exist_usernames();
     std::string get_exist_userfds();
     void turn_off_fd_close_on_exec();
-    void close_exist_userfds(int epfd);
+    void erase_exist_userinfo(
+        ServerObjects *sobj,
+        int epfd
+    );
 };
 
 struct Game{
@@ -174,6 +179,7 @@ struct Game{
         std::vector<std::vector<int>> &v
     );
     std::string get_full_game_info();
+    std::string get_player_info();
     void broadcast_init_msg();
     void broadcast_game_result(int result);
     void broadcast_observe_result(
@@ -188,16 +194,10 @@ struct Game{
         std::pair<int, int> &p, 
         int result
     );
-    void delete_user(
-        Game *g,
-        conn *u
-    );
+    void delete_user(conn *u);
 
-    void pass_ufd_to_main(
-        Game *g,
-        conn *u
-    );
-    
+    void pass_ufd_to_main(conn *u);
+
 };
 
 class Uid_generator{

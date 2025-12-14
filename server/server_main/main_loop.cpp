@@ -40,6 +40,7 @@ int main(int arg, char **argv){
     /* user data */
     Uid_generator uid_gen;
     std::map<int, conn*> fd_to_conn;
+    std::set<int> playing_room_fds;
     std::map<std::string, Room*> id_to_room;
 
     /* dw job queue */
@@ -88,7 +89,8 @@ int main(int arg, char **argv){
 
     ServerObjects *sobj = new ServerObjects(
         &dwq, &dwr_buf, &uid_gen,
-        &fd_to_conn, &id_to_room
+        &fd_to_conn, &playing_room_fds, 
+        &id_to_room 
     );
 
     for( ; ; ){
@@ -101,6 +103,12 @@ int main(int arg, char **argv){
             }
             if(evfd == *dw_fd && evtype & EPOLLIN){
                 on_dw_res(scxt, sobj);
+                continue;
+            }
+            if(evtype & EPOLLIN && is_playing_room(sobj, evfd)){
+                printf("receive room msg\n");
+                scxt->cur_fd = evfd;
+                on_room_msg(scxt, sobj);
                 continue;
             }
             if(evtype & EPOLLIN){

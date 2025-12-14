@@ -119,4 +119,9 @@ pid_t fork_room(
     int epfd
 );
 
+bool is_playing_room(
+    ServerObjects *scxt,
+    int fd
+);
+
 #endif

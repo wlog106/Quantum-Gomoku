@@ -49,7 +49,6 @@ int main(int arg, char **argv){
             }
             else if(events[i].events & EPOLLOUT){
                 on_send(game, evfd);
-                std::cout << fcntl(evfd,1) << "\n";
             }
         }
     }

@@ -23,7 +23,11 @@ void on_readable(
                 break;
         }
         else if(n == 0){
-            //u->state = 1;
+            /* user leave */
+            sobj->fd_to_conn->erase(u->fd);
+            Close(u->fd);
+            delete u;
+            return;
         }
         recvline[n] = 0;
         u->r_buf->append(recvline);
