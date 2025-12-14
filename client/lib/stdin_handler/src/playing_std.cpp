@@ -114,6 +114,8 @@ void playing_std(const string &key){
     else if(key == "L" || key == "l"){
         if(game_over){
             set_state(S_select_option);
+            lock_ui();
+            PP_close_timer();
             signal_ui();
             unlock_ui();
             return;
@@ -126,6 +128,8 @@ void playing_std(const string &key){
             signal_writer();
             unlock_writer();
             set_state(S_select_option);
+            lock_ui();
+            PP_close_timer();
             signal_ui();
             unlock_ui();
         }

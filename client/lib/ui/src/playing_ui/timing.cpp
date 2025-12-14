@@ -28,6 +28,9 @@ bool PP_close_timer(){ //close timer and set the remain time
     unlock_ui();
     Pthread_join( tid_timer, NULL);
     lock_ui();
+    cout << MOVE(((int)Timer_pos_x + 0), Timer_pos_y) << "\x1b[0k";
+    cout << MOVE(((int)Timer_pos_x + 1), Timer_pos_y) << "\x1b[0k";
+    cout << flush;
     player_remain_time[0] = timer_finish_player_remain_time[0];
     player_remain_time[1] = timer_finish_player_remain_time[1];
     return flag;
