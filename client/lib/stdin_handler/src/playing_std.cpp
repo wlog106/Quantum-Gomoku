@@ -41,6 +41,7 @@ void playing_std(const string &key){
         lock_ui();
         if(game_over){
             set_state(S_select_option);
+            reset_playing_page();
             signal_ui();
             unlock_ui();
             return;
@@ -116,6 +117,7 @@ void playing_std(const string &key){
             set_state(S_select_option);
             lock_ui();
             PP_close_timer();
+            reset_playing_page();
             signal_ui();
             unlock_ui();
             return;
@@ -130,6 +132,7 @@ void playing_std(const string &key){
             set_state(S_select_option);
             lock_ui();
             PP_close_timer();
+            reset_playing_page();
             signal_ui();
             unlock_ui();
         }

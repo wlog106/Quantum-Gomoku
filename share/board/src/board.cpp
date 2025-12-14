@@ -8,6 +8,14 @@ Board::Board(int board_size):size(board_size){
     board_data.resize(size, std::vector(size, 0));
 }
 
+void Board::reset(){
+    for(int i = 0; i < size; i++){
+        for(int j = 0; j < size; j++){
+            board_data[i][j] = 0;
+        }
+    }
+}
+
 int Board::get_observe_result(std::vector<std::vector<int>> &observed_board){
     observed_board.resize(size, std::vector<int>(size, 0));
     for(int i = 0; i < size; i++){

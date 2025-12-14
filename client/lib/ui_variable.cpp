@@ -80,6 +80,21 @@ int game_over = 0;
 
 
 void reset_playing_page(){
-    //TODO reset variable
+    playing_room_id = "";
+    for(int i = 0; i < 5; i++){
+        playing_user_existance[i] = 0;
+        playing_username[i] = "";
+    }
+    playing_position = -1;
+    moving_position = 0;
+    playing_board.reset();
+    player_remain_time[0] = 6000;
+    player_remain_time[1] = 6000;
+    cursor_pos_x = (Board_size - 1) / 2;
+    cursor_pos_y = (Board_size - 1) / 2;
+    playing_page_type = -1;
+    observing_chance = 5;
+    has_observe = 0;
+    game_over = 0;
     return;
 }

@@ -10,6 +10,7 @@ struct Board{
     std::vector<std::vector<int>> board_data;
     Board(int);
     int get_observe_result(std::vector<std::vector<int>>&);
+    void reset();
 };
 
 #endif
