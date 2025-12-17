@@ -8,6 +8,7 @@ void pr_leaving_dispatcher(
 ){
     if(u==g->users[0]){
         /* player 1 leave player 2 win*/
+        printf("player 1 die...\n");
         g->broadcast_game_result(2);
         /* delete player and go through normal 
         game terminate process*/

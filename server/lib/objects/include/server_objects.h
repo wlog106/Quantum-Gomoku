@@ -161,7 +161,6 @@ struct Game{
     int mainfd;
     char room_id[10];
     bool cur_player;
-    bool game_terminate;
     bool observed_flag;
     long long p1_time;
     long long p2_time;
@@ -169,6 +168,7 @@ struct Game{
     bool user_exist[5];
     conn *users[5];
     Board *board;
+    std::pair<int, int> new_elo;
     Game(int epfd);
     ~Game();
     conn *get_user(int fd);
@@ -198,7 +198,6 @@ struct Game{
     void delete_user(conn *u);
 
     void pass_ufd_to_main(conn *u);
-
 };
 
 class Uid_generator{

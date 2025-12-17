@@ -24,7 +24,7 @@ Game::Game(int epfd){
     p1_time = 6000;
     p2_time = 6000;
     cur_player = 0;
-    game_terminate = 0;
+    new_elo = {0, 0};
     for(int i=0; i<5; i++){
         users[i] = new conn;
         user_exist[i] = false;
@@ -148,7 +148,6 @@ void Game::broadcast_observe_result(
 }
 
 void Game::broadcast_game_result(int result){
-    std::pair<int, int> new_elo = {users[0]->cur_elo, users[1]->cur_elo};
     calculate_new_elo(new_elo, result);
     char msg[200];
     sprintf(msg, "%d %s %d %d %s %d %d %d %d\n",

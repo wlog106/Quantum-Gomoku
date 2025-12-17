@@ -9,7 +9,7 @@ void pr_dispatcher(
     Game *g,
     conn *u
 ){
-    job_t *curJob = new job_t;
+    job_t *curJob;
     while(!u->jobq.empty()){
         curJob = u->jobq.front();
         if(curJob->type == RES_USR){
