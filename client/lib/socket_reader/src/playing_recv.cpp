@@ -43,6 +43,7 @@ void playing_recv(const string &command){
             ss >> game_result.wining[1];
             if(ss.fail())return;
             lock_ui();
+            PP_close_timer();
             game_over = 1;
             PP_show_playing_result(game_result);
             unlock_ui();
