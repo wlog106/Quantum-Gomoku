@@ -40,6 +40,7 @@ int main(int arg, char **argv){
     /* user data */
     Uid_generator uid_gen;
     std::map<int, conn*> fd_to_conn;
+    std::set<int> login_ids;
     std::set<int> playing_room_fds;
     std::map<std::string, Room*> id_to_room;
 
@@ -90,7 +91,7 @@ int main(int arg, char **argv){
     ServerObjects *sobj = new ServerObjects(
         &dwq, &dwr_buf, &uid_gen,
         &fd_to_conn, &playing_room_fds, 
-        &id_to_room 
+        &id_to_room, &login_ids
     );
 
     for( ; ; ){

@@ -13,7 +13,8 @@ void dispatcher(
 
 void leaving_dispatcher(
     ServerObjects *sobj,
-    conn *u
+    conn *u,
+    int cmd
 );
 
 void room_msg_dispatcher(

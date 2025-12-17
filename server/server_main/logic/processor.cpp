@@ -38,6 +38,10 @@ void processor(
                 newJob->fill_line(cmd);
                 u->jobq.push_back(newJob);
                 break;
+
+            case (C_client_logout):
+                leaving_dispatcher(sobj, u, C_client_logout);
+                return;
             
             // opselect
             case (C_create_room):

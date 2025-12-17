@@ -41,7 +41,15 @@ void dw_res_processor(
                 }
                 break;
             case (DW_LOGIN):
-                if(cur_dw_res->result == DW_RESULT_SUCCESS){
+                if(sobj->login_ids->find(cur_dw_res->u->id)!=sobj->login_ids->end()){
+                    newJob->type = RES_USR;
+                    sprintf(cmd, "%d\n", C_already_login);
+                    newJob->line = cmd;
+                    newJob->r_ptr = cmd;
+                    newJob->len = strlen(cmd);
+                    push_res_job(cur_dw_res->u->jobq, newJob);
+                }
+                else if(cur_dw_res->result == DW_RESULT_SUCCESS){
                     newJob->type = RES_USR;
                     sprintf(cmd, "%d\n", C_login_success);
                     newJob->line = cmd;
@@ -49,6 +57,7 @@ void dw_res_processor(
                     newJob->len = strlen(cmd);
                     push_res_job(cur_dw_res->u->jobq, newJob);
                     cur_dw_res->u->state = OP_SELECTING_USR;
+                    sobj->login_ids->insert(cur_dw_res->u->id);
                 }
                 else if(cur_dw_res->result == DW_ERESULT_USERDNE){
                     newJob->type = RES_USR;

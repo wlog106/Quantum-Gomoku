@@ -1,10 +1,12 @@
+#include "share_cmd.h"
 #include <server_objects.h>
 #include <server_utils.h>
 #include <server_cmd.h>
 
 void leaving_dispatcher(
     ServerObjects *sobj,
-    conn *u
+    conn *u,
+    int cmd
 ){
     if(u->state==WAITING_ROOM_USR){
         auto it = sobj->id_to_room->find(u->room_id);
@@ -21,7 +23,14 @@ void leaving_dispatcher(
         }
     }
     sobj->fd_to_conn->erase(u->fd);
-    Close(u->fd);
+    sobj->login_ids->erase(u->id);
+    if(cmd==C_client_logout){
+        conn *newConn = new conn(u->fd, UNKNOWN_USR);
+        sobj->fd_to_conn->insert({u->fd, newConn});
+    }
+    else{
+        Close(u->fd);
+    }
     printf("user: %s leave successfully\n", u->name);
     delete u;
 }

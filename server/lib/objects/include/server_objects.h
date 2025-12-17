@@ -38,6 +38,7 @@ struct ServerObjects{
     std::map<int, conn*> *fd_to_conn;
     std::set<int> *playing_room_fds;
     std::map<std::string, Room*> *id_to_room;
+    std::set<int> *login_ids;
     ServerObjects();
     ServerObjects(
         std::queue<job_t*> *dwq,
@@ -45,7 +46,8 @@ struct ServerObjects{
         Uid_generator *uid_gen,
         std::map<int, conn*> *fd_to_conn,
         std::set<int> *playing_room_fds,
-        std::map<std::string, Room*> *id_to_room
+        std::map<std::string, Room*> *id_to_room,
+        std::set<int> *login_ids
     );
 };
 

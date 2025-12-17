@@ -25,7 +25,7 @@ void on_readable(
         }
         else if(n == 0){
             printf("read zero\n");
-            leaving_dispatcher(sobj, u);
+            leaving_dispatcher(sobj, u, -7);
             return;
         }
         recvline[n] = 0;

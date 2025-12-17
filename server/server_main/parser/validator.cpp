@@ -12,8 +12,6 @@ bool validator(
                 return true;
             if(cmd_id==C_login_to_server)
                 return true;
-            if(cmd_id==C_client_logout)
-                return true;
             return false;
             
         case (OP_SELECTING_USR):
@@ -24,6 +22,8 @@ bool validator(
             if(cmd_id==C_pair_randomly)
                 return true;
             if(cmd_id==C_observe_randomly)
+                return true;
+            if(cmd_id==C_client_logout)
                 return true;
             return false;
             
