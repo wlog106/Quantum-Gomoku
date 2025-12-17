@@ -22,8 +22,3 @@ void select_enter_room_id_ui();
 
 //waiting room
 void waiting_room_ui();
-
-//playing
-
-//debug
-void debug_ui();
