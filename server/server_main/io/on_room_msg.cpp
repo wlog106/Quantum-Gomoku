@@ -1,5 +1,6 @@
 
 #include <bits/types/struct_iovec.h>
+#include <fcntl.h>
 #include <server_objects.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -12,8 +13,8 @@ void on_room_msg(
 ){
     struct msghdr msg = {0};
     struct cmsghdr *cmsg;
-    char iovbuf[150];
-    int fds[5];
+    char iovbuf[300];
+    int fds[1];
     struct iovec iov = {
         iovbuf,
         sizeof(iovbuf)
@@ -30,12 +31,13 @@ void on_room_msg(
 
     int n = TEMP_FAILURE_RETRY(recvmsg(scxt->cur_fd, &msg, 0));
     cmsg = CMSG_FIRSTHDR(&msg);
-    char room_msg[150];
+    char room_msg[300];
     if (cmsg && cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS){
         memcpy(fds, CMSG_DATA(cmsg), sizeof(fds));
         memcpy(room_msg, msg.msg_iov->iov_base, msg.msg_iov->iov_len);
         printf("receive room msg %s from room successfully\n", room_msg);
         printf("transfer: %d bytes\n", n);
+        printf("examine fd: %d\n", fcntl(fds[0], F_GETFD));
     }
     else{
         printf("error on receiving room msg's fds\n");

@@ -9,5 +9,6 @@ void pr_dispatcher(
 
 void pr_leaving_dispatcher(
     Game *g,
-    conn *u
+    conn *u,
+    int cmd
 );

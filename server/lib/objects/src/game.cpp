@@ -23,6 +23,7 @@ Game::Game(int epfd){
     board = new Board(13);
     p1_time = 6000;
     p2_time = 6000;
+    game_terminate = 0;
     cur_player = 0;
     new_elo = {0, 0};
     for(int i=0; i<5; i++){
@@ -137,6 +138,12 @@ void Game::broadcast_init_msg(){
     }
 }
 
+void Game::broadcast_player_change(){
+    char msg[40];
+    sprintf(msg, "%d %s\n", C_playing_users_change, get_player_info().data());
+    broadcast_msg(msg, RES_USR);
+}
+
 void Game::broadcast_observe_result(
     std::vector<std::vector<int>> &v
 ){
@@ -149,6 +156,7 @@ void Game::broadcast_observe_result(
 
 void Game::broadcast_game_result(int result){
     calculate_new_elo(new_elo, result);
+    game_terminate = 1;
     char msg[200];
     sprintf(msg, "%d %s %d %d %s %d %d %d %d\n",
             C_game_over,
@@ -253,23 +261,24 @@ void Game::delete_user(
     user_exist[i] = false;
     epoll_del(epfd, u->fd);
     epoll_del(epfd, u->tfd);
-    Close(u->fd);
+    close(u->fd);
     delete u;
+    if(all_user_leave())
+        exit(0);
     users[i] = new conn;
     epoll_r_add(epfd, users[i]->tfd);
 }
 
 void Game::pass_ufd_to_main(
-    conn *u
+    conn *u,
+    int op
 ){
     struct msghdr msg = {0};
     struct cmsghdr *cmsg;
     int fd_to_pass[1] = {u->fd};
-    char iobuf[70];
-    // indicate "single observer leave" type 
-    // (c.f. "1 " prefix imply "game terminate" type)
-    sprintf(iobuf, "0 %s %s", room_id, u->name);
-    printf("(room) iobuf: %s\n", iobuf);
+    char iobuf[200];
+    sprintf(iobuf, "%d %s %s %d", op, room_id, u->name, u->cur_elo);
+    printf("(%s) iobuf: %s\n", room_id, iobuf);
     struct iovec iov = {
         iobuf,
         sizeof(iobuf)
@@ -294,14 +303,19 @@ void Game::pass_ufd_to_main(
     /* only check EINTR signal */
     int n = TEMP_FAILURE_RETRY(sendmsg(mainfd, &msg, 0));
     if(n == -1) {
-        printf("(pr) error on passing fd: %d, errno: %d\nno change has been made...\n", 
-                *fd_to_pass, errno);
+        printf("(%s) error on passing fd: %d, errno: %d\nno change has been made...\n", 
+               room_id, *fd_to_pass, errno);
         return;
     }
     else{
-        printf("(pr) send user: %s fd: %d to main loop successfully!\n", 
-               u->name, *fd_to_pass);
+        printf("(%s) send user: %s fd: %d to main loop successfully!\n", 
+               room_id, u->name, *fd_to_pass);
     }
+}
 
-    delete_user(u);
+bool Game::all_user_leave(){
+    bool flag = 0;
+    for(int i=0; i<5; i++)
+        flag |= user_exist[i];
+    return !flag;
 }

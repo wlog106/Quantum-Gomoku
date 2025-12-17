@@ -163,6 +163,7 @@ struct Game{
     int mainfd;
     char room_id[10];
     bool cur_player;
+    bool game_terminate;
     bool observed_flag;
     long long p1_time;
     long long p2_time;
@@ -184,6 +185,7 @@ struct Game{
     std::string get_full_game_info();
     std::string get_player_info();
     void broadcast_init_msg();
+    void broadcast_player_change();
     void broadcast_game_result(int result);
     void broadcast_observe_result(
         std::vector<std::vector<int>> &v
@@ -198,8 +200,8 @@ struct Game{
         int result
     );
     void delete_user(conn *u);
-
-    void pass_ufd_to_main(conn *u);
+    void pass_ufd_to_main(conn *u, int op);
+    bool all_user_leave();
 };
 
 class Uid_generator{

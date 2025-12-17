@@ -18,7 +18,7 @@ void on_recv(Game *g, int fd){
                 break;
         }
         else if(n == 0){
-            pr_leaving_dispatcher(g, u);
+            pr_leaving_dispatcher(g, u, -7);
             return;
         }
         recvline[n] = 0;

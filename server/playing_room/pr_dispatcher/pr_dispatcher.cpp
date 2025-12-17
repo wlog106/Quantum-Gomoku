@@ -1,9 +1,10 @@
-#include "share_cmd.h"
 #include <cstdio>
 #include <server_utils.h>
 #include <server_objects.h>
 #include <server_cmd.h>
 #include <share_board.h>
+
+#include "pr_dispatcher.h"
 
 void pr_dispatcher(
     Game *g,
@@ -36,14 +37,7 @@ void pr_dispatcher(
             u->jobq.pop_front();
         }
         else if(curJob->type == LEAVE_GAME){
-            g->pass_ufd_to_main(u);
-            char msg[40];
-            sprintf(msg, "%d %s\n", C_playing_users_change, g->get_player_info().data());
-            g->broadcast_msg(msg, RES_USR);
-            /* 
-                There's no need to process further job,
-                since the user no longer exist.
-            */
+            pr_leaving_dispatcher(g, u, LEAVE_GAME);
             return;
         }
         else break;

@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <server_utils.h>
 #include <server_objects.h>
 #include <cstdio>

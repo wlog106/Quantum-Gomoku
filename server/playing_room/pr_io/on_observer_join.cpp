@@ -5,6 +5,7 @@
 #include <cstring>
 #include <server_objects.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 void on_observer_join(Game *g, int fd){
     struct msghdr msg = {0};
@@ -26,7 +27,7 @@ void on_observer_join(Game *g, int fd){
     msg.msg_controllen = sizeof(u.buf);
     
 
-    int n = recvmsg(fd, &msg, 0);
+    int n = TEMP_FAILURE_RETRY(recvmsg(fd, &msg, 0));
     cmsg = CMSG_FIRSTHDR(&msg);
     conn *newConn = g->get_empty_observe_pos();
     if(newConn == NULL){
