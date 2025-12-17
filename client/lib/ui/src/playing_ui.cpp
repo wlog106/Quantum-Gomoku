@@ -91,7 +91,7 @@ void PP_observe(Board &observed_board){
 }
 
 void PP_show_playing_result(game_result_t &game_result){
-    cout << MOVE(Game_result_pos_x, Game_result_pos_y) << "\x1b[0k";
+    cout << MOVE(Game_result_pos_x, Game_result_pos_y) << "\x1b[0K";
     if(playing_position == 1 || playing_position == 2){
         if(game_result.wining[playing_position-1]){
             cout << "\x1b[38;5;46mYou are winner!\x1b[0m";
@@ -102,7 +102,7 @@ void PP_show_playing_result(game_result_t &game_result){
         else{
             cout << "\x1b[38;5;226mGame is draw!\x1b[0m";
         }
-        cout << MOVE(Game_result_pos_x+1, Game_result_pos_y) << "\x1b[0k";
+        cout << MOVE(Game_result_pos_x+1, Game_result_pos_y) << "\x1b[0K";
         cout << "Elo changed: " << game_result.origin_elo[playing_position-1] << "->" << game_result.new_elo[playing_position-1];
     }
     else{
@@ -116,8 +116,8 @@ void PP_show_playing_result(game_result_t &game_result){
         else{
             cout << "\x1b[38;5;46mThis game is draw!\x1b[0m";
         }
-        cout << MOVE(Game_result_pos_x+1, Game_result_pos_y) << "\x1b[0k";
+        cout << MOVE(Game_result_pos_x+1, Game_result_pos_y) << "\x1b[0K";
     }
     cout << flush;
-    cout << MOVE(Game_result_pos_x+2, Game_result_pos_y) << "\x1b[0kPress Enter to leave" << flush;
+    cout << MOVE(Game_result_pos_x+2, Game_result_pos_y) << "\x1b[0KPress Enter to leave" << flush;
 }
