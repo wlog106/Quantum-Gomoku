@@ -44,6 +44,12 @@ void playing_std(const string &key){
             reset_playing_page();
             signal_ui();
             unlock_ui();
+            lock_writer();
+            command_to_be_sent.push(
+                    std::to_string(C_leave_playing_room) + "\n"
+                );
+            signal_writer();
+            unlock_writer();
             return;
         }
         if(playing_position == moving_position && playing_page_type == 1){
@@ -113,27 +119,35 @@ void playing_std(const string &key){
         }
     }
     else if(key == "L" || key == "l"){
+        lock_ui();
         if(game_over){
             set_state(S_select_option);
-            lock_ui();
             PP_close_timer();
             reset_playing_page();
             signal_ui();
             unlock_ui();
-            return;
-        }
-        if(playing_page_type == 1 && playing_position != 1 && playing_position != 2){
             lock_writer();
             command_to_be_sent.push(
                     std::to_string(C_leave_playing_room) + "\n"
                 );
             signal_writer();
             unlock_writer();
+            return;
+        }
+        if(playing_page_type == 1 && playing_position != 1 && playing_position != 2){
             set_state(S_select_option);
-            lock_ui();
             PP_close_timer();
             reset_playing_page();
             signal_ui();
+            unlock_ui();
+            lock_writer();
+            command_to_be_sent.push(
+                    std::to_string(C_leave_playing_room) + "\n"
+                );
+            signal_writer();
+            unlock_writer();
+        }
+        else{
             unlock_ui();
         }
     }
