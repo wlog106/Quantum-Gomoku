@@ -2,6 +2,7 @@
 #include <server_objects.h>
 
 #include "../pr_parser/pr_parser.h"
+#include "../pr_dispatcher/pr_dispatcher.h"
 
 void on_recv(Game *g, int fd){
     conn *u;
@@ -17,7 +18,8 @@ void on_recv(Game *g, int fd){
                 break;
         }
         else if(n == 0){
-            /* user leave */
+            pr_leaving_dispatcher(g, u);
+            return;
         }
         recvline[n] = 0;
         u->r_buf->append(recvline);
