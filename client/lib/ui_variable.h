@@ -6,6 +6,10 @@
 This file is for definition of ui variable.
 */
 
+struct users_t{
+    bool user_existance[5];
+    string user_name[5];
+};
 
 //login page
 //-------------------------------------------------------------------------------
@@ -79,21 +83,21 @@ extern int observing_chance;
 extern int has_observe;//has observe at this round
 extern int game_over;
 
-//timing
-
-
+struct game_result_t{
+    string player_name[2];
+    int origin_elo[2], new_elo[2], wining[2];
+};
 
 
 void reset_playing_page();
-
 void PP_initialize();
 void PP_move_cursor(int direction);
 void PP_no_time();
 void PP_drop_piece(int x, int y, int type);
 bool PP_close_timer();
 void PP_segement_start();
-void PP_observe(stringstream &ss);
-void PP_show_playing_result(stringstream &ss);
+void PP_observe(Board &observed_board);
+void PP_show_playing_result(game_result_t &game_result);
 void PP_refresh_observe_chance_info();
-void PP_user_change(stringstream &ss);
+void PP_user_change(users_t &user_info);
 void PP_erase_cursor();

@@ -23,13 +23,13 @@ void PP_initialize(){
 
 void PP_refresh_observe_chance_info(){
     cout << MOVE(Observe_chance_pos_x, Observe_chance_pos_y) << "Observe chance: " << observing_chance;
-    cout << MOVE(Observe_chance_pos_x+1, Observe_chance_pos_y) << "Press O to observe after this hand." << flush;
+    cout << MOVE(Observe_chance_pos_x+1, Observe_chance_pos_y) << "Press O to observe after this hand, Press Enter to drop piece." << flush;
 }
 
 void PP_segement_start(){
     has_observe = 0;
     cout << MOVE(Observe_chance_pos_x, Observe_chance_pos_y) << "Observe chance: " << observing_chance;
-    cout << MOVE(Observe_chance_pos_x+1, Observe_chance_pos_y) << "Press O to observe after this hand." << flush;
+    cout << MOVE(Observe_chance_pos_x+1, Observe_chance_pos_y) << "Press O to observe after this hand, Press Enter to drop piece." << flush;
     if(moving_position == playing_position) {
         cursor_pos_x = (Board_size - 1) / 2;
         cursor_pos_y = (Board_size - 1) / 2;
@@ -76,49 +76,42 @@ void PP_drop_piece(int x, int y, int type){
     return;
 }
 
-void PP_observe(stringstream &ss){
+void PP_observe(Board &observed_board){
     PP_close_timer();
     cout << CLEAR_SCREEN << CURSOR_HOME << CURSOR_HIDE << "\x1b[1m" << flush;
     cout << "\n                   Quantun Gomoku Playing Room\n";
     cout << "                         Room ID: " << playing_room_id << "\x1b[0m" << flush;
     clear_board_ui();
-    int piece_type;
     for(int i = 0; i < Board_size; i++){
         for(int j = 0; j < Board_size; j++){
-            ss >> piece_type;
-            draw_real_piece(i, j, piece_type);
+            draw_real_piece(i, j, observed_board.board_data[i][j]);
         }
     }
     show_all_user();
 }
 
-void PP_show_playing_result(stringstream &ss){
-    string player[2];
-    int origin_elo[2], new_elo[2], wining[2];
-    ss >> player[0] >> origin_elo[0] >> new_elo[0];
-    ss >> player[1] >> origin_elo[1] >> new_elo[1];
-    ss >> wining[0] >> wining[1];
+void PP_show_playing_result(game_result_t &game_result){
     cout << MOVE(Game_result_pos_x, Game_result_pos_y);
     if(playing_position == 1 || playing_position == 2){
-        if(wining[playing_position-1]){
+        if(game_result.wining[playing_position-1]){
             cout << "\x1b[38;5;46mYou are winner!\x1b[0m";
         }
-        else if(wining[2-playing_position]){
+        else if(game_result.wining[2-playing_position]){
             cout << "\x1b[38;5;196mYou are loser!\x1b[0m";
         }
         else{
             cout << "\x1b[38;5;226mGame is draw!\x1b[0m";
         }
         cout << MOVE(Game_result_pos_x+1, Game_result_pos_y);
-        cout << "Elo changed: " << origin_elo[playing_position-1] << "->" << new_elo[playing_position-1];
+        cout << "Elo changed: " << game_result.origin_elo[playing_position-1] << "->" << game_result.new_elo[playing_position-1];
     }
     else{
         string winner_name;
-        if(wining[0]){
-            cout << "\x1b[38;5;46mThe winner is \x1b[0m" << player[0];
+        if(game_result.wining[0]){
+            cout << "\x1b[38;5;46mThe winner is \x1b[0m" << game_result.player_name[0];
         }
-        else if(wining[1]){
-            cout << "\x1b[38;5;46mThe winner is \x1b[0m" << player[1];
+        else if(game_result.wining[1]){
+            cout << "\x1b[38;5;46mThe winner is \x1b[0m" << game_result.player_name[1];
         }
         else{
             cout << "\x1b[38;5;46mThis game is draw!\x1b[0m";

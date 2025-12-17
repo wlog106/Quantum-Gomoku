@@ -8,14 +8,17 @@ void select_option_recv(const string &command){
     observe randomly
     */
     stringstream ss(command);
+    waiting_room_t waiting_info;
+    playing_room_t playing_info;
     int cmd_id;
     ss >> cmd_id;
     switch (cmd_id){
         //create room
         case C_create_room_success:
-            read_room_info(ss);
+            if(read_waiting_info(ss, waiting_info))return;
             set_state(S_waiting_room);
             lock_ui();
+            apply_waiting_info(waiting_info);
             reset_opselect_ui();
             signal_ui();
             unlock_ui();
@@ -28,9 +31,10 @@ void select_option_recv(const string &command){
             break;
         //pair randomly
         case C_pair_success_start_waiting:
-            read_room_info(ss);
+            if(read_waiting_info(ss, waiting_info))return;
             set_state(S_waiting_room);
             lock_ui();
+            apply_waiting_info(waiting_info);
             reset_opselect_ui();
             signal_ui();
             unlock_ui();
@@ -49,10 +53,11 @@ void select_option_recv(const string &command){
             unlock_ui();
             break;
         case C_start_a_playing_room:
+            if(read_playing_info(ss, playing_info)) return;
             set_state(S_playing);
             lock_ui();
+            apply_playing_info(playing_info);
             reset_opselect_ui();
-            read_playing_info(ss);
             unlock_ui();
             break;
         default:
@@ -63,13 +68,15 @@ void select_option_recv(const string &command){
 void select_enter_room_id_recv(const string &command){
     //result of join by room id
     stringstream ss(command);
+    waiting_room_t waiting_info;
     int cmd_id;
     ss >> cmd_id;
     switch (cmd_id){
         case C_join_by_id_success_waiting:
-            read_room_info(ss);
+            if(read_waiting_info(ss, waiting_info))return;
             set_state(S_waiting_room);
             lock_ui();
+            apply_waiting_info(waiting_info);
             reset_opselect_room_id();
             signal_ui();
             unlock_ui();
@@ -79,6 +86,7 @@ void select_enter_room_id_recv(const string &command){
         case C_join_by_id_fail:
             int reason;
             ss >> reason;
+            if(ss.fail())return;
             lock_ui();
             switch (reason) {
                 case 1:
@@ -96,17 +104,4 @@ void select_enter_room_id_recv(const string &command){
         default:
             break;
     }
-}
-
-void read_room_info(stringstream &ss){
-    lock_ui();
-    ss >> waiting_room_id;
-    for(int i = 0; i < 5; i++) ss >> waiting_user_existance[i];
-    for(int i = 0; i < 2; i++) ss >> waiting_is_ready[i];
-    for(int i = 0; i < 5; i++){
-        if(waiting_user_existance[i]){
-            ss >> waiting_username[i];
-        }
-    }
-    unlock_ui();
 }

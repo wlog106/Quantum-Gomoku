@@ -1,13 +1,13 @@
 #include "playing_ui.h"
 
-void PP_user_change(stringstream &ss){
+void PP_user_change(users_t &user_info){
     erase_all_user();
     for(int i = 0; i < 5; i++){
-        ss >> playing_user_existance[i];
+        playing_user_existance[i] = user_info.user_existance[i];
     }
     for(int i = 0; i < 5; i++){
         if(playing_user_existance[i]){
-            ss >> playing_username[i];
+            playing_username[i] = user_info.user_name[i];
         }
     }
     show_all_user();
