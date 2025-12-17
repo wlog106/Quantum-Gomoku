@@ -34,7 +34,8 @@ void room_msg_dispatcher(
         printf("no such user\n");
     }
     else{
-        if(cur_conn->cur_elo != elo){
+        if(cur_conn->cur_elo != elo 
+        &&(cur_conn==cur_room->users[0] || cur_conn==cur_room->users[1])){
             job_t *newDwJob = new job_t;
             newDwJob->type = DW_SET_ELO;
             char *cmd = (char*)malloc(100*sizeof(char));

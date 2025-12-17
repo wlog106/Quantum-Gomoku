@@ -189,14 +189,14 @@ conn *Game::get_exp_user(int fd){
 void Game::reset_timer(){
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    last_seg_start = ts.tv_sec * 10 + ts.tv_nsec / 100000000;
+    last_reset_timer = ts.tv_sec * 10 + ts.tv_nsec / 100000000;
 }
 
 void Game::align_timer(){
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
-    long long pass_time = (ts.tv_sec * 10 + ts.tv_nsec / 100000000) - last_seg_start;
-    std::cout << last_seg_start << " " << pass_time << " " << p1_time << "\n";
+    long long pass_time = (ts.tv_sec * 10 + ts.tv_nsec / 100000000) - last_reset_timer;
+    reset_timer();
     if(cur_player == 0){
         p1_time -= pass_time;
         if(p1_time < 0) p1_time = 0;

@@ -167,7 +167,7 @@ struct Game{
     bool observed_flag;
     long long p1_time;
     long long p2_time;
-    long long last_seg_start;
+    long long last_reset_timer;
     bool user_exist[5];
     conn *users[5];
     Board *board;
