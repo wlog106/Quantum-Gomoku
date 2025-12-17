@@ -33,14 +33,6 @@ void login_option_ui(){
         cout << MOVE(title_pos_x + i, title_pos_y) << title[i];
     }
 
-
-
-
-
-
-
-    //cout << endl << endl << endl;
-    //cout << "\x1b[1;38;5;226mWelcome to Quantum Gomoku!\n\x1b[0m" << flush;
     cout << MOVE(12, 19) << "\x1b[1;38;5;82mPress 1 to login\n";
     cout << MOVE(12, 84) << "\x1b[1;38;5;82mPress 2 to create new account\x1b[0m" << flush;
     cout << MOVE(14, 47) << "\x1b[1;38;5;196mPress Esc to close the game\x1b[0m" << flush;
