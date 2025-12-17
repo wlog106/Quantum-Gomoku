@@ -19,10 +19,12 @@ db_conn *db_init()
     const char *sql_get_hash = "SELECT passwd FROM users WHERE name = ?;";
     const char *sql_get_id_by_name = "SELECT id FROM users WHERE name = ?;";
     const char *sql_get_elo_by_name = "SELECT elo FROM users WHERE name = ?;";
+    const char *sql_set_elo_by_id = "UPDATE users SET elo = ? WHERE id = ?;";
     db_handler->stmt_add_user = Mysql_stmt_init(db_handler->conn);
     db_handler->stmt_get_hash = Mysql_stmt_init(db_handler->conn);
     db_handler->stmt_get_id_by_name = Mysql_stmt_init(db_handler->conn);
     db_handler->stmt_get_elo_by_name = Mysql_stmt_init(db_handler->conn);
+    db_handler->stmt_set_elo_by_id = Mysql_stmt_init(db_handler->conn);
     Mysql_stmt_prepare(
         db_handler->stmt_add_user, 
         sql_add_user, 
@@ -42,6 +44,11 @@ db_conn *db_init()
         db_handler->stmt_get_elo_by_name,
         sql_get_elo_by_name,
         strlen(sql_get_elo_by_name)
+    );
+    Mysql_stmt_prepare(
+        db_handler->stmt_set_elo_by_id,
+        sql_set_elo_by_id,
+        strlen(sql_set_elo_by_id)
     );
     db_handler->res_info = (db_response *)malloc(sizeof(db_response));
 
@@ -150,6 +157,31 @@ unsigned int db_get_elo_by_name(
     error |= (mysql_stmt_fetch(db_handler->stmt_get_elo_by_name) != MYSQL_NO_DATA);
     mysql_stmt_free_result(db_handler->stmt_get_elo_by_name);
     mysql_stmt_reset(db_handler->stmt_get_elo_by_name);
+    return error;
+}
+
+unsigned int db_set_elo_by_id(
+    db_conn *db_handler, 
+    int id,
+    int new_elo
+){
+    unsigned int error = 0;
+    MYSQL_BIND bind_param[2];
+    memset(bind_param, 0, 2*sizeof(MYSQL_BIND));
+    bind_param[0].buffer_type = MYSQL_TYPE_LONG;
+    bind_param[0].buffer      = &new_elo;
+    bind_param[0].buffer_length = sizeof(int);
+    bind_param[1].buffer_type = MYSQL_TYPE_LONG;
+    bind_param[1].buffer      = &id;
+    bind_param[1].buffer_length = sizeof(int);
+    error |= Mysql_stmt_bind_param(
+        db_handler->stmt_set_elo_by_id, 
+        bind_param
+    );
+    error |= Mysql_stmt_execute(db_handler->stmt_set_elo_by_id);
+    mysql_stmt_free_result(db_handler->stmt_set_elo_by_id);
+    mysql_stmt_reset(db_handler->stmt_set_elo_by_id);
+    error |= Mysql_commit(db_handler->conn);
     return error;
 }
 

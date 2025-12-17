@@ -34,6 +34,7 @@ typedef struct db_conn{
     MYSQL_STMT *stmt_get_hash;
     MYSQL_STMT *stmt_get_id_by_name;
     MYSQL_STMT *stmt_get_elo_by_name;
+    MYSQL_STMT *stmt_set_elo_by_id;
     db_response *res_info;
 } db_conn;
 
@@ -95,6 +96,12 @@ unsigned int db_get_id_by_name(
 unsigned int db_get_elo_by_name(
     db_conn *db_handler,
     char *username
+);
+
+unsigned int db_set_elo_by_id(
+    db_conn *db_handler, 
+    int id,
+    int new_elo
 );
 
 #ifdef __cplusplus
