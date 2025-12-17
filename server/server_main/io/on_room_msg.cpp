@@ -1,4 +1,4 @@
-
+#include <server_utils.h>
 #include <bits/types/struct_iovec.h>
 #include <fcntl.h>
 #include <server_objects.h>
@@ -30,6 +30,12 @@ void on_room_msg(
     msg.msg_controllen = sizeof(u.buf);
 
     int n = TEMP_FAILURE_RETRY(recvmsg(scxt->cur_fd, &msg, 0));
+    if(n == 0){
+        printf("a room die...\n");
+        epoll_del(scxt->epfd, scxt->cur_fd);
+        Close(scxt->cur_fd);
+        return;
+    }
     cmsg = CMSG_FIRSTHDR(&msg);
     char room_msg[300];
     if (cmsg && cmsg->cmsg_level == SOL_SOCKET && cmsg->cmsg_type == SCM_RIGHTS){

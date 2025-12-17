@@ -106,7 +106,6 @@ int main(int arg, char **argv){
                 continue;
             }
             if(evtype & EPOLLIN && is_playing_room(sobj, evfd)){
-                printf("receive room msg\n");
                 scxt->cur_fd = evfd;
                 on_room_msg(scxt, sobj);
                 continue;

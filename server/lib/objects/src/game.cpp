@@ -196,7 +196,7 @@ void Game::align_timer(){
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     long long pass_time = (ts.tv_sec * 10 + ts.tv_nsec / 100000000) - last_reset_timer;
-    reset_timer();
+    last_reset_timer = ts.tv_sec * 10 + ts.tv_nsec / 100000000;
     if(cur_player == 0){
         p1_time -= pass_time;
         if(p1_time < 0) p1_time = 0;
@@ -265,8 +265,10 @@ void Game::delete_user(
     epoll_del(epfd, u->tfd);
     close(u->fd);
     delete u;
-    if(all_user_leave())
+    if(all_user_leave()){
+        printf("room: %s terminate\n", room_id);
         exit(0);
+    }
     users[i] = new conn;
     epoll_r_add(epfd, users[i]->tfd);
 }

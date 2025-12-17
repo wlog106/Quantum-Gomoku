@@ -21,7 +21,8 @@ void on_dw_res(
                 break;
         }
         else if(n == 0){
-            /* database worker die */
+            printf("dw die...\n");
+            exit(0);
         }
         recvline[n] = 0;
         sobj->dwr_buf->append(recvline);
