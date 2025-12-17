@@ -10,6 +10,7 @@ void dw_login(DwContext *dwcxt){
     int job_result;
     int user_id;
     int user_fd;
+    int user_elo;
     int job_type = DW_LOGIN;
     char name[MAXLINE];
     char hash[MAXLINE];
@@ -37,23 +38,34 @@ void dw_login(DwContext *dwcxt){
     }
     else{
         job_result = DW_RESULT_SUCCESS;
-        int e =  db_get_id_by_name(
+        int e_id =  db_get_id_by_name(
             dwcxt->dc,
             name
         );
-        if(e != 0 || dwcxt->dc->res_info->id_is_null){
+        if(e_id != 0 || dwcxt->dc->res_info->id_is_null){
             /* unknown error */
             exit(1);
         }
         else{
             user_id = dwcxt->dc->res_info->id;
         }
+        int e_elo =  db_get_elo_by_name(
+            dwcxt->dc,
+            name
+        );
+        if(e_elo != 0 || dwcxt->dc->res_info->elo_is_null){
+            /* unknown error */
+            exit(1);
+        }
+        else{
+            user_elo = dwcxt->dc->res_info->elo;
+        }
     }
     job_res newRes;
     newRes.line = (char*)malloc(MAXLINE*sizeof(char));
     /* fd, id, type:result */
-    sprintf(newRes.line, "%d %d %d:%d\n",
-            user_fd, user_id, job_type, job_result);
+    sprintf(newRes.line, "%d %d %d %d:%d\n",
+            user_fd, user_id, user_elo, job_type, job_result);
     newRes.r_ptr = newRes.line;
     newRes.len = strlen(newRes.line);
     if(dwcxt->resultq->empty()){

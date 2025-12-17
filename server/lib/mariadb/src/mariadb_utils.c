@@ -15,12 +15,14 @@ db_conn *db_init()
     Mysql_real_connect(db_handler->conn, host, user, passwd, db);
 
     /* initialize statement handlers */
-    const char *sql_add_user = "INSERT INTO users (name, passwd) VALUES (?, ?);";
+    const char *sql_add_user = "INSERT INTO users (name, passwd, elo) VALUES (?, ?, 500);";
     const char *sql_get_hash = "SELECT passwd FROM users WHERE name = ?;";
     const char *sql_get_id_by_name = "SELECT id FROM users WHERE name = ?;";
+    const char *sql_get_elo_by_name = "SELECT elo FROM users WHERE name = ?;";
     db_handler->stmt_add_user = Mysql_stmt_init(db_handler->conn);
     db_handler->stmt_get_hash = Mysql_stmt_init(db_handler->conn);
     db_handler->stmt_get_id_by_name = Mysql_stmt_init(db_handler->conn);
+    db_handler->stmt_get_elo_by_name = Mysql_stmt_init(db_handler->conn);
     Mysql_stmt_prepare(
         db_handler->stmt_add_user, 
         sql_add_user, 
@@ -35,6 +37,11 @@ db_conn *db_init()
         db_handler->stmt_get_id_by_name,
         sql_get_id_by_name,
         strlen(sql_get_id_by_name)
+    );
+    Mysql_stmt_prepare(
+        db_handler->stmt_get_elo_by_name,
+        sql_get_elo_by_name,
+        strlen(sql_get_elo_by_name)
     );
     db_handler->res_info = (db_response *)malloc(sizeof(db_response));
 
@@ -57,12 +64,26 @@ db_conn *db_init()
     bind_get_id_by_name_result[0].buffer_type   = MYSQL_TYPE_LONG;
     bind_get_id_by_name_result[0].buffer        = &db_handler->res_info->id;
     bind_get_id_by_name_result[0].buffer_length = sizeof(int);
-    bind_get_hash_result[0].length              = &db_handler->res_info->id_recvlen;
-    bind_get_hash_result[0].is_null             = &db_handler->res_info->id_is_null;
+    bind_get_id_by_name_result[0].length        = &db_handler->res_info->id_recvlen;
+    bind_get_id_by_name_result[0].is_null       = &db_handler->res_info->id_is_null;
     Mysql_stmt_bind_result(
         db_handler->stmt_get_id_by_name, 
         bind_get_id_by_name_result
     );
+
+    /* bind get_elo_by_name result */
+    MYSQL_BIND bind_get_elo_by_name_result[1];
+    memset(bind_get_elo_by_name_result, 0, sizeof(MYSQL_BIND));
+    bind_get_elo_by_name_result[0].buffer_type   = MYSQL_TYPE_LONG;
+    bind_get_elo_by_name_result[0].buffer        = &db_handler->res_info->elo;
+    bind_get_elo_by_name_result[0].buffer_length = sizeof(int);
+    bind_get_elo_by_name_result[0].length        = &db_handler->res_info->elo_recvlen;
+    bind_get_elo_by_name_result[0].is_null       = &db_handler->res_info->elo_is_null;
+    Mysql_stmt_bind_result(
+        db_handler->stmt_get_elo_by_name, 
+        bind_get_elo_by_name_result
+    );
+
     return db_handler;
 }
 
@@ -107,6 +128,28 @@ unsigned int db_get_id_by_name(
     error |= (mysql_stmt_fetch(db_handler->stmt_get_id_by_name) != MYSQL_NO_DATA);
     mysql_stmt_free_result(db_handler->stmt_get_id_by_name);
     mysql_stmt_reset(db_handler->stmt_get_id_by_name);
+    return error;
+}
+
+unsigned int db_get_elo_by_name(
+    db_conn *db_handler,
+    char *username
+){
+    unsigned int error = 0;
+    MYSQL_BIND bind_param[1];
+    memset(bind_param, 0, sizeof(MYSQL_BIND));
+    bind_param[0].buffer_type = MYSQL_TYPE_VAR_STRING;
+    bind_param[0].buffer      = username;
+    bind_param[0].buffer_length = strlen(username);
+    error |= Mysql_stmt_bind_param(
+        db_handler->stmt_get_elo_by_name, 
+        bind_param
+    );
+    error |= Mysql_stmt_execute(db_handler->stmt_get_elo_by_name);
+    error |= (mysql_stmt_fetch(db_handler->stmt_get_elo_by_name) != 0);
+    error |= (mysql_stmt_fetch(db_handler->stmt_get_elo_by_name) != MYSQL_NO_DATA);
+    mysql_stmt_free_result(db_handler->stmt_get_elo_by_name);
+    mysql_stmt_reset(db_handler->stmt_get_elo_by_name);
     return error;
 }
 

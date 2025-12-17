@@ -40,6 +40,7 @@ void dw_res_processor(
                     //cur_dw_res->u->state = UNKNOWN_USR;
                 }
                 break;
+                
             case (DW_LOGIN):
                 if(sobj->login_ids->find(cur_dw_res->u->id)!=sobj->login_ids->end()){
                     newJob->type = RES_USR;

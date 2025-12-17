@@ -8,7 +8,7 @@ void dw_res_parser(
     ServerObjects *sobj
 ){  
     char *line;
-    int id, fd;
+    int id, fd, elo;
     dw_res newDwres;
     std::queue<dw_res> q;
     /*
@@ -21,10 +21,11 @@ void dw_res_parser(
     while((
         line = sobj->dwr_buf->getline())!=NULL
     ){
-        sscanf(line, "%d %d %d:%d",
-               &fd, &id, &newDwres.type, &newDwres.result);
+        sscanf(line, "%d %d %d %d:%d",
+               &fd, &id, &elo, &newDwres.type, &newDwres.result);
         newDwres.u = get_user(fd, sobj->fd_to_conn);
         newDwres.u->id = id;
+        newDwres.u->cur_elo = elo;
         q.push(newDwres);
         free(line);
     }

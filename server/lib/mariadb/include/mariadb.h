@@ -18,10 +18,13 @@
 
 typedef struct db_response{
     int id;
+    int elo;
     char hash[65];
     unsigned long id_recvlen;
+    unsigned long elo_recvlen;
     unsigned long pwd_recvlen;
     my_bool id_is_null;
+    my_bool elo_is_null;
     my_bool pwd_is_null;
 } db_response;
 
@@ -30,6 +33,7 @@ typedef struct db_conn{
     MYSQL_STMT *stmt_add_user;
     MYSQL_STMT *stmt_get_hash;
     MYSQL_STMT *stmt_get_id_by_name;
+    MYSQL_STMT *stmt_get_elo_by_name;
     db_response *res_info;
 } db_conn;
 
@@ -84,6 +88,11 @@ unsigned int db_get_hash(
 );
 
 unsigned int db_get_id_by_name(
+    db_conn *db_handler,
+    char *username
+);
+
+unsigned int db_get_elo_by_name(
     db_conn *db_handler,
     char *username
 );
