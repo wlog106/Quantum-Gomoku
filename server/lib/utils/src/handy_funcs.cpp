@@ -143,6 +143,7 @@ pid_t fork_room(
     char room_metadata[34];
     char exist_usernames[150];
     char exist_userfds[15];
+    char player_elos[20];
 
     /* 
         use SOCK_DGRAM to avoid partial read/write
@@ -168,11 +169,14 @@ pid_t fork_room(
                 room->get_exist_usernames().data());
         sprintf(exist_userfds, "%s",
                 room->get_exist_userfds().data());
+        sprintf(player_elos, "%d %d", 
+                room->users[0]->cur_elo, room->users[1]->cur_elo);
         char *room_argv[] = {
             room_proc_name,
             room_metadata,
             exist_usernames,
             exist_userfds,
+            player_elos,
             NULL
         };
         // turn off exist users' FD_CLOEXEC option

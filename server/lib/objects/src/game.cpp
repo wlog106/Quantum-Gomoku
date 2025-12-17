@@ -25,7 +25,6 @@ Game::Game(int epfd){
     p2_time = 6000;
     game_terminate = 0;
     cur_player = 0;
-    new_elo = {0, 0};
     for(int i=0; i<5; i++){
         users[i] = new conn;
         user_exist[i] = false;
@@ -250,8 +249,11 @@ void Game::calculate_new_elo(
     s_b = (result==2) + (double)(result==3)/2.0;
     k_a = (p.first <= p.second) ? 32 : 16;
     k_b = (p.first >= p.second) ? 32 : 16;
+    std::cout << "cur0: " << p.first << " cur1: " << p.second << "\n";
+    std::cout << "ka: " << k_a << " kb: " << k_b << "\n";
     p.first = p.first + k_a*(s_a-e_a);
     p.second = p.second + k_b*(s_b-e_b);
+    std::cout << "cur0: " << p.first << " cur1: " << p.second << "\n";
 }
 
 void Game::delete_user(

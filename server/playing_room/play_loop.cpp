@@ -25,6 +25,9 @@ int main(int arg, char **argv){
     std::stringstream *ssfd = new std::stringstream;
     *ssName << std::string(argv[2]);
     *ssfd << std::string(argv[3]);
+    sscanf(argv[4], "%d %d",
+           &game->users[0]->cur_elo, &game->users[1]->cur_elo);
+    game->new_elo = {game->users[0]->cur_elo, game->users[1]->cur_elo};
     for(int i = 0 ; i < 5; i++){
         if(!(exist_pos & (1 << i)))
             continue;

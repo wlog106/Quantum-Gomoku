@@ -28,12 +28,14 @@ void pr_leaving_dispatcher(
             /* player 1 leave player 2 win*/
             printf("(%s) player 1 %s die...\n", g->room_id, u->name);
             g->broadcast_game_result(2);
+            u->cur_elo = g->new_elo.first;
             g->pass_ufd_to_main(u, 1);
             g->delete_user(u);
         }
         else if(u==g->users[1]){
             printf("(%s) player 2 %s die...\n", g->room_id, u->name);
             g->broadcast_game_result(1);
+            u->cur_elo = g->new_elo.second;
             g->pass_ufd_to_main(u, 1);
             g->delete_user(u);
         }

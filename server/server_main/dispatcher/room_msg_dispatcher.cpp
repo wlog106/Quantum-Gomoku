@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <server_cmd.h>
 #include <cstdio>
 #include <server_utils.h>
@@ -34,9 +35,18 @@ void room_msg_dispatcher(
     }
     else{
         if(cur_conn->cur_elo != elo){
-            /* dw job here */
+            job_t *newDwJob = new job_t;
+            newDwJob->type = DW_SET_ELO;
+            char *cmd = (char*)malloc(100*sizeof(char));
+            /* op id new_elo */
+            sprintf(cmd, "%d %d %d\n",
+                    DW_SET_ELO, cur_conn->id, elo);
+            newDwJob->fill_line(cmd);
+            sobj->dwq->push(newDwJob);
+            epoll_rw_mod(scxt->epfd, scxt->dw_fd);
             printf("update %s elo from %d to %d\n",
                    cur_conn->name, cur_conn->cur_elo, elo);
+            cur_conn->cur_elo = elo;
         }
         if(op==0){
             cur_room->user_leave(cur_conn);
