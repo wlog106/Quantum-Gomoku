@@ -11,7 +11,6 @@ void pr_parser(
     std::queue<char*> to_be_freed;
     std::queue<std::pair<int, char*>> q;
     while((line = u->r_buf->getline())!=NULL){
-        // validator
         int cmd_id;
         char *space = strchr(line, ' ');
         if(space != NULL) *space++ = 0;

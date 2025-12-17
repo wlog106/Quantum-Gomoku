@@ -16,4 +16,9 @@ void dw_res_parser(
     ServerObjects *sobj
 );
 
+bool validator(
+    int state,
+    int cmd_id
+);
+
 #endif
