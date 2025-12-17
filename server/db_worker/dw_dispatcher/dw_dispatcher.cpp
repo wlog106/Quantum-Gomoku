@@ -18,6 +18,9 @@ void dw_dispatcher(
             case (DW_LOGIN):
                 dw_login(dwcxt);
                 break;
+            case (DW_SET_ELO):
+                dw_set_elo(dwcxt);
+                break;
         }
     }
 }

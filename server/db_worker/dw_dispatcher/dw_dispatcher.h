@@ -11,4 +11,6 @@ void dw_signup(DwContext *dwcxt);
 
 void dw_login(DwContext *dwcxt);
 
+void dw_set_elo(DwContext *dwcxt);
+
 #endif

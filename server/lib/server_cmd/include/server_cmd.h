@@ -12,6 +12,7 @@ typedef enum{
     /* db_worker */
     DW_SIGNUP,
     DW_LOGIN,
+    DW_SET_ELO,
 
     /* opselect */
     CREATE_ROOM,
