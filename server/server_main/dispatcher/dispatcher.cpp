@@ -48,7 +48,9 @@ void dispatcher(
                 sobj->id_to_room->insert({newRoomid, newRoom});
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
-                push_res_job(u->jobq, newJob);;
+                u->state = WAITING_ROOM_USR;
+                u->room_id = newRoomid;
+                push_res_job(u->jobq, newJob);
             }
         }
         else if(cur_job->type == JOIN_ROOM_BY_ID){
@@ -78,6 +80,8 @@ void dispatcher(
                     it->second->on_change(scxt->epfd, u);
                     newJob->fill_line(cmd);
                     u->jobq.pop_front();
+                    u->state = WAITING_ROOM_USR;
+                    u->room_id = it->second->room_id;
                     push_res_job(u->jobq, newJob);;
                 }
             } 
@@ -101,6 +105,8 @@ void dispatcher(
                 it->second->on_change(scxt->epfd, u);
                 newJob->fill_line(cmd);
                 u->jobq.pop_front();
+                u->state = WAITING_ROOM_USR;
+                u->room_id = it->second->room_id;
                 push_res_job(u->jobq, newJob);;
             }
             else{
@@ -118,6 +124,8 @@ void dispatcher(
                 if(it->second->is_playing 
                 && it->second->add_observer(u)){
                     pass_ufd_to_room(scxt, sobj, it->second, u);
+                    u->state = PLAYING_ROOM_USR;
+                    u->room_id = it->second->room_id;
                     return;
                 }
                 it++;
@@ -141,6 +149,11 @@ void dispatcher(
                 printf("open a new playing room, pid: %d\n", 
                        fork_room(sobj, it->second, scxt->epfd));
                 u->jobq.pop_front();
+                for(int i=0; i<5; i++){
+                    if(!it->second->user_existance[i])
+                        continue;
+                    it->second->users[i]->state = PLAYING_ROOM_USR;
+                }
             }
             else{
                 job_t *newJob = new job_t;
@@ -197,6 +210,8 @@ void dispatcher(
             }
             newJob->fill_line(cmd);
             u->jobq.pop_front();
+            u->state = OP_SELECTING_USR;
+            u->room_id = "ROOMLESS";
             push_res_job(u->jobq, newJob);;
         }
         else if(cur_job->type == SENDMSG_WAITING_ROOM){
@@ -205,8 +220,8 @@ void dispatcher(
             sscanf(cur_job->line, "%s %s", room_id, message);
             auto it = sobj->id_to_room->find(std::string(room_id));
             if(it==sobj->id_to_room->end()){
-                assert(1==0);
-                /* error no such room */
+                fprintf(stderr, "user send waiting room msg but no such roo,\n");
+                exit(1);
             }
             u->jobq.pop_front();
             it->second->broadcast_msg(scxt->epfd, u, message);

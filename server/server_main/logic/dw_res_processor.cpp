@@ -28,7 +28,7 @@ void dw_res_processor(
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
                     push_res_job(cur_dw_res->u->jobq, newJob);
-                    cur_dw_res->u->state = LOGGEDIN_USR;
+                    cur_dw_res->u->state = OP_SELECTING_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_DUPNAME){
                     newJob->type = RES_USR;
@@ -48,7 +48,7 @@ void dw_res_processor(
                     newJob->r_ptr = cmd;
                     newJob->len = strlen(cmd);
                     push_res_job(cur_dw_res->u->jobq, newJob);
-                    cur_dw_res->u->state = LOGGEDIN_USR;
+                    cur_dw_res->u->state = OP_SELECTING_USR;
                 }
                 else if(cur_dw_res->result == DW_ERESULT_USERDNE){
                     newJob->type = RES_USR;

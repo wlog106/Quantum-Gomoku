@@ -3,7 +3,9 @@
 
 typedef enum{
     UNKNOWN_USR,
-    LOGGEDIN_USR,
+    OP_SELECTING_USR,
+    WAITING_ROOM_USR,
+    PLAYING_ROOM_USR
 } userState;
 
 typedef enum{

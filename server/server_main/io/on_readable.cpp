@@ -3,6 +3,7 @@
 #include <server_utils.h>
 
 #include "../parser/parser.h"
+#include "../dispatcher/dispatcher.h"
 
 #include <cerrno>
 
@@ -23,10 +24,8 @@ void on_readable(
                 break;
         }
         else if(n == 0){
-            /* user leave */
-            sobj->fd_to_conn->erase(u->fd);
-            Close(u->fd);
-            delete u;
+            printf("read zero\n");
+            leaving_dispatcher(sobj, u);
             return;
         }
         recvline[n] = 0;

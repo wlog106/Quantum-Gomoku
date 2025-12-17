@@ -4,6 +4,7 @@
 #include <server_utils.h>
 
 conn::conn(){
+    this->room_id = "ROOMLESS";
     this->r_buf = new linear_buf_t(MAXLINE);
     start = {
         {0, 0},
@@ -19,6 +20,7 @@ conn::conn(){
 conn::conn(int fd, int state){ 
     this->fd = fd;
     this->state = state;
+    this->room_id = "ROOMLESS";
     this->r_buf = new linear_buf_t(MAXLINE);
     start = {
         {0, 0},

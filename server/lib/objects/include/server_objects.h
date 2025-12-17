@@ -78,6 +78,7 @@ struct conn{
     char hash[65];
     int cur_elo;
     int state;
+    std::string room_id;
 
     /* connection buffer */
     linear_buf_t *r_buf;

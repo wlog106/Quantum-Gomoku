@@ -11,6 +11,11 @@ void dispatcher(
     conn *u
 );
 
+void leaving_dispatcher(
+    ServerObjects *sobj,
+    conn *u
+);
+
 void room_msg_dispatcher(
     ServerContext *scxt,
     ServerObjects *sobj,
