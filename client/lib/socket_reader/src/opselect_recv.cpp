@@ -1,4 +1,5 @@
 #include "../socket_reader.h"
+#include "share_cmd.h"
 
 void select_option_recv(const string &command){
     /** 
@@ -69,6 +70,7 @@ void select_enter_room_id_recv(const string &command){
     //result of join by room id
     stringstream ss(command);
     waiting_room_t waiting_info;
+    playing_room_t playing_info;
     int cmd_id;
     ss >> cmd_id;
     switch (cmd_id){
@@ -81,7 +83,13 @@ void select_enter_room_id_recv(const string &command){
             signal_ui();
             unlock_ui();
             break;
-        case C_join_by_id_success_playing:
+        case C_start_a_playing_room:
+            if(read_playing_info(ss, playing_info)) return;
+            set_state(S_playing);
+            lock_ui();
+            apply_playing_info(playing_info);
+            reset_opselect_room_id();
+            unlock_ui();
             break;
         case C_join_by_id_fail:
             int reason;

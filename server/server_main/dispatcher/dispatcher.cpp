@@ -74,6 +74,14 @@ void dispatcher(
                     u->jobq.pop_front();
                     push_res_job(u->jobq, newJob);;
                 }
+                else if(it->second->is_playing
+                     && it->second->add_observer(u)
+                ){
+                    pass_ufd_to_room(scxt, sobj, it->second, u);
+                    u->state = PLAYING_ROOM_USR;
+                    u->room_id = it->second->room_id;
+                    return;
+                }
                 else{
                     sprintf(cmd, "%d %s\n", 
                         C_join_by_id_success_waiting, it->second->get_room_info().data());
