@@ -154,6 +154,7 @@ void Game::broadcast_observe_result(
 }
 
 void Game::broadcast_game_result(int result){
+    std::cout << "broadcast game result: " << result << "\n";
     calculate_new_elo(new_elo, result);
     game_terminate = 1;
     char msg[200];

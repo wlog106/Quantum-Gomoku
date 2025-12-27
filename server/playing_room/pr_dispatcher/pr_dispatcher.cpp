@@ -21,6 +21,8 @@ void pr_dispatcher(
             int pos_x, pos_y, type;
             sscanf(curJob->line, "%d %d %d %lld %lld",
                    &pos_x, &pos_y, &type, &g->p1_time, &g->p2_time);
+            if(g->p1_time<=0 || g->p2_time<=0)
+                goto run_out_of_time;
             g->board->board_data[pos_x][pos_y] = type;
             u->jobq.pop_front();
             if(g->observed_flag) 
@@ -33,8 +35,9 @@ void pr_dispatcher(
             u->jobq.pop_front();
         }
         else if(curJob->type == RUN_OUT_OF_TIME){
-            g->broadcast_game_result((g->cur_player^1)+1);
+    run_out_of_time:
             u->jobq.pop_front();
+            g->broadcast_game_result((g->cur_player^1)+1);
         }
         else if(curJob->type == LEAVE_GAME){
             pr_leaving_dispatcher(g, u, LEAVE_GAME);
