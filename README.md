@@ -8,7 +8,7 @@
 - mariadb Connector/C: [C connector doc](https://mariadb.com/docs/connectors/mariadb-connector-c)
 
 #### Note
-- table description example (you may want to change the `NULL` settings)
+- table description example ( you may want to change the some settings )
 ```
 +-----------+-------------+------+-----+---------------------+----------------+
 | Field     | Type        | Null | Key | Default             | Extra          |
@@ -25,10 +25,10 @@
   `DB_ADMIN=${account name}`  
   `DB_PASSWD=${account password}`  
   `DB_NAME=${the db you want to use}`  
-  then put the `.env` file in `${PROJECT ROOT}`
-- run `source ./load_env.sh` in `${PROJECT_ROOT}` to set required environment variables
-- if it wasn't an executable run `chmod +x ./load_env.sh`
-- add this in your `${PROJECT_ROOT}/.vscode/settings.json` to shut up clangd server
+- put the `.env` file in `${PROJECT ROOT}`  
+  then run `source ./load_env.sh` in `${PROJECT_ROOT}`  
+  to set required environment variables
+- you may want to add this in your `${PROJECT_ROOT}/.vscode/settings.json` to shut up clangd server
  ```json
   "clangd.fallbackFlags": [
     "-I${workspaceFolder}/server/lib/server_cmd/include",
