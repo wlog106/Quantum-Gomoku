@@ -8,7 +8,7 @@
 - mariadb Connector/C: [C connector doc](https://mariadb.com/docs/connectors/mariadb-connector-c)
 
 #### Note
-- table description example
+- table description example (you may want to change the `NULL` settings)
 ```
 +-----------+-------------+------+-----+---------------------+----------------+
 | Field     | Type        | Null | Key | Default             | Extra          |
