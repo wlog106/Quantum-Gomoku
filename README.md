@@ -4,11 +4,11 @@
 - compile client only: `make client` 
 
 #### Dependencies
-- mariadb-server: [mariadb doc for Debian-base Linux distro](https://sources.debian.org/src/mariadb/1%3A11.8.3-0%2Bdeb13u1/debian/mariadb-server.README.Debian)
-- mariadb Connector/C: [C connector doc](https://mariadb.com/docs/connectors/mariadb-connector-c)
+- mariadb-server : [mariadb doc for Debian-base Linux distro](https://sources.debian.org/src/mariadb/1%3A11.8.3-0%2Bdeb13u1/debian/mariadb-server.README.Debian)
+- mariadb Connector/C : [C connector doc](https://mariadb.com/docs/connectors/mariadb-connector-c)
 
 #### Note
-- table description example ( you may want to change the some settings )
+- table description example ( you may want to change some settings to fit your need )
 ```
 +-----------+-------------+------+-----+---------------------+----------------+
 | Field     | Type        | Null | Key | Default             | Extra          |
@@ -20,7 +20,7 @@
 | elo       | int(11)     | YES  |     | NULL                |                |
 +-----------+-------------+------+-----+---------------------+----------------+
 ```
-- you have to put the following variables in `.env` file  
+- you have to define the following variables in `.env` file  
   `DB_HOST=${IP}`  
   `DB_ADMIN=${account name}`  
   `DB_PASSWD=${account password}`  
