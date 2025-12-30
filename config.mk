@@ -1,4 +1,4 @@
-SHELL := /bin/bash
+SHELL := $(shell which bash)
 PROJECT_ROOT := $(CURDIR)
 
 CC := gcc
